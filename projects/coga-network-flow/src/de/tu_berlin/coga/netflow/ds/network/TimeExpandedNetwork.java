@@ -20,9 +20,9 @@ import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.container.collection.ListSequence;
-import de.tu_berlin.coga.netflow.ds.network.Network;
-import de.tu_berlin.coga.netflow.ds.network.NetworkInterface;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.netflow.ds.structure.DynamicPath;
 import ds.graph.GraphLocalization;
 import java.util.LinkedList;
@@ -33,75 +33,75 @@ import java.util.List;
  * The class {@code TimeExpandedNetwork} provides flow algorithms with the
  * methods to create and work with time expanded networks in order to transform
  * dynamic flow problems into static ones.
- * The construction of the time expanded network depends on whether the
- * base network has multiple sources / sinks and whether those
- * shall be connected with a super source / sink.
- *
- * The original network may not include loops.
+ * The construction of the time expanded graph depends on whether the
+ base graph has multiple sources / sinks and whether those
+ shall be connected with a super source / sink.
+
+ The original graph may not include loops.
  */
-public class TimeExpandedNetwork extends Network {
+public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
     /**
-     * The underlying base network.
+     * The underlying base graph.
      */
-    protected NetworkInterface network = null;
+    protected DirectedGraph graph = null;
 
     /**
-     * The capacities belonging to the time expanded network.
+     * The capacities belonging to the time expanded graph.
      */
     protected IdentifiableIntegerMapping<Edge> capacities = null;
 
     /**
-     * The transit times belonging to the time expanded network.
+     * The transit times belonging to the time expanded graph.
      */
     protected IdentifiableIntegerMapping<Edge> costs = null;
 
     /**
-     * The supply function belonging to the time expanded network.
+     * The supply function belonging to the time expanded graph.
      */
     protected IdentifiableIntegerMapping<Node> supplies = null;
 
     /**
-     * The sink of the time expanded network
-     * if it has exactly one sink.
+     * The sink of the time expanded graph
+ if it has exactly one sink.
      */
     protected Node sink = null;
 
     /**
-     * The sinks of the time expanded network,
-     * can also contain only one sink.
+     * The sinks of the time expanded graph,
+ can also contain only one sink.
      */
     protected ListSequence<Node> sinks = null;
 
     /**
-     * The sinks of the original network.
+     * The sinks of the original graph.
      */
     protected ListSequence<Node> originalSinks = null;
 
     /**
-     * The source of the time expanded network
-     * if it has exactly one source.
+     * The source of the time expanded graph
+ if it has exactly one source.
      */
     protected Node source = null;
 
     /**
-     * The sources of the time expanded network,
-     * can also contain only one source.
+     * The sources of the time expanded graph,
+ can also contain only one source.
      */
     protected ListSequence<Node> sources = null;
 
     /**
-     * The sources of the original network.
+     * The sources of the original graph.
      */
     protected ListSequence<Node> originalSources = null;
 
     /**
      * A grid to store references to all nodes of
-     * the time expanded network.
+ the time expanded graph.
      * The first dimension is addressed with the
-     * IDs of the nodes in the base network,
-     * the second dimension represents the
-     * time layers of the time expanded network.
+ IDs of the nodes in the base graph,
+ the second dimension represents the
+ time layers of the time expanded graph.
      */
     private Node[][] grid = null;
 
@@ -112,7 +112,7 @@ public class TimeExpandedNetwork extends Network {
     IdentifiableIntegerMapping<Node> originalID = null;
 
     /**
-     * The time horizon of the time expanded network.
+     * The time horizon of the time expanded graph.
      */
     protected int timeHorizon = -1;
 
@@ -136,21 +136,21 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-	 * Private method to extend the base network into time by constructing time
-	 * layers.
-	 * The  base network is included in the expanded version
-	 * as the bottom layer.
-	 * @param network The base network.
-	 * @param capacities The capacity function of the base network.
-	 * @param transitTimes The transit time function of the base network.
+	 * Private method to extend the base graph into time by constructing time
+ layers.
+	 * The  base graph is included in the expanded version
+ as the bottom layer.
+	 * @param network The base graph.
+	 * @param capacities The capacity function of the base graph.
+	 * @param transitTimes The transit time function of the base graph.
 	 * @param timeHorizon The time horizon, i.e. the number of layers.
-	 * @param sources The sources of the base network, may also be only one.
-	 * @param sinks The sinks of the base network, may also be only one.
+	 * @param sources The sources of the base graph, may also be only one.
+	 * @param sinks The sinks of the base graph, may also be only one.
 	 * @param allowStorageInNodes Says whether it shall be allowed to store flow in nodes, i.e.
 	 *            whether there are hold-over arcs for all nodes or only for
 	 *            sources and sinks.
 	 */
-	private void createTimeExpansion(NetworkInterface network,
+	private void createTimeExpansion(DirectedGraph network,
 			IdentifiableIntegerMapping<Edge> capacities,
 			IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon,
 			List<Node> sources, List<Node> sinks,
@@ -160,16 +160,16 @@ public class TimeExpandedNetwork extends Network {
     	int nodeCount = network.nodeCount();
 
     	// Initialize data structures:
-    	// list newNodes is to set nodes in the network later,
+    	// list newNodes is to set nodes in the graph later,
     	// the grid saves the structure of the time expanded
-    	// network and has one row for each time layer
+    	// graph and has one row for each time layer
     	// and at least one column for every node.
     	LinkedList<Node> newNodes = new LinkedList<Node>();
     	grid = new Node[nodeCount][timeHorizon];
     	originalID = new IdentifiableIntegerMapping<Node>(nodeCount*timeHorizon);
 
-    	// Write the base network in the zero layer of
-    	// the time expanded network.
+    	// Write the base graph in the zero layer of
+    	// the time expanded graph.
     	for (Node node : network.nodes()){
     		grid[node.id()][0] = node;
     		if (originalID.getDomainSize()<=node.id())
@@ -193,7 +193,7 @@ public class TimeExpandedNetwork extends Network {
         	}
         }
 
-    	// Store the original and the new nodes in the network
+    	// Store the original and the new nodes in the graph
     	setNodeCapacity(nodeCount);
     	setNodes(network.nodes());
     	setNodes(newNodes);
@@ -204,7 +204,7 @@ public class TimeExpandedNetwork extends Network {
         // Each edge e will be copied starting at each
         // time layer from 1 .. T-transitTime(e)+1,
         // edges in upper time layers would go outside
-        // the time expanded network.
+        // the time expanded graph.
         for (Edge edge : network.edges()) {
             edgeCount += (int)Math.max(0, timeHorizon - (int) transitTimes.get(edge));
         }
@@ -229,7 +229,7 @@ public class TimeExpandedNetwork extends Network {
         // Create the edges for time layers 0 .. T-1.
         for (int t = 0; t <= timeHorizon-1; t++) {
             for (Edge edge : network.edges()) {
-            	// Edges that would stick out of the time expanded network
+            	// Edges that would stick out of the time expanded graph
             	// shall not be created.
                 if (t + transitTimes.get(edge) > timeHorizon-1) continue;
 
@@ -237,10 +237,10 @@ public class TimeExpandedNetwork extends Network {
                 Node start = grid[edge.start().id()][t];
                 Node end = grid[edge.end().id()][t+transitTimes.get(edge)];
 
-                //Node start = nodes.get(t * network.nodeCount() + edge.start().id());
-                //Node end = nodes.get((t + (int) transitTimes.get(edge)) * network.nodeCount() + edge.end().id());
+                //Node start = nodes.get(t * graph.nodeCount() + edge.start().id());
+                //Node end = nodes.get((t + (int) transitTimes.get(edge)) * graph.nodeCount() + edge.end().id());
 
-                // Insert edge into time expanded network
+                // Insert edge into time expanded graph
                 // and copy transit time and capacities.
                 Edge e = createAndSetEdge(start, end);
                 this.capacities.set(e, capacities.get(edge));
@@ -271,7 +271,7 @@ public class TimeExpandedNetwork extends Network {
 				Node start = grid[node.id()][t];
 				Node end = grid[node.id()][t + 1];
 
-				// Insert edge into time-expanded network
+				// Insert edge into time-expanded graph
 				// and set capacity
 
 				Edge e = createAndSetEdge(start, end);
@@ -285,8 +285,8 @@ public class TimeExpandedNetwork extends Network {
 	}
 
     /**
-     * Creates a new time expanded network for a dynamic flow problem.
-     * @param network the network underlying the flow problem.
+     * Creates a new time expanded graph for a dynamic flow problem.
+     * @param graph the graph underlying the flow problem.
      * @param capacities the flow problem's capacities.
      * @param transitTimes the flow problem's transit times.
      * @param source the flow problem's source, may not be null.
@@ -295,20 +295,20 @@ public class TimeExpandedNetwork extends Network {
      * @param allowStorageInNodes {@code true} if flow can wait in all nodes, {@code false}
      * otherwise.
      */
-   public TimeExpandedNetwork(NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, Node source, Node sink, int timeHorizon, boolean allowStorageInNodes) {
-		this(allowStorageInNodes, network, timeHorizon);
+   public TimeExpandedNetwork(DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, Node source, Node sink, int timeHorizon, boolean allowStorageInNodes) {
+		this(allowStorageInNodes, graph, timeHorizon);
 		if (source ==null && sink==null)
 			throw new AssertionError(GraphLocalization.loc.getString ("ds.graph.SinkSourceNullException"));
 		if (source ==null)
 			throw new AssertionError(GraphLocalization.loc.getString ("ds.graph.SourceIsNullException"));
 		if (sink==null)
 			throw new AssertionError(GraphLocalization.loc.getString ("ds.graph.SinkIsNullException"));
-		sources = new ListSequence<Node>();
+		sources = new ListSequence<>();
 		sources.add(source);
 		originalSources = sources;
 		originalSinks = new ListSequence<>();
 		originalSinks.add(sink);
-		createTimeExpansion(network, capacities, transitTimes, timeHorizon,
+		createTimeExpansion(graph, capacities, transitTimes, timeHorizon,
 				sources, originalSinks, allowStorageInNodes);
 		this.source = grid[source.id()][0];
 		this.sink = grid[sink.id()][timeHorizon-1];
@@ -330,7 +330,7 @@ public class TimeExpandedNetwork extends Network {
 		int edgeCount = this.getEdgeCapacity();
 		this.setEdgeCapacity(edgeCount+originalSources.size());
 
-		// Add edges to the time expanded network:
+		// Add edges to the time expanded graph:
 		// The super source is connected to all sources
 		// on layer zero with edges having maximal capacity
 		// and no costs.
@@ -369,31 +369,31 @@ public class TimeExpandedNetwork extends Network {
 
     }
 
-    public TimeExpandedNetwork(NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, boolean allowStorageInNodes){
-    	this(network, capacities, transitTimes, timeHorizon, sources, sinks, Integer.MAX_VALUE, allowStorageInNodes);
+    public TimeExpandedNetwork(DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, boolean allowStorageInNodes){
+    	this(graph, capacities, transitTimes, timeHorizon, sources, sinks, Integer.MAX_VALUE, allowStorageInNodes);
     }
 
-    public TimeExpandedNetwork(NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, int supersouceOutgoingCapacitiy, boolean allowStorageInNodes ){
-    	this(allowStorageInNodes,network,timeHorizon);
+    public TimeExpandedNetwork(DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, int supersouceOutgoingCapacitiy, boolean allowStorageInNodes ){
+    	this(allowStorageInNodes,graph,timeHorizon);
     	originalSources = new ListSequence<>(sources);
     	this.sources = originalSources;
     	originalSinks = new ListSequence<>(sinks);
 
-		createTimeExpansion(network, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes);
+		createTimeExpansion(graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes);
 
 		createSuperSourceAndSink(supersouceOutgoingCapacitiy);
     }
 
-	public TimeExpandedNetwork(NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes) {
-		this( network, capacities, transitTimes, timeHorizon, supplies, allowStorageInNodes, true );
+	public TimeExpandedNetwork(DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes) {
+		this( graph, capacities, transitTimes, timeHorizon, supplies, allowStorageInNodes, true );
 	}
 
-		public TimeExpandedNetwork(NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes, boolean createSuperSouce ) {
-		this(allowStorageInNodes, network, timeHorizon);
+		public TimeExpandedNetwork(DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes, boolean createSuperSouce ) {
+		this(allowStorageInNodes, graph, timeHorizon);
 		sources = new ListSequence<>();
 		originalSinks = new ListSequence<>();
 		int overallSupply=0;
-		for (Node node : network.nodes()) {
+		for (Node node : graph.nodes()) {
 			if (!supplies.isDefinedFor(node))
 				throw new AssertionError(GraphLocalization.loc.getString ("ds.graph.NoSupplyNodeException"));
 			else {
@@ -409,7 +409,7 @@ public class TimeExpandedNetwork extends Network {
 		if (overallSupply != 0)
 			throw new AssertionError(GraphLocalization.loc.getString ("ds.graph.SumNotZeroException"));
 
-		createTimeExpansion(network, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
+		createTimeExpansion(graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
 
 		if( createSuperSouce )
 			createSuperSourceAndSink(supplies);
@@ -465,7 +465,7 @@ public class TimeExpandedNetwork extends Network {
 		int edgeCount = this.getEdgeCapacity();
 		this.setEdgeCapacity(edgeCount+originalSources.size());
 
-		// Add edges to the time expanded network:
+		// Add edges to the time expanded graph:
 		// The super source is connected to all sources
 		// on layer zero with edges having the capacity
 		// equal to the former supply of the sources
@@ -502,7 +502,7 @@ public class TimeExpandedNetwork extends Network {
 		int edgeCount = this.getEdgeCapacity();
 		this.setEdgeCapacity(edgeCount+originalSinks.size());
 
-		// Add edges to the time expanded network:
+		// Add edges to the time expanded graph:
 		// The super sink is connected to all sinks
 		// on layer timeHorizon-1 by an arc with
 		// max capacity and no costs.
@@ -552,32 +552,32 @@ public class TimeExpandedNetwork extends Network {
 
     }
 
-  /*  public TimeExpandedNetwork(AbstractNetwork network,
+  /*  public TimeExpandedNetwork(AbstractNetwork graph,
 			IdentifiableIntegerMapping<Edge> capacities,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			LinkedList<Node> sources, LinkedList<Node> sinks,
 			int timeHorizon,
 			boolean allowStorageInNodes) {
-		this(allowStorageInNodes, network, timeHorizon);
+		this(allowStorageInNodes, graph, timeHorizon);
 		this.sinks = new ListSequence<Node>(sinks);
 		this.sources = new ListSequence<Node>(sources);
-		createTimeExpansion(network, capacities, transitTimes, timeHorizon,
+		createTimeExpansion(graph, capacities, transitTimes, timeHorizon,
 				sources, sinks, allowStorageInNodes);
 	}*/
 
-    private TimeExpandedNetwork(boolean allowStorageInNodes, NetworkInterface network, int timeHorizon){
+    private TimeExpandedNetwork(boolean allowStorageInNodes, DirectedGraph graph, int timeHorizon){
     	super(0,0);
         this.allowStorageInNodes = allowStorageInNodes;
-        this.network = network;
+        this.graph = graph;
         this.timeHorizon = timeHorizon;
     }
 
     /**
-     * Translates a static path in this time expanded network into a string.
+     * Translates a static path in this time expanded graph into a string.
      * O(edges in the path).
      * @param path the static path to be translated.
-     * @return a dynamic path in the underlying base network that is equivalent
-     * to this path.
+     * @return a dynamic path in the underlying base graph that is equivalent
+ to this path.
      */
     public DynamicPath translatePath(StaticPath path) {
         DynamicPath result = new DynamicPath();
@@ -587,9 +587,9 @@ public class TimeExpandedNetwork extends Network {
         	if (isHoldoverArc(edge))
         		delay++;
         	else {
-        		Node from = network.getNode(originalID.get(edge.start()));
-        		Node to = network.getNode(originalID.get(edge.end()));
-        		Edge e = network.getEdge(from,to);
+        		Node from = graph.getNode(originalID.get(edge.start()));
+        		Node to = graph.getNode(originalID.get(edge.end()));
+        		Edge e = graph.getEdge(from,to);
         		result.addLastEdge(e, delay);
         		delay = 0;
         	}
@@ -597,7 +597,7 @@ public class TimeExpandedNetwork extends Network {
         return result;
     }
 
-    // This method uses that the original network does not include loops!
+    // This method uses that the original graph does not include loops!
     private boolean isHoldoverArc(Edge edge){
     	if (edge==null)
     		throw new AssertionError(GraphLocalization.loc.getString ("ds.graph.EdgeIsNullException"));
@@ -609,11 +609,11 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-     * Translates a static path in this time expanded network into a dynamic
-     * path in the underlying base network. O(edges in the path).
+     * Translates a static path in this time expanded graph into a dynamic
+ path in the underlying base graph. O(edges in the path).
      * @param path the static path to be translated.
      * @return a string representation of the dynamic path which takes the
-     * structure of the time expanded network into account.
+ structure of the time expanded graph into account.
      */
     @Deprecated
     public String translatePathToString(StaticPath path) {
@@ -626,7 +626,7 @@ public class TimeExpandedNetwork extends Network {
                 if (delay > 0) {
                     result.append("[" + delay + "], ");
                 }
-                result.append(String.format("(%1$s [%2$s], %3$s [%4$s])", edge.start().id() % network.nodeCount(), edge.start().id() / network.nodeCount(), edge.end().id() % network.nodeCount(), edge.end().id() / network.nodeCount()));
+                result.append(String.format("(%1$s [%2$s], %3$s [%4$s])", edge.start().id() % graph.nodeCount(), edge.start().id() / graph.nodeCount(), edge.end().id() % graph.nodeCount(), edge.end().id() / graph.nodeCount()));
                 result.append(", ");
                 delay = 0;
             }
@@ -645,40 +645,40 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-     * Returns the capacities belonging to this time expanded network.
+     * Returns the capacities belonging to this time expanded graph.
      * Runtime O(1).
-     * @return the capacities belonging to this time expanded network.
+     * @return the capacities belonging to this time expanded graph.
      */
     public IdentifiableIntegerMapping<Edge> capacities() {
         return capacities;
     }
 
     /**
-     * Returns the network underlying the time expanded network. Runtime O(1).
-     * @return the network underlying the time expanded network.
+     * Returns the graph underlying the time expanded graph. Runtime O(1).
+     * @return the graph underlying the time expanded graph.
      */
-    public NetworkInterface network() {
-        return network;
+    public DirectedGraph network() {
+        return graph;
     }
 
     /**
-     * Returns the sinks of the time expanded network. Runtime O(1).
+     * Returns the sinks of the time expanded graph. Runtime O(1).
      * All original sinks will be returned,
      * even if a super sink exists, but the super sink will not
      * be returned.
-     * @return the sinks of the time expanded network.
+     * @return the sinks of the time expanded graph.
      */
     public LinkedList<Node> sinks() {
         return sinks;
     }
 
     /**
-     * Returns the single sink of the time expanded network,
-     * if it has one. Else an {@code AssertionError} will be thrown.
-     * The network does for example not contain a single sink
-     * if it has multiple sinks and does not contain a super sink.
-     * @return the single sink of this time expanded network,
-     *         if it has one.
+     * Returns the single sink of the time expanded graph,
+ if it has one. Else an {@code AssertionError} will be thrown.
+ The graph does for example not contain a single sink
+ if it has multiple sinks and does not contain a super sink.
+     * @return the single sink of this time expanded graph,
+         if it has one.
      */
     public Node singleSink(){
     	if (sink == null)
@@ -688,23 +688,23 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-     * Returns the sources of the time expanded network. Runtime O(1).
+     * Returns the sources of the time expanded graph. Runtime O(1).
      * All original sources will be returned,
      * even if a super source exists, but the super source will not
      * be returned.
-     * @return the sources of the time expanded network.
+     * @return the sources of the time expanded graph.
      */
     public LinkedList<Node> sources() {
         return sources;
     }
 
     /**
-     * Returns the single source of the time expanded network,
-     * if it has one. Else an {@code AssertionError} will be thrown.
-     * The network does for example not contain a single source
-     * if it has multiple sources and does not contain a super source.
-     * @return the single source of this time expanded network,
-     *         if it has one.
+     * Returns the single source of the time expanded graph,
+ if it has one. Else an {@code AssertionError} will be thrown.
+ The graph does for example not contain a single source
+ if it has multiple sources and does not contain a super source.
+     * @return the single source of this time expanded graph,
+         if it has one.
      */
     public Node singleSource(){
     	if (source == null)
@@ -713,41 +713,41 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-     * Returns the time horizon of this time expanded network. Runtime O(1).
-     * @return the time horizon of this time expanded network.
+     * Returns the time horizon of this time expanded graph. Runtime O(1).
+     * @return the time horizon of this time expanded graph.
      */
     public int timeHorizon() {
         return timeHorizon;
     }
 
     /**
-     * Returns the cost function belonging to this time expanded network.
+     * Returns the cost function belonging to this time expanded graph.
      * Runtime O(1).
-     * @return the cost function belonging to this time expanded network.
+     * @return the cost function belonging to this time expanded graph.
      */
     public IdentifiableIntegerMapping<Edge> costs() {
         return costs;
     }
 
     /**
-     * Return the supply function belonging to this time expanded network.
+     * Return the supply function belonging to this time expanded graph.
      * Runtime O(1)
-     * @return the supply function belonging to this time expanded network.
+     * @return the supply function belonging to this time expanded graph.
      */
     public IdentifiableIntegerMapping<Node> supplies(){
     	return supplies;
     }
 
     /**
-     * Creates a copy of this time expanded network.
-     * @return a copy of this time expanded network.
+     * Creates a copy of this time expanded graph.
+     * @return a copy of this time expanded graph.
      */
     @Override
     public TimeExpandedNetwork clone() {
         TimeExpandedNetwork clone = new TimeExpandedNetwork(nodeCount(), edgeCount());
         clone.setNodes(nodes());
         clone.setEdges(edges());
-        clone.network = network;
+        clone.graph = graph;
         clone.allowStorageInNodes = allowStorageInNodes;
         clone.capacities = capacities.clone();
         clone.realEdges = realEdges;
@@ -764,8 +764,8 @@ public class TimeExpandedNetwork extends Network {
      * Compares this object with the specified object. If the specified object
      * is equivalent to this one {@code true} is returned, {@code false
      * } otherwise. A object is considered equivalent if and only if it is
-     * a time expanded network with equals components (nodes, edges,
-     * base network, capacities, ...). Runtime O(n + m).
+ a time expanded graph with equals components (nodes, edges,
+ base graph, capacities, ...). Runtime O(n + m).
      * @param o the object to compare this one to.
      * @return {@code true} if the specified object
      * is equivalent to this one, {@code false
@@ -775,7 +775,7 @@ public class TimeExpandedNetwork extends Network {
     public boolean equals(Object o) {
         if (o instanceof TimeExpandedNetwork) {
             TimeExpandedNetwork ten = (TimeExpandedNetwork) o;
-            return network.equals(ten.network) && capacities.equals(ten.capacities)
+            return graph.equals(ten.graph) && capacities.equals(ten.capacities)
                    && costs.equals(ten.costs) && super.equals(o);
 //                   && (sink.equals(ten.sink) && (source.equals(ten.source))
 //                   && (sinks.equals(ten.sinks)) && (sources.equals(ten.sources)));
@@ -785,7 +785,7 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-     * Returns a hash code for this time expanded network.
+     * Returns a hash code for this time expanded graph.
      * Runtime O(n + m).
      * @return a hash code computed by the sum of the hash codes of its
      * components.
@@ -797,14 +797,14 @@ public class TimeExpandedNetwork extends Network {
     }
 
     /**
-     * Returns a string representation of this time expanded network.
+     * Returns a string representation of this time expanded graph.
      * Runtime O(n + m).
-     * @return  a string representation of this residual network.
+     * @return  a string representation of this residual graph.
      */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Base network: \n" + network.toString() + "\n");
+        builder.append("Base network: \n" + graph.toString() + "\n");
         builder.append("Nodes of the time expanded network:\n");
         for (int t = this.timeHorizon-1; t >= 0; t--){
         	if (this.source != null)

@@ -5,13 +5,11 @@
  */
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
-import de.tu_berlin.coga.netflow.ds.network.OutgoingStarGraph;
-import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
+import de.tu_berlin.coga.graph.OutgoingStarGraph;
 import de.tu_berlin.coga.container.collection.ArraySet;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.NetworkInterface;
 import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
@@ -63,19 +61,19 @@ public class SimpleResidualGraph implements DirectedGraph, OutgoingStarGraph {
 	 * edges according to their tail nodes into the array. Thus, the incident
 	 * edges to a vertex can be searched by a run through the array.
 	 *
-	 * @param network
+	 * @param graph
 	 * @param capacities
 	 * @param current
 	 */
-	public void init( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Node> current ) {
+	public void init( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Node> current ) {
 		// set up residual edges
 		int edgeCounter = 0;
 		int[] temp = new int[edges.getCapacity()];
-		for( Node v : network ) {
+		for( Node v : graph ) {
 			first.set( v, edgeCounter );
 			current.set( v, edgeCounter );
 			// add the outgoing edges to the arc list
-			for( Edge e : network.outgoingEdges( v ) ) {
+			for( Edge e : graph.outgoingEdges( v ) ) {
 				//residualEdges[edgeCounter] = new ResidualEdge( edgeCounter, e.start(), e.end(), getProblem().getCapacities().get( e ), false );
 				Edge ne = new Edge(edgeCounter, e.start(), e.end() );
 				originalResidualEdgeMapping.set( ne, e );
@@ -87,7 +85,7 @@ public class SimpleResidualGraph implements DirectedGraph, OutgoingStarGraph {
 				temp[e.id()] = edgeCounter++;
 			}
 			// add the reverse edge for incoming edges to the arc list (they are also outgoing!
-			for( Edge e : network.incomingEdges( v ) ) {
+			for( Edge e : graph.incomingEdges( v ) ) {
 				//residualEdges[edgeCounter] = new ResidualEdge( edgeCounter, e.end(), e.start(), 0, true );
 				Edge ne = new Edge( edgeCounter, e.end(), e.start() );
 

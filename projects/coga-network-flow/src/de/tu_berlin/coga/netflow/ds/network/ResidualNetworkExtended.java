@@ -4,8 +4,10 @@
  */
 package de.tu_berlin.coga.netflow.ds.network;
 
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 
 /**
  *
@@ -25,13 +27,13 @@ public class ResidualNetworkExtended extends ResidualNetwork {
 	}
 
 	/**
-	 * Creates a new residual network, based on the specified network, the
-	 * zero flow and the specidied capacities.
-	 * @param network the base network for the residual network.
-	 * @param capacities the base capacities for the residual network.
+	 * Creates a new residual graph, based on the specified graph, the
+ zero flow and the specidied capacities.
+	 * @param graph the base graph for the residual graph.
+	 * @param capacities the base capacities for the residual graph.
 	 */
-	public ResidualNetworkExtended( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities ) {
-		super( network, capacities );
+	public ResidualNetworkExtended( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities ) {
+		super( graph, capacities );
 		this.upper = capacities;
 	}
 
@@ -40,20 +42,20 @@ public class ResidualNetworkExtended extends ResidualNetwork {
 	}
 
 	/**
-	 * Updates hidden edges in the residual network. Call this, if the network
-	 * has changed and another iteration of a flow algorithm should be called
+	 * Updates hidden edges in the residual graph. Call this, if the graph
+ has changed and another iteration of a flow algorithm should be called
 	 */
 	@Override
 	public void update() {
 		// Update residual capacities
-		if( !(network instanceof Network) )
+		if( !(graph instanceof DefaultDirectedGraph) )
 			return; // No hidden edges and no update!
-		Network n = (Network)network;
+		DefaultDirectedGraph n = (DefaultDirectedGraph)graph;
 		for( Edge edge : n.allEdges() ) {
 			Edge rev = allGetEdge( edge.end(), edge.start() );
 			if( rev == null )
 				throw new IllegalStateException( "Reverse edge is null! (Hidden?)" );
-			if( n.isHidden( edge ) ) { // if an edge in original network is hidden, hide both edges.
+			if( n.isHidden( edge ) ) { // if an edge in original graph is hidden, hide both edges.
 				setHidden( edge, true );
 				setHidden( rev, true);
 				//System.out.println( "Hidden edge found in update: " + edge );

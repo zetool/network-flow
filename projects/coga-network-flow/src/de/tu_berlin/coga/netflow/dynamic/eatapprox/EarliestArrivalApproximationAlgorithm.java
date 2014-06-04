@@ -10,8 +10,8 @@ import de.tu_berlin.coga.common.util.Formatter;
 import de.tu_berlin.coga.common.util.units.TimeUnits;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.NetworkInterface;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +37,7 @@ public class EarliestArrivalApproximationAlgorithm extends Algorithm<EarliestArr
 		return builder.build();
 	}
 
-	public void performTest( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon,  List<Node> sources, List<Node> sinks, IdentifiableIntegerMapping<Node> supplies ) {
+	public void performTest( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon,  List<Node> sources, List<Node> sinks, IdentifiableIntegerMapping<Node> supplies ) {
 		// Create Hiding residual graph
 		//1676
 
@@ -51,7 +51,7 @@ public class EarliestArrivalApproximationAlgorithm extends Algorithm<EarliestArr
 		long start;
 		long end;
 
-		HidingResidualGraph g = new HidingResidualGraph(network, capacities, transitTimes, timeHorizon, sources, sinks, supplies );
+		HidingResidualGraph g = new HidingResidualGraph(graph, capacities, transitTimes, timeHorizon, sources, sinks, supplies );
 		start = System.nanoTime();
 		g.build();
 		end = System.nanoTime();

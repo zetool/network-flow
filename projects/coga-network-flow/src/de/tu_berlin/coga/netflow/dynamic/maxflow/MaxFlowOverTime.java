@@ -31,7 +31,7 @@ import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
 import de.tu_berlin.coga.netflow.ds.flow.TimeReapeatedFlow;
 import de.tu_berlin.coga.netflow.ds.network.ExtendedNetwork;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
 import java.util.List;
 
@@ -43,7 +43,7 @@ import java.util.List;
  * @author Gordon Schlechter, Jan-Philipp Kappmeier
  */
 public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeReapeatedFlow> {
-	private Network network;
+	private DefaultDirectedGraph network;
 	private IdentifiableIntegerMapping<Edge> edgeCapacities;
 	private List<Node> sinks;
 	private List<Node> sources;
@@ -122,7 +122,7 @@ public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeR
 	protected TimeReapeatedFlow runAlgorithm( MaximumFlowOverTimeProblem problem ) {
 		sinks = problem.getSinks();
 		sources = problem.getSources();
-		network = (Network)problem.getNetwork(); // todo avoid cast here?
+		network = (DefaultDirectedGraph)problem.getNetwork(); // todo avoid cast here?
 		edgeCapacities = problem.getCapacities();
 		transitTimes = problem.getTransitTimes();
 		timeHorizon = problem.getTimeHorizon();

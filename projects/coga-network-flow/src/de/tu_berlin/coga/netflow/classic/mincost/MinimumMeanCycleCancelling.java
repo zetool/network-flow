@@ -14,15 +14,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/**
- * MinimumMeanCycleCancelling.java
- * 
- */
 package de.tu_berlin.coga.netflow.classic.mincost;
 
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 
 /**
@@ -46,15 +43,15 @@ public class MinimumMeanCycleCancelling extends CycleCancelling {
     /**
      * Determines a cycle of minimum mean cost in the given network and returns 
      * it if its total cost is negative.
-     * @param network the network.
+     * @param graph the network.
      * @param costs the cost function.
      * @return a cycle of minimum mean cost, if the minimum mean cost is 
      * negative. If the minimum mean cost of a cycle is non-negative or the 
      * given network is acyclic.
      */
     @Override
-    protected StaticPath findCycle(AbstractNetwork network, IdentifiableIntegerMapping<Edge> costs) {
-        StaticPath cycle = MinimumMeanCycleDetector.detect(network, costs);        
+    protected StaticPath findCycle( DirectedGraph graph, IdentifiableIntegerMapping<Edge> costs) {
+        StaticPath cycle = MinimumMeanCycleDetector.detect((DefaultDirectedGraph)graph, costs);        
         if (cycle == null) {
             return null;
         } else {

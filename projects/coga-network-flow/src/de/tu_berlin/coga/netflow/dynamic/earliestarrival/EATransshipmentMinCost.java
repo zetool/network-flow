@@ -18,11 +18,7 @@ package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
 import de.tu_berlin.coga.netflow.dynamic.transshipment.DynamicTransshipment;
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
 import de.tu_berlin.coga.netflow.dynamic.transshipment.TransshipmentFramework;
-import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
-import de.tu_berlin.coga.graph.Node;
 
 /**
  * The class {@code EATransshipment} solves two variants

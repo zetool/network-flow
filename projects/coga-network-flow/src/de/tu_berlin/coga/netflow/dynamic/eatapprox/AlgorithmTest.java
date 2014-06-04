@@ -6,23 +6,21 @@ import de.tu_berlin.math.coga.zet.DatFileReaderWriter;
 import de.tu_berlin.math.coga.zet.viewer.NodePositionMapping;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  *
- * @author kapman
+ * @author Jan-Philipp Kappmeier
  */
 public class AlgorithmTest {
 	public HidingResidualGraph g;
 
 	public static void MaxFlowTestInstance2Test() {
-		AbstractNetwork network = new Network( 6, 1 );
+		DefaultDirectedGraph network = new DefaultDirectedGraph( 6, 1 );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 1 ) );
 
 		IdentifiableIntegerMapping<Edge> capacities = new IdentifiableIntegerMapping<>( 4 );
@@ -55,7 +53,7 @@ public class AlgorithmTest {
 	}
 
 	public EarliestArrivalFlowProblem testInstance() {
-		AbstractNetwork network = new Network( 4, 5 );
+		DefaultDirectedGraph network = new DefaultDirectedGraph( 4, 5 );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 1 ) );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 2 ) );
 		network.createAndSetEdge( network.getNode( 1 ), network.getNode( 2 ) );

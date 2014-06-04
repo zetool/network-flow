@@ -9,11 +9,10 @@ import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabel;
 import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabelHighestLabel;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import java.util.ArrayList;
 
@@ -77,7 +76,7 @@ public class LimitedMaxFlowOverTime {
 	
 	public static void main( String[] args ) {
 		
-		AbstractNetwork n = new Network(4, 3);
+		DefaultDirectedGraph n = new DefaultDirectedGraph(4, 3);
 		
 		int timeHorizon = 3;
 		

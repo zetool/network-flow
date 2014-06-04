@@ -16,6 +16,7 @@
 
 package de.tu_berlin.coga.netflow.ds.network;
 
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.Edge;
 import ds.graph.GraphLocalization;
@@ -62,10 +63,10 @@ public class DynamicNetwork implements DirectedGraph {
 		setEdges( edges );
 	}
 
-	public DynamicNetwork( AbstractNetwork network ) {
+	public DynamicNetwork( DirectedGraph graph ) {
 		this();
-		setNodes( network.nodes() );
-		setEdges( network.edges() );
+		setNodes( graph.nodes() );
+		setEdges( graph.edges() );
 	}
 
 	public boolean directed() {
@@ -339,8 +340,8 @@ public class DynamicNetwork implements DirectedGraph {
 		throw new UnsupportedOperationException( GraphLocalization.loc.getString( "ds.graph.NotSupportedException" ) );
 	}
 
-	public AbstractNetwork getAsStaticNetwork() {
-		Network network = new Network( nodeCount(), edgeCount() );
+	public DirectedGraph getAsStaticNetwork() {
+		DefaultDirectedGraph network = new DefaultDirectedGraph( nodeCount(), edgeCount() );
 		network.setNodes( nodes );
 		network.setEdges( edges );
 		return network;

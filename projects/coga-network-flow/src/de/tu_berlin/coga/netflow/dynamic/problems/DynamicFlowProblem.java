@@ -6,8 +6,8 @@
 package de.tu_berlin.coga.netflow.dynamic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 
 /**
  *
@@ -16,12 +16,12 @@ import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 public class DynamicFlowProblem {
 
     protected IdentifiableIntegerMapping<Edge> edgeCapacities;
-    private AbstractNetwork network;
+    private DirectedGraph network;
     protected IdentifiableIntegerMapping<Edge> transitTimes;
 
-	public DynamicFlowProblem( IdentifiableIntegerMapping<Edge> edgeCapacities, AbstractNetwork network, IdentifiableIntegerMapping<Edge> transitTimes ) {
+	public DynamicFlowProblem( IdentifiableIntegerMapping<Edge> edgeCapacities, DirectedGraph graph, IdentifiableIntegerMapping<Edge> transitTimes ) {
 		this.edgeCapacities = edgeCapacities;
-		this.network = network;
+		this.network = graph;
 		this.transitTimes = transitTimes;
 	}
 		
@@ -34,7 +34,7 @@ public class DynamicFlowProblem {
 //        this.edgeCapacities = capacities;
 //    }
 
-    public AbstractNetwork getNetwork() {
+    public DirectedGraph getNetwork() {
         return network;
     }
 

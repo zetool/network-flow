@@ -13,10 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/*
- * ImplicitTimeExpandedResidualNetwork.java
- *
- */
+
 package de.tu_berlin.coga.netflow.ds.network;
 
 import de.tu_berlin.coga.graph.Edge;
@@ -24,7 +21,7 @@ import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import de.tu_berlin.coga.netflow.ds.structure.EarliestArrivalAugmentingPath;
 import de.tu_berlin.coga.netflow.ds.structure.EarliestArrivalAugmentingPath.NodeTimePair;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
 import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
@@ -36,7 +33,7 @@ import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
  * 
  * @author Martin Groß
  */
-public class ImplicitTimeExpandedResidualNetwork extends Network {
+public class ImplicitTimeExpandedResidualNetwork extends DefaultDirectedGraph {
     
     /**
      * Enumeration constants for the different types of edges in this network:

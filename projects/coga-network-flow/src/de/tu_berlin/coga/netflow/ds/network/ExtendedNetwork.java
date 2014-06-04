@@ -4,21 +4,22 @@
  */
 package de.tu_berlin.coga.netflow.ds.network;
 
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.Node;
 
 /**
- * A special {@code Network} extending an static network, i.e. a network that
+ * A special {@code DefaultDirectedGraph} extending an static network, i.e. a network that
  * cannot be changed, such that it can be modified by adding some sources and
  * edges.
  * @author Jan-Philipp Kappmeier
  */
-public class ExtendedNetwork extends Network {
+public class ExtendedNetwork extends DefaultDirectedGraph {
 	private int newNodes;
 	private int newEdges;
-	private int originalEdgeCount;
-	private int originalNodeCount;
+	private final int originalEdgeCount;
+	private final int originalNodeCount;
 	
-	public ExtendedNetwork( Network network, int newNodes, int newEdges ) {
+	public ExtendedNetwork( DefaultDirectedGraph network, int newNodes, int newEdges ) {
 		super( network );
 		originalNodeCount = network.getNodeCapacity();
 		network.setNodeCapacity( network.getNodeCapacity() + newNodes );

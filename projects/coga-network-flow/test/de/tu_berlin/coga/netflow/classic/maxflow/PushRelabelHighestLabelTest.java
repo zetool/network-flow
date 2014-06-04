@@ -5,10 +5,8 @@
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
-import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabelHighestLabel;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -21,7 +19,7 @@ public class PushRelabelHighestLabelTest extends TestCase {
 
 	@Test
 	public void testInstance() {
-		AbstractNetwork network = new Network( 4, 5 );
+		DefaultDirectedGraph network = new DefaultDirectedGraph( 4, 5 );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 1 ) );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 2 ) );
 		network.createAndSetEdge( network.getNode( 1 ), network.getNode( 2 ) );
