@@ -23,11 +23,12 @@ import de.tu_berlin.coga.netflow.classic.maxflow.PathDecomposition;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
 import algo.graph.Flags;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import ds.graph.GraphLocalization;
 
 /** 
@@ -36,7 +37,7 @@ import ds.graph.GraphLocalization;
  */
 public class TransshipmentBoundEstimator {
 
-	public static int calculateBoundByLongestPath(AbstractNetwork network,
+	public static int calculateBoundByLongestPath(DirectedGraph network,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies){
@@ -77,7 +78,7 @@ public class TransshipmentBoundEstimator {
 
 	}
 	
-	public static int calculateBoundByStaticMaxFlows(AbstractNetwork network,
+	public static int calculateBoundByStaticMaxFlows(DefaultDirectedGraph network,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies) {
@@ -189,7 +190,7 @@ public class TransshipmentBoundEstimator {
 		return maxLength + sumOfMaxSupplies + 1;
 	}
 	
-	public static int calculateBoundByStaticTransshipmentAndScaleFactorSearch(AbstractNetwork network,
+	public static int calculateBoundByStaticTransshipmentAndScaleFactorSearch(DefaultDirectedGraph network,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies) {
@@ -337,7 +338,7 @@ public class TransshipmentBoundEstimator {
 		throw new AssertionError("Binary search found no working testScaleFactor.");
 	}
 	
-	public static int calculateBoundByStaticTransshipment(AbstractNetwork network,
+	public static int calculateBoundByStaticTransshipment(DefaultDirectedGraph network,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies) {		
@@ -421,7 +422,7 @@ public class TransshipmentBoundEstimator {
 		return ((maxLength + maxSupply)* sources.size()+1);
 	}
 	
-	public static int calculateBound(AbstractNetwork network,
+	public static int calculateBound(DirectedGraph network,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies){

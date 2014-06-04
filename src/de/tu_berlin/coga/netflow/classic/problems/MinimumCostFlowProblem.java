@@ -22,7 +22,7 @@ package de.tu_berlin.coga.netflow.classic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Node;
 
 /**
@@ -30,13 +30,13 @@ import de.tu_berlin.coga.graph.Node;
  * @author Martin Groß
  */
 public class MinimumCostFlowProblem {
-	private AbstractNetwork network;
+	private DirectedGraph graph;
 	private IdentifiableIntegerMapping<Node> balances;
 	private IdentifiableIntegerMapping<Edge> capacities;
 	private IdentifiableIntegerMapping<Edge> costs;
 
-	public MinimumCostFlowProblem( AbstractNetwork network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs, IdentifiableIntegerMapping<Node> balances ) {
-		this.network = network;
+	public MinimumCostFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs, IdentifiableIntegerMapping<Node> balances ) {
+		this.graph = graph;
 		this.balances = balances;
 		this.capacities = capacities;
 		this.costs = costs;
@@ -66,16 +66,16 @@ public class MinimumCostFlowProblem {
 		this.costs = costs;
 	}
 
-	public AbstractNetwork getNetwork() {
-		return network;
+	public DirectedGraph getGraph() {
+		return graph;
 	}
 
-	public void setNetwork( AbstractNetwork network ) {
-		this.network = network;
+	public void getGraph( DirectedGraph graph ) {
+		this.graph = graph;
 	}
 
 	@Override
 	public String toString() {
-		return "MinimumCostFlowProblem{" + "network=" + network + ", balances=" + balances + ", capacities=" + capacities + ", costs=" + costs + '}';
+		return "MinimumCostFlowProblem{" + "graph=" + graph + ", balances=" + balances + ", capacities=" + capacities + ", costs=" + costs + '}';
 	}
 }

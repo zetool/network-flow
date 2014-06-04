@@ -22,9 +22,8 @@ package de.tu_berlin.coga.netflow.classic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.NetworkInterface;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,30 +32,30 @@ import java.util.List;
  * @author Martin Groß
  */
 public class MaximumFlowProblem {
-	private NetworkInterface network;
+	private DirectedGraph graph;
 	private IdentifiableIntegerMapping<Edge> capacities;
 	private List<Node> sources;
 	private List<Node> sinks;
 
-	public MaximumFlowProblem( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
-		this.network = network;
+	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
+		this.graph = graph;
 		this.capacities = capacities;
 		this.sources = sources;
 		this.sinks = sinks;
 	}
 
-	public MaximumFlowProblem( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, Node source, List<Node> sinks ) {
-		this( network, capacities, new LinkedList<Node>(), sinks );
+	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, List<Node> sinks ) {
+		this( graph, capacities, new LinkedList<>(), sinks );
 		sources.add( source );
 	}
 
-	public MaximumFlowProblem( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, Node sink ) {
-		this( network, capacities, sources, new LinkedList<Node>() );
+	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, Node sink ) {
+		this( graph, capacities, sources, new LinkedList<>() );
 		sinks.add( sink );
 	}
 
-	public MaximumFlowProblem( NetworkInterface network, IdentifiableIntegerMapping<Edge> capacities, Node source, Node sink ) {
-		this( network, capacities, new LinkedList<Node>(), new LinkedList<Node>() );
+	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, Node sink ) {
+		this( graph, capacities, new LinkedList<>(), new LinkedList<>() );
 		sources.add( source );
 		sinks.add( sink );
 	}
@@ -69,12 +68,12 @@ public class MaximumFlowProblem {
 		this.capacities = capacities;
 	}
 
-	public NetworkInterface getNetwork() {
-		return network;
+	public DirectedGraph getNetwork() {
+		return graph;
 	}
 
-	public void setNetwork( AbstractNetwork network ) {
-		this.network = network;
+	public void setGraph( DirectedGraph graph ) {
+		this.graph = graph;
 	}
 
 	public Node getSink() {

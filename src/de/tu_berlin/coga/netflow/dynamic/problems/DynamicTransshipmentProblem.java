@@ -6,8 +6,8 @@ package de.tu_berlin.coga.netflow.dynamic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 
 /**
  *
@@ -18,7 +18,7 @@ public class DynamicTransshipmentProblem extends DynamicFlowProblem {
 	protected IdentifiableIntegerMapping<Node> supplies;
 	private int timeHorizon;
 
-	public DynamicTransshipmentProblem( IdentifiableIntegerMapping<Edge> edgeCapacities, AbstractNetwork network, IdentifiableIntegerMapping<Node> nodeCapacities, int timeHorizon, IdentifiableIntegerMapping<Edge> transitTimes, IdentifiableIntegerMapping<Node> supplies ) {
+	public DynamicTransshipmentProblem( IdentifiableIntegerMapping<Edge> edgeCapacities, DirectedGraph network, IdentifiableIntegerMapping<Node> nodeCapacities, int timeHorizon, IdentifiableIntegerMapping<Edge> transitTimes, IdentifiableIntegerMapping<Node> supplies ) {
 		super( edgeCapacities, network, transitTimes );
 		this.nodeCapacities = nodeCapacities;
 		this.supplies = supplies;

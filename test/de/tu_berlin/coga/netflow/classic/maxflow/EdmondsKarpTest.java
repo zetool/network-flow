@@ -4,7 +4,7 @@ import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.netflow.classic.maxflow.EdmondsKarp;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class EdmondsKarpTest extends TestCase {
 
   @Test
   public void testHiddenEdges() {
-    Network n = new Network( 4, 5 );
+    DefaultDirectedGraph n = new DefaultDirectedGraph( 4, 5 );
 
     int c = 0;
     Node A = n.getNode( c++ );
@@ -63,7 +63,7 @@ public class EdmondsKarpTest extends TestCase {
 
   @Test
   public void testInstance() {
-    Network network = new Network( 4, 5 );
+    DefaultDirectedGraph network = new DefaultDirectedGraph( 4, 5 );
     network.createAndSetEdge( network.getNode( 0 ), network.getNode( 1 ) );
     network.createAndSetEdge( network.getNode( 0 ), network.getNode( 2 ) );
     network.createAndSetEdge( network.getNode( 1 ), network.getNode( 2 ) );

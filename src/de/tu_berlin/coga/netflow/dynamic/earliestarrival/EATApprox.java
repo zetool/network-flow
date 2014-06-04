@@ -9,10 +9,9 @@ import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabel;
 import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabelHighestLabel;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import java.util.ArrayList;
 
@@ -51,7 +50,7 @@ public class EATApprox {
 		int totalFlow = 0;
 
 		do {
-			AbstractNetwork n = new Network( problem.getNetwork().nodeCount() + 2, problem.getNetwork().edgeCount() + sinkCount + sourceCount );
+			DefaultDirectedGraph n = new DefaultDirectedGraph( problem.getNetwork().nodeCount() + 2, problem.getNetwork().edgeCount() + sinkCount + sourceCount );
 			IdentifiableIntegerMapping<Edge> capacities = new IdentifiableIntegerMapping<>( n.getEdgeCapacity() );
 
 			int superSource = problem.getNetwork().nodeCount();

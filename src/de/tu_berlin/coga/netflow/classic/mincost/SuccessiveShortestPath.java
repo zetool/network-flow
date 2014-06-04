@@ -21,11 +21,11 @@ import de.tu_berlin.coga.graph.structure.Path;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.traversal.BreadthFirstSearch;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
-import de.tu_berlin.coga.netflow.ds.network.Network;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>>*/ {
 
   private static final Logger LOGGER = Logger.getLogger( "fv.model.algorithm.SuccessiveShortestPath" );
-  private AbstractNetwork network;
+  private DirectedGraph graph;
   private IdentifiableIntegerMapping<Node> baseBalances;
   private IdentifiableIntegerMapping<Edge> capacities;
   private IdentifiableIntegerMapping<Edge> baseCosts;
@@ -49,15 +49,15 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
   private transient IdentifiableIntegerMapping<Edge> costs;
   private transient ResidualNetwork residualNetwork;
 
-  public SuccessiveShortestPath( AbstractNetwork network, IdentifiableIntegerMapping<Node> balances, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs ) {
-    this.network = network;
+  public SuccessiveShortestPath( DirectedGraph graph, IdentifiableIntegerMapping<Node> balances, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs ) {
+    this.graph = graph;
     this.baseBalances = balances;
     this.baseCosts = costs;
     this.capacities = capacities;
   }
 
-  public SuccessiveShortestPath( AbstractNetwork network, IdentifiableIntegerMapping<Node> balances, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs, boolean bounds ) {
-    this.network = network;
+  public SuccessiveShortestPath( DirectedGraph graph, IdentifiableIntegerMapping<Node> balances, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs, boolean bounds ) {
+    this.graph = graph;
     this.baseBalances = balances;
     this.baseCosts = costs;
     this.capacities = capacities;
@@ -88,7 +88,7 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
     return paths;
   }
 
-  private boolean existsPathBetween( AbstractNetwork network, Node start, Node end ) {
+  private boolean existsPathBetween( DirectedGraph network, Node start, Node end ) {
     BreadthFirstSearch bfs = new BreadthFirstSearch();
     bfs.setProblem( network );
     bfs.setStart( start );
@@ -99,14 +99,14 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
 
   public void run() {
     // Create the residual graph
-    residualNetwork = new ResidualNetwork( network, capacities );
+    residualNetwork = new ResidualNetwork( graph, capacities );
     // Create a copy of the balance map since we are going to modify it
     balances = new IdentifiableIntegerMapping<>( baseBalances );
     // Extend the costs to the residual graph
-    costs = new IdentifiableIntegerMapping<>( network.edges() );
+    costs = new IdentifiableIntegerMapping<>( graph.edges() );
     // Prepare the path lists
     paths = new LinkedList<>();
-    for( Edge edge : network.edges() ) {
+    for( Edge edge : graph.edges() ) {
       costs.set( edge, baseCosts.get( edge ) );
       costs.set( residualNetwork.reverseEdge( edge ), -baseCosts.get( edge ) );
       if( baseCosts.get( edge ) < 0 ) {
@@ -130,14 +130,14 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
       // Pick a feasible source-sink pair
       Node source = null;
       Node sink = null;
-      for( Node node : network.nodes() ) {
+      for( Node node : graph.nodes() ) {
         if( balance( node ) > 0 ) {
           source = node;
           break;
         }
       }
       if( source != null ) {
-        for( Node node : network.nodes() ) {
+        for( Node node : graph.nodes() ) {
           if( balance( node ) < 0 && existsPathBetween( residualNetwork, source, node ) ) {
             sink = node;
             break;
@@ -187,7 +187,7 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
   }
 
   public static void main( String[] args ) {
-    Network network = new Network( 4, 5 );
+    DefaultDirectedGraph network = new DefaultDirectedGraph( 4, 5 );
     Node source = network.getNode( 0 );
     Node a = network.getNode( 1 );
     Node b = network.getNode( 2 );

@@ -16,10 +16,6 @@
 package de.tu_berlin.coga.netflow.dynamic.transshipment;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
-import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
-import de.tu_berlin.coga.graph.Node;
 
 /**
  * The class {@code QuickestTransshipment} calculates the smallest

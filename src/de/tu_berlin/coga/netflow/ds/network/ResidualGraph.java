@@ -17,29 +17,29 @@ public class ResidualGraph extends StaticGraph {
 
 	private DirectedGraph graph;
 
-	private int maxnodeid; //maximal id of nodes in original graph
-	private int maxedgeid; //maximal id of edges in original graph
+	private int maxNodeId; //maximal id of nodes in original graph
+	private int maxEdgeId; //maximal id of edges in original graph
 
 	private IdentifiableDoubleMapping<Edge> flow;
 	private IdentifiableDoubleMapping<Edge> residualCapacities;
 	private IdentifiableDoubleMapping<Edge> residualTransitTimes;
 
-	public ResidualGraph( DirectedGraph gr, IdentifiableDoubleMapping<Edge> capacities, int mnodeid, int medgeid ) {
-		super( true, (mnodeid + 1), (medgeid + 1) * 2 );
-		maxnodeid = mnodeid;
-		maxedgeid = medgeid;
-		graph = gr;
+	public ResidualGraph( DirectedGraph graph, IdentifiableDoubleMapping<Edge> capacities, int maxNodeId, int maxEdgeId ) {
+		super( true, (maxNodeId + 1), (maxEdgeId + 1) * 2 );
+		this.maxNodeId = maxNodeId;
+		this.maxEdgeId = maxEdgeId;
+		this.graph = graph;
 
-		setNodes( gr.nodes() );
-		setEdges( gr.edges() );
+		setNodes( graph.nodes() );
+		setEdges( graph.edges() );
 
-		for( Edge edge : gr.edges() ) {
-			createEdge( edge.end(), edge.start(), edge.id() + (maxedgeid + 1) );
+		for( Edge edge : graph.edges() ) {
+			createEdge( edge.end(), edge.start(), edge.id() + (maxEdgeId + 1) );
 		}
 
-		flow = new IdentifiableDoubleMapping<>( gr.edgeCount() );
+		flow = new IdentifiableDoubleMapping<>( graph.edgeCount() );
 
-		residualCapacities = new IdentifiableDoubleMapping<>( gr.edgeCount() * 2 );
+		residualCapacities = new IdentifiableDoubleMapping<>( graph.edgeCount() * 2 );
 
 		for( Edge edge : edges ) {
 
@@ -95,16 +95,16 @@ public class ResidualGraph extends StaticGraph {
 	}
 
 	public Edge getReverseEdge( Edge edge ) {
-		if( edge.id() <= maxedgeid ) {       //changed by Sebastian: edge.id() < graph.edgeCount()
-			return edges.get( edge.id() + (maxedgeid + 1) );
+		if( edge.id() <= maxEdgeId ) {       //changed by Sebastian: edge.id() < graph.edgeCount()
+			return edges.get( edge.id() + (maxEdgeId + 1) );
 		} else {
-			return edges.get( edge.id() - (maxedgeid + 1) );
+			return edges.get( edge.id() - (maxEdgeId + 1) );
 		}
 	}
 
 	public boolean isReverseEdge( Edge edge ) {
 
-		return (edge.id() > maxedgeid); //changed by Sebastian: edge.id() >= graph.edgeCount();
+		return (edge.id() > maxEdgeId); //changed by Sebastian: edge.id() >= graph.edgeCount();
 	}
 
 	public static boolean eq( double x, double y ) {

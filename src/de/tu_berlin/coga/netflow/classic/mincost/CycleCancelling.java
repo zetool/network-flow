@@ -25,7 +25,8 @@ import de.tu_berlin.coga.common.algorithm.Algorithm;
 import de.tu_berlin.coga.netflow.classic.transshipment.StaticTransshipment;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.netflow.ds.flow.Flow;
@@ -47,7 +48,7 @@ public abstract class CycleCancelling extends Algorithm<MinimumCostFlowProblem, 
      */
     @Override
     protected Flow runAlgorithm(MinimumCostFlowProblem problem) {
-        StaticTransshipment algorithm = new StaticTransshipment(problem.getNetwork(), problem.getCapacities(), problem.getBalances());
+        StaticTransshipment algorithm = new StaticTransshipment((DefaultDirectedGraph)problem.getGraph(), problem.getCapacities(), problem.getBalances());
         algorithm.run();
         ResidualNetwork residualNetwork = algorithm.getResidualNetwork();
         if (residualNetwork == null) {
@@ -72,5 +73,5 @@ public abstract class CycleCancelling extends Algorithm<MinimumCostFlowProblem, 
      * @return a cycle of negative total cost or {@code null} if no such 
      * cycle exists.
      */
-    protected abstract StaticPath findCycle(AbstractNetwork network, IdentifiableIntegerMapping<Edge> costs);
+    protected abstract StaticPath findCycle(DirectedGraph graph, IdentifiableIntegerMapping<Edge> costs);
 }

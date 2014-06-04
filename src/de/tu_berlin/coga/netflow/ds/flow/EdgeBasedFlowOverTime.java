@@ -20,7 +20,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
 import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
+import de.tu_berlin.coga.graph.DirectedGraph;
 
 /**
  * The {@code EdgeBasedFlowOverTime} class represents an edge based representation
@@ -42,11 +42,11 @@ public class EdgeBasedFlowOverTime {
      * where the flow on all edges is zero all the time.
      * The flow functions can later be set by
      * {@code set(Edge edge, TimeIntegerMapping flowFunction)}.
-     * @param network the network for which the empty flow shall be created.
+     * @param graph the network for which the empty flow shall be created.
      */
-    public EdgeBasedFlowOverTime(AbstractNetwork network) {
-        map = new IdentifiableObjectMapping<>(network.getEdgeCapacity());
-        IdentifiableCollection<Edge> edges = network.edges();
+    public EdgeBasedFlowOverTime(DirectedGraph graph) {
+        map = new IdentifiableObjectMapping<>(graph.edgeCount());
+        IdentifiableCollection<Edge> edges = graph.edges();
         for (Edge edge : edges){
             map.set(edge, new TimeIntegerMapping());
         }

@@ -14,16 +14,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/*
- * StaticTransshipment.java
- *
- */
 package de.tu_berlin.coga.netflow.classic.transshipment;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
+import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import java.util.LinkedList;
@@ -40,7 +36,7 @@ public class StaticTransshipment implements Runnable {
 
     private IdentifiableIntegerMapping<Node> balances;
     private IdentifiableIntegerMapping<Edge> capacities;
-    private AbstractNetwork network;
+    private DefaultDirectedGraph network;
     private IdentifiableIntegerMapping<Edge> flow;
     private ResidualNetwork residualNetwork;
     private boolean feasible;
@@ -55,7 +51,7 @@ public class StaticTransshipment implements Runnable {
         this.algorithm = algorithm;
     }    
 
-    public StaticTransshipment(AbstractNetwork network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Node> balances) {
+    public StaticTransshipment(DefaultDirectedGraph network, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Node> balances) {
         this.balances = balances;
         this.capacities = capacities;
         this.network = network;
@@ -85,6 +81,8 @@ public class StaticTransshipment implements Runnable {
                 sources.add(node);
             }
         }
+        
+        // TODO: extended network!
         network.setNodeCapacity(network.getNodeCapacity() + 2);
         Node supersource = network.getNode(network.getNodeCapacity() - 2);
         Node supersink = network.getNode(network.getNodeCapacity() - 1);

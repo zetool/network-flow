@@ -19,9 +19,9 @@ package de.tu_berlin.coga.netflow.util;
 import algo.graph.Flags;
 import de.tu_berlin.coga.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.AbstractNetwork;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.traversal.DepthFirstSearch;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -38,7 +38,7 @@ public class GraphInstanceChecker {
   private ListSequence<Node> sources, sinks;
   private LinkedList<Node> newSources;
   private LinkedList<Node> deletedSources;
-  private AbstractNetwork network;
+  private DirectedGraph network;
   private IdentifiableIntegerMapping<Node> supplies;
   private IdentifiableIntegerMapping<Node> newSupplies;
   boolean hasRun = false;
@@ -48,7 +48,7 @@ public class GraphInstanceChecker {
    * @param network the network to be checked.
    * @param supplies the supplies of the network.
    */
-  public GraphInstanceChecker( AbstractNetwork network,
+  public GraphInstanceChecker( DirectedGraph network,
           IdentifiableIntegerMapping<Node> supplies ) {
     this.network = network;
     this.supplies = supplies;
@@ -199,7 +199,7 @@ public class GraphInstanceChecker {
    * @param supplies the supply mapping to be checked.
    * @return {@code true} if no demands and supplies are given, {@code false} otherwise
    */
-  public static boolean emptySupplies( AbstractNetwork network, IdentifiableIntegerMapping<Node> supplies ) {
+  public static boolean emptySupplies( DirectedGraph network, IdentifiableIntegerMapping<Node> supplies ) {
     int sup = 0, dem = 0;
     for( Node node : network.nodes() ) {
       if( supplies.get( node ) > 0 ) {
