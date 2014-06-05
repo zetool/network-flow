@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  *
  * @author Martin Groß
  */
-public class FlowOverTimeImplicit extends FlowOverTimeInterface {
+public class FlowOverTimeImplicit implements FlowOverTimeInterface {
 	/** The logger of the main class. */
 	private static final Logger log = Logger.getGlobal();
 	private EdgeBasedFlowOverTime edgeBased;
@@ -56,7 +56,7 @@ public class FlowOverTimeImplicit extends FlowOverTimeInterface {
 			sum += p.getRate();
 		}
 		log.fine( Integer.toString( sum ) );
-		
+
 		//pathBased = new PathBasedFlowOverTime();
 		//LinkedList<FlowOverTimeEdgeSequence> paths = new LinkedList<FlowOverTimeEdgeSequence>();
 		//int index = 0;

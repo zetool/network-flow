@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
+package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
 import de.tu_berlin.coga.netflow.dynamic.transshipment.TransshipmentWithTimeHorizon;

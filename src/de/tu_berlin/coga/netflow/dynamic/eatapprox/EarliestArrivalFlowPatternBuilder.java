@@ -22,14 +22,14 @@ public class EarliestArrivalFlowPatternBuilder {
 		EarliestArrivalFlowPatternBuilder builder = new EarliestArrivalFlowPatternBuilder( neededTimeHorizon + 2 );
 
 		for( FlowOverTimePath p : df ) {
-			System.out.println( "Arriving at " + p.getArrival( transitTimes ) + ": " + p.getAmount() );
+			//System.out.println( "Arriving at " + p.getArrival( transitTimes ) + ": " + p.getAmount() );
 			builder.addFlowValue( p.getArrival( transitTimes ), p.getAmount() );
 			//builder.addFlowValue( builder.getArrival( p, transitTimes ), p.getAmount() );
 		}
 
 		return builder.build();
 	}
-	
+
 	private int getArrival( FlowOverTimePath p, IdentifiableIntegerMapping<Edge> transitTimes ) {
 		int arrival = 0;
 		for( Edge e : p.edges() ) {
@@ -38,7 +38,7 @@ public class EarliestArrivalFlowPatternBuilder {
 		}
 		return arrival;
 	}
-	
+
 	public EarliestArrivalFlowPatternBuilder() {
 		flowPattern = new ArrayList<>();
 	}

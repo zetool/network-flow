@@ -2,7 +2,7 @@
  * LimitedMaxFlowOverTime.java
  * Created: 02.12.2011, 14:36:51
  */
-package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
+package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
 import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabel;

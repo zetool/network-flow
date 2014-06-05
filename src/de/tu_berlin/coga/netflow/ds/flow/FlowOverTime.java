@@ -11,7 +11,7 @@ import de.tu_berlin.coga.netflow.classic.PathComposition;
  *
  * @author Jan-Philipp Kappmeier
  */
-public class FlowOverTime extends FlowOverTimeInterface {
+public class FlowOverTime implements FlowOverTimeInterface {
 	/** Flow based result flow. */
 	protected PathBasedFlowOverTime resultFlowPathBased = null;
 	/** Edge based result flow. */

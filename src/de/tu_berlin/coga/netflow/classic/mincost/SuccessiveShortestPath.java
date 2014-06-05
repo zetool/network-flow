@@ -26,6 +26,7 @@ import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
+import de.tu_berlin.math.coga.algorithm.shortestpath.Dijkstra;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -156,8 +157,14 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
       }
       // Find a cost minimal source-sink-path
       MooreBellmanFord mbf = new MooreBellmanFord( residualNetwork, costs, source );
-      mbf.run();
-      Path shortestPath = mbf.getShortestPath( sink );
+      //mbf.run();
+      //Path shortestPath = mbf.getShortestPath( sink );
+
+      Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source );
+      dijkstra.run();
+      Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
+
+
       paths.add( shortestPath );
       LOGGER.finest( "Der kürzeste Pfad ist " + shortestPath );
       // Augment flow along this shortest path
