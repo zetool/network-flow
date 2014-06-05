@@ -13,10 +13,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/*
- * SuccessiveEarliestArrivalAugmentingPathAlgorithm.java
- *
- */
 package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
@@ -33,38 +29,39 @@ import de.tu_berlin.coga.common.algorithm.Algorithm;
  */
 public class SuccessiveEarliestArrivalAugmentingPathAlgorithm extends Algorithm<EarliestArrivalFlowProblem, FlowOverTimeImplicit> {
 
-    @Override
-    protected FlowOverTimeImplicit runAlgorithm(EarliestArrivalFlowProblem problem) {
-        ImplicitTimeExpandedResidualNetwork implicitResidualNetwork = new ImplicitTimeExpandedResidualNetwork(problem);
-				System.out.println( "Time horizon: " + problem.getTimeHorizon() );
-        EarliestArrivalAugmentingPathProblem pathProblem = new EarliestArrivalAugmentingPathProblem(implicitResidualNetwork, implicitResidualNetwork.superSource(), problem.getSink(), problem.getTimeHorizon());
-        EarliestArrivalAugmentingPathAlgorithm pathAlgorithm = new EarliestArrivalAugmentingPathAlgorithm();
-        pathAlgorithm.setProblem(pathProblem);
-        pathAlgorithm.run();
-        EarliestArrivalAugmentingPath path = pathAlgorithm.getSolution();
-        int flowUnitsSent = 0;
-        int flowUnitsTotal = 0;
-        for (Node source : problem.getSources()) {
-            flowUnitsTotal += problem.getSupplies().get(source);
-        }
-        LinkedList<EarliestArrivalAugmentingPath> paths = new LinkedList<>();
-        while (!path.isEmpty() && path.getCapacity() > 0) {
-            flowUnitsSent += path.getCapacity();
-						System.out.println( flowUnitsSent );
-            fireProgressEvent(flowUnitsSent * 1.0 / flowUnitsTotal, String.format("%1$s von %2$s Personen evakuiert.", flowUnitsSent, flowUnitsTotal));
-            paths.add(path);
-            implicitResidualNetwork.augmentPath(path);
-            pathAlgorithm = new EarliestArrivalAugmentingPathAlgorithm();
-            pathAlgorithm.setProblem(pathProblem);
-            pathAlgorithm.run();
-            path = pathAlgorithm.getSolution();
-        }
-				
-				FlowOverTimeImplicit flow = new FlowOverTimeImplicit(implicitResidualNetwork, paths);
-
-				if( flow.getFlowAmount() != problem.getTotalSupplies() )
-					System.out.println( flow.getFlowAmount() + " vs. " + problem.getTotalSupplies() );
-				
-				return flow;
+  @Override
+  protected FlowOverTimeImplicit runAlgorithm( EarliestArrivalFlowProblem problem ) {
+    ImplicitTimeExpandedResidualNetwork implicitResidualNetwork = new ImplicitTimeExpandedResidualNetwork( problem );
+    System.out.println( "Time horizon: " + problem.getTimeHorizon() );
+    EarliestArrivalAugmentingPathProblem pathProblem = new EarliestArrivalAugmentingPathProblem( implicitResidualNetwork, implicitResidualNetwork.superSource(), problem.getSink(), problem.getTimeHorizon() );
+    EarliestArrivalAugmentingPathAlgorithm pathAlgorithm = new EarliestArrivalAugmentingPathAlgorithm();
+    pathAlgorithm.setProblem( pathProblem );
+    pathAlgorithm.run();
+    EarliestArrivalAugmentingPath path = pathAlgorithm.getSolution();
+    int flowUnitsSent = 0;
+    int flowUnitsTotal = 0;
+    for( Node source : problem.getSources() ) {
+      flowUnitsTotal += problem.getSupplies().get( source );
     }
+    LinkedList<EarliestArrivalAugmentingPath> paths = new LinkedList<>();
+    while( !path.isEmpty() && path.getCapacity() > 0 ) {
+      flowUnitsSent += path.getCapacity();
+      System.out.println( flowUnitsSent );
+      fireProgressEvent( flowUnitsSent * 1.0 / flowUnitsTotal, String.format( "%1$s von %2$s Personen evakuiert.", flowUnitsSent, flowUnitsTotal ) );
+      paths.add( path );
+      implicitResidualNetwork.augmentPath( path );
+      pathAlgorithm = new EarliestArrivalAugmentingPathAlgorithm();
+      pathAlgorithm.setProblem( pathProblem );
+      pathAlgorithm.run();
+      path = pathAlgorithm.getSolution();
+    }
+
+    FlowOverTimeImplicit flow = new FlowOverTimeImplicit( implicitResidualNetwork, paths );
+
+    if( flow.getFlowAmount() != problem.getTotalSupplies() ) {
+      System.out.println( flow.getFlowAmount() + " vs. " + problem.getTotalSupplies() );
+    }
+
+    return flow;
+  }
 }

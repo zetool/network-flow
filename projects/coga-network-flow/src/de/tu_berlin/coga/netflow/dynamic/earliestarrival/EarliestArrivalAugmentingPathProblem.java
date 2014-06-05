@@ -13,10 +13,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/*
- * EarliestArrivalAugmentingPathProblem.java
- *
- */
 
 package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
 
@@ -28,7 +24,7 @@ import de.tu_berlin.coga.graph.Node;
  * @author Martin Groß
  */
 public class EarliestArrivalAugmentingPathProblem {
-    
+
     private ImplicitTimeExpandedResidualNetwork network;
     private Node source;
     private Node sink;
@@ -71,5 +67,5 @@ public class EarliestArrivalAugmentingPathProblem {
 
     public void setTimeHorizon(int timeHorizon) {
         this.timeHorizon = timeHorizon;
-    }    
+    }
 }

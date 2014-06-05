@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
+package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
 import de.tu_berlin.coga.common.algorithm.Algorithm;
@@ -26,17 +26,17 @@ import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
 
 public class EATransshipmentWithTHMinCost extends TransshipmentWithTimeHorizon<DynamicTransshipmentProblem> {
 
-    public EATransshipmentWithTHMinCost() {
-        //super(network, transitTimes, edgeCapacities, nodeCapacities, supplies, timeHorizon, "Earliest Arrival Transshipment TH MinCost");
-			super.setName( "Earliest Arrival Transshipment TH MinCost" );
-    }
+  public EATransshipmentWithTHMinCost() {
+    //super(network, transitTimes, edgeCapacities, nodeCapacities, supplies, timeHorizon, "Earliest Arrival Transshipment TH MinCost");
+    super.setName( "Earliest Arrival Transshipment TH MinCost" );
+  }
 
-    @Override
-    protected IdentifiableIntegerMapping<Edge> transshipmentWithTimeHorizon(TimeExpandedNetwork tnetwork) {
-        MinimumCostFlowProblem problem = new MinimumCostFlowProblem(tnetwork, tnetwork.capacities(), tnetwork.costs(), tnetwork.supplies());
-        Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> algorithm = new MinimumMeanCycleCancelling();
-        algorithm.setProblem(problem);
-        algorithm.run();
-        return algorithm.getSolution();
-    }
+  @Override
+  protected IdentifiableIntegerMapping<Edge> transshipmentWithTimeHorizon( TimeExpandedNetwork tnetwork ) {
+    MinimumCostFlowProblem problem = new MinimumCostFlowProblem( tnetwork, tnetwork.capacities(), tnetwork.costs(), tnetwork.supplies() );
+    Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> algorithm = new MinimumMeanCycleCancelling();
+    algorithm.setProblem( problem );
+    algorithm.run();
+    return algorithm.getSolution();
+  }
 }

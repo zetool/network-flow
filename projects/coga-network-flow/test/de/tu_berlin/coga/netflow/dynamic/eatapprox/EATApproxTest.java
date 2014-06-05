@@ -1,7 +1,7 @@
 package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 
-import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EATApprox;
-import de.tu_berlin.coga.netflow.dynamic.earliestarrival.LimitedMaxFlowOverTime;
+import de.tu_berlin.coga.netflow.dynamic.earliestarrival.old.EATApprox;
+import de.tu_berlin.coga.netflow.dynamic.earliestarrival.old.LimitedMaxFlowOverTime;
 import de.tu_berlin.coga.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
 import de.tu_berlin.math.coga.graph.generator.RMFGEN;
 import de.tu_berlin.math.coga.rndutils.distribution.discrete.UniformDistribution;

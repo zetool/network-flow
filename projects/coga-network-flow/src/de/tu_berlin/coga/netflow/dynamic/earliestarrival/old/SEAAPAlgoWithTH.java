@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
+package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import de.tu_berlin.coga.netflow.ds.structure.EarliestArrivalAugmentingPath;
@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import de.tu_berlin.coga.common.algorithm.Algorithm;
 import de.tu_berlin.coga.common.algorithm.AlgorithmStatusEvent;
+import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathAlgorithm;
+import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathProblem;
 /**
  *
  * @author schwengf
