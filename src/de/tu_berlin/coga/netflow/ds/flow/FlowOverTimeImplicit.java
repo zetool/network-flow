@@ -24,7 +24,7 @@ import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlowOverTime;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTimeInterface;
 import de.tu_berlin.coga.netflow.dynamic.FlowOverTimePathDecomposition;
 import de.tu_berlin.coga.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
-import de.tu_berlin.coga.netflow.ds.structure.EarliestArrivalAugmentingPath;
+import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPath;
 import de.tu_berlin.coga.netflow.ds.structure.FlowOverTimePath;
 import java.util.Queue;
 import java.util.logging.Logger;
