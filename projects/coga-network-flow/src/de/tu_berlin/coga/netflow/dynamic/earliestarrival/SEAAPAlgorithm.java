@@ -22,7 +22,6 @@ import de.tu_berlin.coga.common.algorithm.Algorithm;
 import de.tu_berlin.coga.common.algorithm.AlgorithmStatusEvent;
 import de.tu_berlin.coga.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.structure.EarliestArrivalAugmentingPath;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTimeImplicit;
 import java.util.Arrays;
 import java.util.LinkedList;

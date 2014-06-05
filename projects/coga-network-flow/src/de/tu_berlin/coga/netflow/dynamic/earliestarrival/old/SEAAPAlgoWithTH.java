@@ -5,7 +5,7 @@
 package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
-import de.tu_berlin.coga.netflow.ds.structure.EarliestArrivalAugmentingPath;
+import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPath;
 import de.tu_berlin.math.coga.algorithm.shortestpath.Dijkstra;
 import de.tu_berlin.coga.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import de.tu_berlin.coga.graph.Node;
