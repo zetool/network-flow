@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import de.tu_berlin.coga.graph.Edge;
 import java.util.HashMap;
-import de.tu_berlin.coga.netflow.ds.network.ResidualGraph;
+import de.tu_berlin.coga.netflow.ds.network.rational.RationalResidualGraph;
 import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
 
 /**
@@ -18,7 +18,7 @@ import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
  */
 public class MAordering {
 
-	private ResidualGraph graph;
+	private RationalResidualGraph graph;
 	private IdentifiableDoubleMapping<Edge> capacities;
 	private Node source, sink;
 	private IdentifiableDoubleMapping<Node> demands;
@@ -27,7 +27,7 @@ public class MAordering {
 	private List<Node> VminusW;
 	private int iterations;
 
-	public MAordering( ResidualGraph resGraph, Node s, Node t, IdentifiableDoubleMapping<Edge> cap ) {
+	public MAordering( RationalResidualGraph resGraph, Node s, Node t, IdentifiableDoubleMapping<Edge> cap ) {
 		graph = resGraph;
 		capacities = cap;
 		source = s;

@@ -13,7 +13,7 @@ import de.tu_berlin.coga.graph.DirectedGraph;
  *
  * @author Jan-Philipp Kappmeier
  */
-public class ResidualNetworkExtended extends ResidualNetwork {
+public class OldResidualNetworkExtended extends OldResidualNetwork {
 	IdentifiableIntegerMapping<Edge> upper;
 	IdentifiableIntegerMapping<Edge> lower;
 
@@ -22,7 +22,7 @@ public class ResidualNetworkExtended extends ResidualNetwork {
 	 * @param initialNodeCapacity
 	 * @param initialEdgeCapacity
 	 */
-	protected ResidualNetworkExtended( int initialNodeCapacity, int initialEdgeCapacity ) {
+	protected OldResidualNetworkExtended( int initialNodeCapacity, int initialEdgeCapacity ) {
 		super( initialNodeCapacity, initialEdgeCapacity );
 	}
 
@@ -32,7 +32,7 @@ public class ResidualNetworkExtended extends ResidualNetwork {
 	 * @param graph the base graph for the residual graph.
 	 * @param capacities the base capacities for the residual graph.
 	 */
-	public ResidualNetworkExtended( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities ) {
+	public OldResidualNetworkExtended( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities ) {
 		super( graph, capacities );
 		this.upper = capacities;
 	}

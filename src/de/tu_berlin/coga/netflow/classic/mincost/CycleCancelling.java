@@ -27,7 +27,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
-import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
+import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.netflow.ds.flow.Flow;
 
@@ -50,7 +50,7 @@ public abstract class CycleCancelling extends Algorithm<MinimumCostFlowProblem, 
     protected Flow runAlgorithm(MinimumCostFlowProblem problem) {
         StaticTransshipment algorithm = new StaticTransshipment((DefaultDirectedGraph)problem.getGraph(), problem.getCapacities(), problem.getBalances());
         algorithm.run();
-        ResidualNetwork residualNetwork = algorithm.getResidualNetwork();
+        OldResidualNetwork residualNetwork = algorithm.getResidualNetwork();
         if (residualNetwork == null) {
             fireEvent("The instance has no feasible solution.");
             return null;

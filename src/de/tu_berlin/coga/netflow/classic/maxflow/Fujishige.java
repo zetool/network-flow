@@ -20,7 +20,7 @@ import de.tu_berlin.coga.netflow.classic.problems.RationalMaxFlowProblem;
 import de.tu_berlin.coga.common.algorithm.Algorithm;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.ResidualGraph;
+import de.tu_berlin.coga.netflow.ds.network.rational.RationalResidualGraph;
 import de.tu_berlin.coga.netflow.ds.flow.RationalMaxFlow;
 import de.tu_berlin.coga.netflow.ds.network.DynamicNetwork;
 import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
@@ -35,7 +35,7 @@ public class Fujishige extends Algorithm<RationalMaxFlowProblem, RationalMaxFlow
 
 	private final static double EPSILON = 0.00001;
 
-	private ResidualGraph resGraph;
+	private RationalResidualGraph resGraph;
 
 	private double maxflowvalue;
 
@@ -51,7 +51,7 @@ public class Fujishige extends Algorithm<RationalMaxFlowProblem, RationalMaxFlow
 				medgeid = e.id();
 			}
 		}
-		resGraph = new ResidualGraph( getProblem().getNetwork(), getProblem().getCapacities(), mnodeid, medgeid );
+		resGraph = new RationalResidualGraph( getProblem().getNetwork(), getProblem().getCapacities(), mnodeid, medgeid );
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class Fujishige extends Algorithm<RationalMaxFlowProblem, RationalMaxFlow
 		return new RationalMaxFlow( getProblem(), getFlow() );
 	}
 
-	public ResidualGraph getResidualGraph() {
+	public RationalResidualGraph getResidualGraph() {
 		return resGraph;
 	}
 

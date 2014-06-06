@@ -22,7 +22,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.traversal.BreadthFirstSearch;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
+import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
@@ -48,7 +48,7 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
   private boolean bounds;
   private transient IdentifiableIntegerMapping<Node> balances;
   private transient IdentifiableIntegerMapping<Edge> costs;
-  private transient ResidualNetwork residualNetwork;
+  private transient OldResidualNetwork residualNetwork;
 
   public SuccessiveShortestPath( DirectedGraph graph, IdentifiableIntegerMapping<Node> balances, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> costs ) {
     this.graph = graph;
@@ -100,7 +100,7 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
 
   public void run() {
     // Create the residual graph
-    residualNetwork = new ResidualNetwork( graph, capacities );
+    residualNetwork = new OldResidualNetwork( graph, capacities );
     // Create a copy of the balance map since we are going to modify it
     balances = new IdentifiableIntegerMapping<>( baseBalances );
     // Extend the costs to the residual graph

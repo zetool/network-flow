@@ -9,7 +9,7 @@ import de.tu_berlin.coga.common.algorithm.Algorithm;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
+import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 
 /**
@@ -159,7 +159,7 @@ public abstract class PushRelabel extends Algorithm<MaximumFlowProblem, MaximumF
 	}
 
 	// TODO
-	public ResidualNetwork getResidualNetwork() {
+	public OldResidualNetwork getResidualNetwork() {
 		throw new UnsupportedOperationException( "Not supported yet." );
 	}
 
