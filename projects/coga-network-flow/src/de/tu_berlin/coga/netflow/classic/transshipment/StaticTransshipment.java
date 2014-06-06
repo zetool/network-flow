@@ -21,7 +21,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
+import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class StaticTransshipment implements Runnable {
     private IdentifiableIntegerMapping<Edge> capacities;
     private DefaultDirectedGraph network;
     private IdentifiableIntegerMapping<Edge> flow;
-    private ResidualNetwork residualNetwork;
+    private OldResidualNetwork residualNetwork;
     private boolean feasible;
     private int valueOfFlow;
     private PushRelabel algorithm;
@@ -103,7 +103,7 @@ public class StaticTransshipment implements Runnable {
         valueOfFlow = algorithm.getSolution().getFlowValue();
         
         //residualNetwork = algorithm.getResidualNetwork();
-        residualNetwork = new ResidualNetwork(network, capacities);
+        residualNetwork = new OldResidualNetwork(network, capacities);
         for (Edge edge : network.edges()) {
             residualNetwork.augmentFlow(edge, flow.get(edge));
         }        
@@ -113,7 +113,7 @@ public class StaticTransshipment implements Runnable {
         network.setEdgeCapacity(network.getEdgeCapacity() - sources.size() - sinks.size());
         capacities.setDomainSize(network.getEdgeCapacity());
         flow.setDomainSize(network.getEdgeCapacity());
-        residualNetwork = new ResidualNetwork(network, capacities);
+        residualNetwork = new OldResidualNetwork(network, capacities);
         for (Edge edge : network.edges()) {
             residualNetwork.augmentFlow(edge, flow.get(edge));
         }
@@ -138,7 +138,7 @@ public class StaticTransshipment implements Runnable {
         return valueOfFlow;
     }
 
-    public ResidualNetwork getResidualNetwork() {
+    public OldResidualNetwork getResidualNetwork() {
 			return feasible ? residualNetwork : null;
     }
 }

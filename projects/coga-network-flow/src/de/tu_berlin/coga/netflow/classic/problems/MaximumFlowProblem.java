@@ -14,16 +14,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/*
- * MaximumFlowProblem.java
- *
- */
 package de.tu_berlin.coga.netflow.classic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Node;
+import de.tu_berlin.coga.netflow.ds.network.Network;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,20 +57,25 @@ public class MaximumFlowProblem {
 		sinks.add( sink );
 	}
 
+  public MaximumFlowProblem( Network network ) {
+    if( network.sinkCount() == 0 || network.sourceCount() == 0 ) {
+      throw new IllegalArgumentException( "At least one sink and source must be specified." );
+    }
+    if( network.sinkCount() > 1 || network.sourceCount() > 1 ) {
+      throw new UnsupportedOperationException( "Not implemented yet!" );
+    }
+		this.graph = network.getGraph();
+		this.capacities = network.getCapacities();
+		this.sources = new LinkedList<>( network.sources() );
+		this.sinks = new LinkedList<>( network.sinks() );
+  }
+
 	public IdentifiableIntegerMapping<Edge> getCapacities() {
 		return capacities;
 	}
 
-	public void setCapacities( IdentifiableIntegerMapping<Edge> capacities ) {
-		this.capacities = capacities;
-	}
-
 	public DirectedGraph getNetwork() {
 		return graph;
-	}
-
-	public void setGraph( DirectedGraph graph ) {
-		this.graph = graph;
 	}
 
 	public Node getSink() {
@@ -82,17 +84,8 @@ public class MaximumFlowProblem {
 		throw new IllegalStateException( "There are multiple sinks." );
 	}
 
-	public void setSink( Node sink ) {
-		sinks.clear();
-		sinks.add( sink );
-	}
-
 	public List<Node> getSinks() {
 		return sinks;
-	}
-
-	public void setSinks( List<Node> sinks ) {
-		this.sinks = sinks;
 	}
 
 	public Node getSource() {
@@ -101,16 +94,7 @@ public class MaximumFlowProblem {
 		throw new IllegalStateException( "There are multiple sources." );
 	}
 
-	public void setSource( Node source ) {
-		sources.clear();
-		sources.add( source );
-	}
-
 	public List<Node> getSources() {
 		return sources;
-	}
-
-	public void setSources( List<Node> sources ) {
-		this.sources = sources;
 	}
 }
