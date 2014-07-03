@@ -14,10 +14,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/*
- * MaximumFlowOverTimeProblem.java
- *
- */
 package de.tu_berlin.coga.netflow.dynamic.problems;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
@@ -75,4 +71,11 @@ public class MaximumFlowOverTimeProblem extends MaximumFlowProblem {
     public void setTransitTimes(IdentifiableIntegerMapping<Edge> transitTimes) {
         this.transitTimes = transitTimes;
     }
+
+  @Override
+  public DirectedGraph getNetwork() {
+    return (DirectedGraph)super.getNetwork();
+  }
+    
+    
 }

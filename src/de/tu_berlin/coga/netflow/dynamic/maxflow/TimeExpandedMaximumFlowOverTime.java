@@ -14,10 +14,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/*
- * TimeExpandedMaximumFlowOverTime.java
- *
- */
 package de.tu_berlin.coga.netflow.dynamic.maxflow;
 
 import de.tu_berlin.coga.netflow.ds.structure.DynamicPath;

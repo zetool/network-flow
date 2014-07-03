@@ -16,8 +16,10 @@
 
 package de.tu_berlin.coga.netflow.ds.network;
 
+import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Graph;
+import de.tu_berlin.coga.graph.structure.Path;
 
 /**
  *
@@ -39,4 +41,36 @@ public interface ResidualGraph extends Graph {
    * @return {@code true} if the specified edge is a reverse edge, {@code false} otherwise.
    */
   public boolean isReverseEdge( Edge edge );
+
+  /**
+   * Augments flow. Increased on original edges, decreased on reverse edges.
+   * @param edge the edge
+   * @param amount the amount
+   */
+  void augmentFlow( Edge edge, int amount );
+  
+  /**
+   * Augments flow on a path, e.g. augments the flow by the given amount on
+   * each edge in the path.
+   * @param path the path
+   * @param amount the amount
+   */
+  default void augmentFlow( Path path, int amount ) {
+    for( Edge e : path ) {
+      augmentFlow( e, amount );
+    }
+  }
+
+  /**
+   * The residual capacity of an edge.
+   * @param edge the edge
+   * @return the residual capacity of the edge
+   */
+  int residualCapacity( Edge edge );
+
+  /**
+   * Returns the flow associated with this residual graph. Runtime O(1).
+   * @return the flow associated with this residual graph.
+   */
+  public IdentifiableIntegerMapping<Edge> flow();
 }

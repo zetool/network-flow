@@ -2,6 +2,7 @@ package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.common.algorithm.Algorithm;
+import de.tu_berlin.coga.common.util.Helper;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.graph.structure.StaticPath;
@@ -9,7 +10,10 @@ import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.traversal.BreadthFirstSearch;
-import de.tu_berlin.coga.netflow.ds.network.DefaultResidualNetwork;
+import de.tu_berlin.coga.graph.util.GraphUtil;
+import de.tu_berlin.coga.graph.util.UnifiedGraphAccess;
+import de.tu_berlin.coga.netflow.ds.network.DirectedResidualNetwork;
+import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +25,7 @@ import java.util.Stack;
  * @author Jan-Philipp Kappmeier
  */
 public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
-  //protected ResidualNetwork residualNetwork;
-  protected DefaultResidualNetwork residualNetwork;
+  protected ResidualNetwork residualNetwork;
   protected long pushes;
   protected int flow;
   protected int augmentations;
@@ -44,12 +47,16 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     cut = null;
 
     int maxPossibleFlow = 0;
-    for( Edge e : residualNetwork.outgoingEdges( source ) ) {
+    //for( Edge e : residualNetwork.outgoingEdges( source ) ) {
+    //for( Edge e :  Helper.in( GraphUtil.getUnifiedAccess( residualNetwork ).outgoing( source ) ) ) {
+    for( Edge e :  GraphUtil.outgoingIterator( residualNetwork, source ) ) {
       maxPossibleFlow += residualNetwork.residualCapacity( e );
     }
 
     int maxPossibleFlow2 = 0;
-    for( Edge e : residualNetwork.incomingEdges( sink ) ) {
+    //for( Edge e : residualNetwork.incomingEdges( sink ) ) {
+    for( Edge e :  GraphUtil.incomingIterator( residualNetwork, sink ) ) {
+    //for( Edge e : Helper.in( GraphUtil.getUnifiedAccess( residualNetwork ).outgoing( sink ) ) ) {
       if( residualNetwork.residualCapacity( e ) == Integer.MAX_VALUE ) {
         maxPossibleFlow2 = Integer.MAX_VALUE;
         break;
@@ -75,10 +82,10 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
 
   private void initializeDatastructures() {
     if( useLower ) {
-      residualNetwork = new DefaultResidualNetwork( getProblem().getNetwork(), getProblem().getCapacities(), getProblem().getSource(), getProblem().getSink() );
+      residualNetwork = ResidualNetwork.getResidualNetwork( getProblem().getNetwork(), getProblem().getCapacities(), getProblem().getSource(), getProblem().getSink() );
       //((ResidualNetworkExtended)residualNetwork).setLower( lowerCapacities );
     } else {
-      residualNetwork = new DefaultResidualNetwork( getProblem().getNetwork(), getProblem().getCapacities(), getProblem().getSource(), getProblem().getSink() );
+      residualNetwork = ResidualNetwork.getResidualNetwork( getProblem().getNetwork(), getProblem().getCapacities(), getProblem().getSource(), getProblem().getSink() );
     }
     source = getProblem().getSource();
     sink = getProblem().getSink();
@@ -90,7 +97,7 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     bfs.setStart( source );
     bfs.setStop( sink );
     bfs.run();
-    return new StaticPath( bfs );
+    return new StaticPath( source, sink, bfs );
   }
 
   private int residualCapacity( StaticPath path ) {
@@ -105,17 +112,14 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
   }
 
   public void augmentFlow( StaticPath path, int value ) {
+    residualNetwork.augmentFlow( path, value );
+    
+    pushes += path.length();
+    
     Stack<Edge> s = new Stack<>();
-
+    System.out.print( "Augmented on " );
     for( Edge e : path ) {
-      residualNetwork.augmentFlow( e, value );
-      pushes++;
-      s.push( e );
-    }
-
-    System.out.println( "Augmented on " );
-    while( !s.empty() ) {
-      System.out.print( s.pop() );
+      System.out.print( e );
     }
     System.out.println( " by " + value );
 
@@ -167,14 +171,19 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
       cutIncoming.clear();
     }
 
+    //UnifiedGraphAccess g;
+    //g = GraphUtil.getUnifiedAccess( getProblem().getNetwork() );
     for( Node n : cut ) {
-      for( Edge e : getProblem().getNetwork().outgoingEdges( n ) ) {
-        // find outgoing edges
+      //for( Edge e : Helper.in( g.incident( n ) ) ) {
+      //for( Edge e : getProblem().getNetwork().outgoingEdges( n ) ) {
+      for( Edge e :  GraphUtil.outgoingIterator( residualNetwork, n ) ) {
+       // find outgoing edges
         if( !contained.get( e.end() ) && !cutOutgoing.contains( e ) ) {
           cutOutgoing.add( e );
         }
       }
-      for( Edge e : getProblem().getNetwork().incomingEdges( n ) ) {
+      //for( Edge e : getProblem().getNetwork().incomingEdges( n ) ) {
+      for( Edge e :  GraphUtil.incomingIterator( residualNetwork, n ) ) {
         if( !contained.get( e.start() ) && !cutIncoming.contains( e ) ) {
           cutIncoming.add( e );
         }

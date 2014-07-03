@@ -16,6 +16,7 @@
 
 package de.tu_berlin.coga.netflow.ds.network;
 
+import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DefaultGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Edge;
@@ -30,33 +31,21 @@ import de.tu_berlin.coga.graph.Edge;
  */
 class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
   // TODO: maybe clone method for default graph that generates copy with larger capacity
-  private final int maxNodeId;
   private final int originalNumberOfEdges;
   private final DirectedGraph graph;
+	/** The flow associated with this residual graph. */
+	protected IdentifiableIntegerMapping<Edge> flow;
+	/** The residual capacities of this residual graph. */
+	protected IdentifiableIntegerMapping<Edge> residualCapacities;
+  private final IdentifiableIntegerMapping<Edge> capacities;
 
-  public DefaultResidualGraph( DirectedGraph graph ) {
+  public DefaultResidualGraph( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities ) {
     super( graph.nodeCount(), graph.edgeCount() * 2 );
-    this.maxNodeId = graph.nodeCount();
     this.originalNumberOfEdges = graph.edgeCount();
     this.graph = graph;
+    this.capacities = capacities;
 
     setUp();
-
-//		flow = new IdentifiableDoubleMapping<>( graph.edgeCount() );
-//TODO move to network
-    //residualCapacities = new IdentifiableDoubleMapping<>( graph.edgeCount() * 2 );
-//    for( Edge edge : edges ) {
-
-//			if( isReverseEdge( edge ) ) {
-//				residualCapacities.set( edge, 0 );
-//				changeVisibility( edge, false );
-//
-//			} else {
-//				changeVisibility( edge, true );
-//				flow.set( edge, 0.0 );
-//				residualCapacities.set( edge, capacities.get( edge ) );
-//    }
-//		}
   }
 
   /**
@@ -65,11 +54,9 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
   private void setUp() {
     // create original edges
     setNodes( graph.nodes() );
-    //setEdges( graph.edges() );
 
     int maxID = -1;
     for( Edge edge : graph.edges() ) {
-      //createEdge( edge.end(), edge.start(), edge.id() + (maxEdgeId + 1) );
       setEdge( edge );
       maxID = Math.max( edge.id(), maxID );
     }
@@ -81,6 +68,20 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
     for( Edge edge : graph.edges() ) {
       createAndSetEdge( edge.end(), edge.start() );
     }
+
+    // initialize flow and stuff
+		flow = new IdentifiableIntegerMapping<>( graph.edgeCount() ); // A flow is only valid in the original graph
+		residualCapacities = new IdentifiableIntegerMapping<>( edgeCount() );
+		for( Edge edge : edges() ) {
+			if( isReverseEdge( edge ) ) {
+				residualCapacities.set( edge, 0 );
+				setHidden( edge, true );
+			} else {
+				flow.set( edge, 0 );
+				residualCapacities.set( edge, capacities.get( edge ) );
+			}
+    }
+  
   }
 
   /**
@@ -89,6 +90,7 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
    * @param edge the edge for which the reverse edge is to be returned.
    * @return the reverse edge of the specified edge.
    */
+  @Override
   public Edge reverseEdge( Edge edge ) {
     if( edge.id() < originalNumberOfEdges ) {
       return edges.getEvenIfHidden( edge.id() + originalNumberOfEdges );
@@ -103,7 +105,45 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
    * @param edge the edge to be tested.
    * @return {@code true} if the specified edge is a reverse edge, {@code false} otherwise.
    */
+  @Override
   public boolean isReverseEdge( Edge edge ) {
     return edge.id() >= originalNumberOfEdges;
+  }
+
+	/**
+	 * Augments a specified amount of flow along the specified edge. The
+   * residual capacities of the edge and its reverse edge are updated
+   * automatically. The residual graph is updated as well, if neccessary.
+   * Runtime O(1).
+	 * @param edge the edge along which flow is to be augmented.
+	 * @param amount the amount of flow to augment.
+	 */
+  @Override
+	public void augmentFlow( Edge edge, int amount ) {
+		Edge reverseEdge = reverseEdge( edge );
+		if( isReverseEdge( edge ) ) {
+			flow.decrease( reverseEdge, amount );
+		} else {
+			flow.increase( edge, amount );
+		}
+		residualCapacities.decrease( edge, amount );
+		residualCapacities.increase( reverseEdge, amount );
+		if( 0 == residualCapacities.get( edge ) ) {
+			setHidden( edge, true );
+    }
+		if( 0 < residualCapacities.get( reverseEdge ) ) {
+			setHidden( reverseEdge, false );
+    }
+	}
+
+
+  @Override
+  public int residualCapacity( Edge edge ) {
+    return residualCapacities.get( edge );
+  }
+
+  @Override
+  public IdentifiableIntegerMapping<Edge> flow() {
+    return flow;
   }
 }

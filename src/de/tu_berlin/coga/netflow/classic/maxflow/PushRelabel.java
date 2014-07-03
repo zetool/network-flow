@@ -158,10 +158,7 @@ public abstract class PushRelabel extends Algorithm<MaximumFlowProblem, MaximumF
 		return /*!v.equals( source ) && */ !v.equals( sink ) && distanceLabels.get( v ) < n && excess.get( v ) > 0;
 	}
 
-	// TODO
 	public OldResidualNetwork getResidualNetwork() {
 		throw new UnsupportedOperationException( "Not supported yet." );
 	}
-
-
 }

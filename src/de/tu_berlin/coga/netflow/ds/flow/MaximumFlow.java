@@ -13,17 +13,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/*
- * MaximumFlow.java
- *
- */
+
 package de.tu_berlin.coga.netflow.ds.flow;
 
-import de.tu_berlin.coga.netflow.ds.flow.Flow;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
+import de.tu_berlin.coga.graph.util.GraphUtil;
 
 /**
  *
@@ -44,14 +41,21 @@ public class MaximumFlow extends Flow {
 	public int getFlowValue() {
 		int result = 0;
 		for( Node source : problem.getSources() ) {
-			for( Edge edge : problem.getNetwork().outgoingEdges( source ) )
+			for( Edge edge : GraphUtil.outgoingIterator( problem.getNetwork(), source ) )
+//      for( Edge edge : problem.getNetwork().outgoingEdges( source ) )
 				result += get( edge );
-			for( Edge edge : problem.getNetwork().incomingEdges( source ) )
+			for( Edge edge : GraphUtil.incomingIterator( problem.getNetwork(), source ) )
+			//for( Edge edge : problem.getNetwork().incomingEdges( source ) )
 				result -= get( edge );
 		}
 		return result;
 	}
 
+  /**
+   * The check methods checks flow conservation. It only works for directed
+   * graphs.
+   * @return 
+   */
 	public boolean check() {
 		boolean problems = false;
 		for( Node v : problem.getNetwork() ) {
@@ -60,10 +64,12 @@ public class MaximumFlow extends Flow {
 			// check flow conservation
 			int sum = 0;
 			// sum incoming
-			for( Edge e : problem.getNetwork().incomingEdges( v ) )
+			for( Edge e : GraphUtil.incomingIterator( problem.getNetwork(), v ) )
+			//for( Edge e : problem.getNetwork().incomingEdges( v ) )
 				sum += get( e );
 			// sum outcoming
-			for( Edge e : problem.getNetwork().outgoingEdges( v ) )
+			for( Edge e : GraphUtil.outgoingIterator( problem.getNetwork(), v ) )
+			//for( Edge e : problem.getNetwork().outgoingEdges( v ) )
 				sum -= get( e );
 
 			if( sum != 0 )

@@ -19,6 +19,7 @@ package de.tu_berlin.coga.netflow.classic.problems;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
+import de.tu_berlin.coga.graph.Graph;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.Network;
 import java.util.LinkedList;
@@ -29,7 +30,7 @@ import java.util.List;
  * @author Martin Groß
  */
 public class MaximumFlowProblem {
-	private DirectedGraph graph;
+	private Graph graph;
 	private IdentifiableIntegerMapping<Edge> capacities;
 	private List<Node> sources;
 	private List<Node> sinks;
@@ -74,7 +75,7 @@ public class MaximumFlowProblem {
 		return capacities;
 	}
 
-	public DirectedGraph getNetwork() {
+	public Graph getNetwork() {
 		return graph;
 	}
 
