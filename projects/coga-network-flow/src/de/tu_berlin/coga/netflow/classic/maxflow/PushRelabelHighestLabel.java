@@ -12,6 +12,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 
 /**
  *
@@ -54,6 +55,9 @@ public class PushRelabelHighestLabel extends PushRelabel {
 
 	@Override
 	protected MaximumFlow runAlgorithm( MaximumFlowProblem problem ) {
+    if( !(problem.getNetwork() instanceof DirectedGraph ) ) {
+      throw new IllegalArgumentException( "Push Relabel implemented for directed graphs." );
+    }
 		source = getProblem().getSource();
 		sink = getProblem().getSink();
 		n = getProblem().getNetwork().nodeCount();
@@ -102,7 +106,7 @@ public class PushRelabelHighestLabel extends PushRelabel {
 	 * edges to a vertex can be searched by a run through the array.
 	 */
 	protected void init() {
-		residualGraph.init( getProblem().getNetwork(), getProblem().getCapacities(), current );
+		residualGraph.init( (DirectedGraph)getProblem().getNetwork(), getProblem().getCapacities(), current );
 
 
 		// set some flow on the residual network

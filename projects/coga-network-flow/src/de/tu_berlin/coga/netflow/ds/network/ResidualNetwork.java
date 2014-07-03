@@ -17,31 +17,58 @@
 package de.tu_berlin.coga.netflow.ds.network;
 
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Edge;
+import de.tu_berlin.coga.graph.Graph;
+import de.tu_berlin.coga.graph.Node;
+import de.tu_berlin.coga.graph.UndirectedGraph;
+import java.util.List;
 
 /**
  *
  * @author Jan-Philipp Kappmeier
  */
-public interface ResidualNetwork {
-  /**
-   * Augments flow. Increased on original edges, decreased on reverse edges.
-   * @param edge the edge
-   * @param amount the amount
-   */
-  void augmentFlow( Edge edge, int amount );
+public interface ResidualNetwork extends ResidualGraph, Network {
 
-  /**
-   * The residual capacity of an edge.
-   * @param edge the edge
-   * @return the residual capacity of the edge
-   */
-  int residualCapacity( Edge edge );
+  
+  public static ResidualNetwork getResidualNetwork( Graph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
+    if( graph instanceof DirectedGraph ) {
+      return new DirectedResidualNetwork((DirectedGraph)graph, capacities, sources, sinks );
+    } else if( graph instanceof UndirectedGraph ) {
+      return new UndirectedResidualNetwork((UndirectedGraph)graph, capacities, sources, sinks );
+    } else {
+      throw new AssertionError( "Only DirectedGraph and UndirectedGraph are supported" );
+    }
+  }
 
-  /**
-   * Returns the flow associated with this residual graph. Runtime O(1).
-   * @return the flow associated with this residual graph.
-   */
-  public IdentifiableIntegerMapping<Edge> flow();
+  public static ResidualNetwork getResidualNetwork( Graph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, List<Node> sinks ) {
+    if( graph instanceof DirectedGraph ) {
+      return new DirectedResidualNetwork((DirectedGraph)graph, capacities, source, sinks );
+    } else if( graph instanceof UndirectedGraph ) {
+      return new UndirectedResidualNetwork((UndirectedGraph)graph, capacities, source, sinks );
+    } else {
+      throw new AssertionError( "Only DirectedGraph and UndirectedGraph are supported" );
+    }
+  }
 
+  public static ResidualNetwork getResidualNetwork( Graph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, Node sink ) {
+    if( graph instanceof DirectedGraph ) {
+      return new DirectedResidualNetwork((DirectedGraph)graph, capacities, sources, sink );
+    } else if( graph instanceof UndirectedGraph ) {
+      return new UndirectedResidualNetwork((UndirectedGraph)graph, capacities, sources, sink );
+    } else {
+      throw new AssertionError( "Only DirectedGraph and UndirectedGraph are supported" );
+    }
+  }
+
+  public static ResidualNetwork getResidualNetwork( Graph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, Node sink ) {
+      if( graph instanceof DirectedGraph ) {
+      return new DirectedResidualNetwork((DirectedGraph)graph, capacities, source, sink );
+    } else if( graph instanceof UndirectedGraph ) {
+      return new UndirectedResidualNetwork((UndirectedGraph)graph, capacities, source, sink );
+    } else {
+      throw new AssertionError( "Only DirectedGraph and UndirectedGraph are supported" );
+    }
+  }
 }
+  
