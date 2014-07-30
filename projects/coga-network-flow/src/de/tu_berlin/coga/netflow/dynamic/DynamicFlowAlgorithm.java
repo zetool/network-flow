@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 package de.tu_berlin.coga.netflow.dynamic;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicFlowProblem;
@@ -24,8 +25,7 @@ import de.tu_berlin.coga.netflow.ds.flow.EdgeBasedFlowOverTime;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
 
 /**
- * This class represents a dynamic flow algorithm. A dynamic flow algorithm is a special case of a graph algorithm and
- * therefore this class implements the {@code GraphAlgorithm} interface.
+ * This class represents a dynamic flow algorithm.
  * @param <U>
  */
 public abstract class DynamicFlowAlgorithm<U extends DynamicFlowProblem> extends Algorithm<U, FlowOverTime> {
