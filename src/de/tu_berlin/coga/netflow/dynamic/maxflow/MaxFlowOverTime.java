@@ -147,7 +147,8 @@ public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeR
 
 		reconstruction( flow );
 
-		PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( ex, sources, sinks, flow );
+		PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( null, sources, sinks, flow );
+		//PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( (DefaultDirectedGraph)ex, sources, sinks, flow );
 
 		return translateIntoMaxFlow( minCostFlow );
 	}
