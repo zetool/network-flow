@@ -29,7 +29,7 @@ public class ExtendedNetwork implements DirectedGraph {
   private DirectedGraph graph;
   private ArrayList<Node> newNodes;
   private ArrayList<Edge> newEdges;
-  
+
   // Node information
 	/** Caches the edges incident to a node for all nodes in the graph. * Must not be null. */
 	protected HashMap<Node, DependingListSequence<Edge>> incidentEdges;
@@ -42,8 +42,8 @@ public class ExtendedNetwork implements DirectedGraph {
 	/** Caches the number of edges ending at a node for all nodes in the graph. Must not be null. */
 	protected HashMap<Node,Integer> indegree;
 	/** Caches the number of edges starting at a node for all nodes in the graph. Must not be null. */
-	protected HashMap<Node,Integer> outdegree;  
-  
+	protected HashMap<Node,Integer> outdegree;
+
 	public ExtendedNetwork( DirectedGraph graph, int newNodes, int newEdges ) {
 		//super( network );
 		originalNodeCount = graph.nodeCount();
@@ -62,7 +62,7 @@ public class ExtendedNetwork implements DirectedGraph {
 	public int getFirstNewEdgeIndex() {
 		return originalEdgeCount;
 	}
-	
+
 	public void undo() {
 //		setNodeCapacity( originalNodeCount );
 //		setEdgeCapacity( originalEdgeCount );
@@ -198,7 +198,7 @@ public class ExtendedNetwork implements DirectedGraph {
     else
       return newNodes.get( id - originalNodeCount );
   }
-  
+
   private boolean isOriginalNode( int id ) {
     return id <= originalNodeCount;
   }
@@ -210,12 +210,12 @@ public class ExtendedNetwork implements DirectedGraph {
   public Iterator<Node> iterator() {
     return new IteratorIterator<>( graph.iterator(), newNodes.iterator() );
   }
-  
+
   // TEmporary:
   public static int getEdgeCapacity() {
     return -1;
   }
-  
+
   public Edge createAndSetEdge( Node start, Node end ) {
     return null;
   }

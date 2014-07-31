@@ -16,9 +16,9 @@
 package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.transshipment.DynamicTransshipment;
-import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
 import de.tu_berlin.coga.netflow.dynamic.transshipment.TransshipmentFramework;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
+import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 
 /**
  * The class {@code EATransshipment} solves two variants
@@ -26,15 +26,15 @@ import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
  * without a given time horizon.
  * The implementation is done with time-expanded networks.
  * For the variant without a time horizon, binary search
- * is used. 
+ * is used.
  */
-public class EATransshipmentSSSP extends TransshipmentFramework<DynamicTransshipmentProblem, DynamicTransshipment> {
+public class EATransshipmentSSSP extends TransshipmentFramework<EarliestArrivalFlowProblem, DynamicTransshipment<EarliestArrivalFlowProblem>> {
 	public EATransshipmentSSSP() {
-		super( new DynamicTransshipment()/*, new EATransshipmentWithTHSSSP()*/ );
+		super( new DynamicTransshipment<>()/*, new EATransshipmentWithTHSSSP()*/ );
 	}
 
 	@Override
-	protected FlowOverTime runAlgorithm( DynamicTransshipmentProblem problem ) {
+	protected FlowOverTime runAlgorithm( EarliestArrivalFlowProblem problem ) {
 		FlowOverTime transshipmentWithoutTimeHorizon = super.runAlgorithm( problem );
 
 		if( getFeasibleTimeHorizon() > -1 && transshipmentWithoutTimeHorizon != null ) {

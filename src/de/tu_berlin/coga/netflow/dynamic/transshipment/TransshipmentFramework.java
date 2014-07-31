@@ -26,19 +26,19 @@ import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
  * The class {@code TransshipmentFramework} implements a binary search to compute the minimal
  * time horizon needed to get a transshipment with given properties. The wished transshipment
  * is defined and calculated by the generic class {@code TT} that has to inherit the
- * class {@code TransshipmentWithTimeHorizon}. 
- * @param <W> 
- * @param <TS> 
+ * class {@code TransshipmentWithTimeHorizon}.
+ * @param <W>
+ * @param <TS>
  */
 public abstract class TransshipmentFramework<W extends DynamicTransshipmentProblem, TS extends TransshipmentWithTimeHorizon<W>> extends DynamicFlowAlgorithm<W> {
 	/** Class type of the specific transshipment algorithm. */
 	TS standardTHTAlgorithm;
 
 	int feasibleTimeHorizon= -1;
-	
+
 	/** Node capacities
 	 * @param standardTHTAlgorithm
-	 * @param additionalTHTAlgorithm  
+	 * @param additionalTHTAlgorithm
 	 */
 	public TransshipmentFramework( TS standardTHTAlgorithm/*, TA additionalTHTAlgorithm*/ ) {
 		this.standardTHTAlgorithm = standardTHTAlgorithm;
@@ -52,14 +52,14 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 	public void setStandardTHTAlgorithm( TS standardTHTAlgorithm ) {
 		this.standardTHTAlgorithm = standardTHTAlgorithm;
 	}
-	
-	
+
+
 
 	/**
 	 * Private method that calculates the result of the specific transshipment
-	 * algorithm by creating a new instance of it, catching exceptions and 
-	 * running it. 
-	 * @param standardTranshipmentAlgorithm 
+	 * algorithm by creating a new instance of it, catching exceptions and
+	 * running it.
+	 * @param standardTranshipmentAlgorithm
 	 * @return The result of the specific transshipment algorithm on the given input.
 	 */
 	protected PathBasedFlowOverTime useTransshipmentAlgorithm( TransshipmentWithTimeHorizon<W> standardTranshipmentAlgorithm ) {
@@ -71,7 +71,7 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 	}
 
 	@Override
-	protected FlowOverTime runAlgorithm( DynamicTransshipmentProblem problem ) {
+	protected FlowOverTime runAlgorithm( W problem ) {
 		runAlgorithm();
 		return new FlowOverTime( resultFlowPathBased, getProblem() );
 	}
@@ -218,7 +218,7 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 			throw new AssertionError( "No solution found. Upper bound wrong?" );
 		}
 
-//		/* if an additional algorithm was set, it is applied for the optimal time horizon. 
+//		/* if an additional algorithm was set, it is applied for the optimal time horizon.
 //		 * The new flow is than the result flow. */
 //		if( left == right - 1 && transshipmentWithoutTimeHorizon != null )
 //			if( additionalTHTAlgorithm != null && additionalTHTAlgorithm != standardTHTAlgorithm ) {
@@ -231,7 +231,7 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 //				fireProgressEvent( 100, "Run with additional transshipment algorithm has finished. The new solution was set." );
 //			}
 
-		/* May be null if upperBound was not sufficient. This should not happen! 
+		/* May be null if upperBound was not sufficient. This should not happen!
 		 * Else the optimal transshipment is saved. */
 		resultFlowPathBased = transshipmentWithoutTimeHorizon;
 	}
@@ -239,6 +239,6 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 	public int getFeasibleTimeHorizon() {
 		return feasibleTimeHorizon;
 	}
-	
-	
+
+
 }

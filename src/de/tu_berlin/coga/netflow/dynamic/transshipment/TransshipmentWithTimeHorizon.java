@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 package de.tu_berlin.coga.netflow.dynamic.transshipment;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
@@ -29,14 +30,16 @@ import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlowOverTime;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import java.util.logging.Logger;
 
-/** 
- * The class {@code TransshipmentWithTimeHorizon} provides a method to calculate 
+/**
+ * The class {@code TransshipmentWithTimeHorizon} provides a method to calculate
  * a dynamic transshipment with certain properties by using the time-expanded network
- * if the method to compute a adequate transshipment in the time-expanded network is overridden. 
+ * if the method to compute a adequate transshipment in the time-expanded network is overridden.
  * @param <U>
  */
 public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmentProblem> extends DynamicFlowAlgorithm<U> {
+  private static final Logger log = Logger.getGlobal();
 
 	/**
 	 * Creates a new instance of the transshipment algorithm with given network, transit times, capacities, supplies and a time horizon.
@@ -61,7 +64,7 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 	 * This static method computes a transshipment using the method {@link #transshipmentWithTimeHorizon}
 	 * that has to be implemented by subclasses.
 	 * The algorithm creates a time expanded network, calls {@link #transshipmentWithTimeHorizon} to compute
-	 * a static flow and creates a dynamic flow from the result. 
+	 * a static flow and creates a dynamic flow from the result.
 	 * If {@code runTransshipment} returns {@code null}
 	 * this method also returns {@code null}.
 	 */
@@ -69,27 +72,19 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 		/* Short debug output telling that a time expanded network is created. */
 		if( Flags.TRANSSHIPMENT_SHORT ) {
 			System.out.println( "The " + getName() + " algorithm creates a time expanded network." );
-//			 AlgorithmTask.getInstance().publish( "Time-Expanded AbstractNetwork-Creation", "The "+nameOfTransshipmentWithTimeHorizon+" algorithm creates a time expanded network.");
 			fireEvent( "Time-Expanded Network-Creation. The " + getName() + " algorithm creates a time expanded network." );
 		}
-		
+
 		/* Create the time expanded network up to the given time horizon. */
 		TimeExpandedNetwork tnetwork = new TimeExpandedNetwork( getProblem().getNetwork(), getProblem().getEdgeCapacities(), getProblem().getTransitTimes(), getProblem().getTimeHorizon(), getProblem().getSupplies(), false );
 
-		/* Progress output. */
-		if( Flags.ALGO_PROGRESS )
-			System.out.print( "Progress: The time expanded network was created, " );
-
 		/* Short debug output including the size of the created expanded network. */
-		if( Flags.TRANSSHIPMENT_SHORT && !Flags.TRANSSHIPMENT_LONG ) {
-			System.out.println( "The time expanded network was created." );
-			System.out.println( "It has " + tnetwork.nodes().size() + " nodes and " + tnetwork.edges().size() + " edges." );
-			//AlgorithmTask.getInstance().publish( "Time-Expanded AbstractNetwork created.", "It has "+tnetwork.nodes().size()+" nodes and "+tnetwork.edges().size()+" edges.");
-			fireEvent( "Time-Expanded Network created. It has " + tnetwork.nodes().size() + " nodes and " + tnetwork.edges().size() + " edges." );
-		}
-		/* Long debug output including the complete expanded network.*/
-		if( Flags.TRANSSHIPMENT_LONG )
-			System.out.println( tnetwork );
+    log.finest( "The time expanded network was created." );
+    log.finest( "It has " + tnetwork.nodes().size() + " nodes and " + tnetwork.edges().size() + " edges." );
+    fireEvent( "Time-Expanded Network created. It has " + tnetwork.nodes().size() + " nodes and " + tnetwork.edges().size() + " edges." );
+
+    /* Long debug output including the complete expanded network.*/
+    log.finest( tnetwork.toString() );
 
 		/* Progress output. */
 		if( Flags.ALGO_PROGRESS )
@@ -97,7 +92,6 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 		/* Short debug output telling that the algorithm for the transshipment with time horizon is called. */
 		if( Flags.TRANSSHIPMENT_SHORT && !Flags.TRANSSHIPMENT_LONG ) {
 			System.out.println( "The " + getName() + " algorithm is called." );
-			//AlgorithmTask.getInstance().publish( nameOfTransshipmentWithTimeHorizon+" algorithm", "The "+nameOfTransshipmentWithTimeHorizon+" algorithm is called.");
 			fireEvent( getName() + " algorithm. The " + getName() + " algorithm is called." );
 		}
 

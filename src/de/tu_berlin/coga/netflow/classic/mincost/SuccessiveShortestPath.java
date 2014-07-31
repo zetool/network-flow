@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 package de.tu_berlin.coga.netflow.classic.mincost;
 
 import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
@@ -127,7 +128,8 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
     }
     int total = 0;
     int totalcost = 0;
-    while( true ) {
+    boolean finished = false;
+    while( !finished ) {
       // Pick a feasible source-sink pair
       Node source = null;
       Node sink = null;
@@ -149,23 +151,26 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
       if( source == null && (sink == null || bounds) ) {
         flow = residualNetwork.flow();
         bFlowExists = true;
-        return;
+        finished = true;
+        continue;
         // If there are only sources or sinks left, there is no b-flow
       } else if( source == null && !bounds && sink != null || source != null && sink == null ) {
         bFlowExists = false;
-        return;
+        finished = true;
+        continue;
       }
       // Find a cost minimal source-sink-path
       MooreBellmanFord mbf = new MooreBellmanFord( residualNetwork, costs, source );
-      //mbf.run();
-      //Path shortestPath = mbf.getShortestPath( sink );
+      mbf.run();
+      Path shortestPath = mbf.getShortestPath( sink );
 
-      Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source );
-      dijkstra.run();
-      Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
+      //Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source );
+      //dijkstra.run();
+      //Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
 
 
       paths.add( shortestPath );
+
       LOGGER.finest( "Der kürzeste Pfad ist " + shortestPath );
       // Augment flow along this shortest path
       int amount = Math.min( balance( source ), -balance( sink ) );
@@ -174,15 +179,16 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
           amount = capacity( edge );
         }
       }
-      LOGGER.finest( "Augmentiere " + amount + " Flusseinheiten." );
-      //System.out.println("Augmentiere " + amount + " Flusseinheiten.");
+      //System.out.println( "Augmentiere " + amount + " Flusseinheiten." );
       int pathCost = 0;
       for( Edge edge : shortestPath ) {
         pathCost += costs.get( edge );
       }
       total += amount;
       totalcost += amount * pathCost;
-      System.out.println( "Sent: " + total + " witch cost: " + totalcost );
+      System.out.println( "Sending on path with cost (arrival time) " + pathCost );
+      System.out.println( " -amount: " + amount );
+//      System.out.println( "Sent: " + total + " witch cost: " + totalcost );
 
       balances.decrease( source, amount );
       balances.increase( sink, amount );
@@ -191,6 +197,8 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
         residualNetwork.augmentFlow( edge, amount );
       }
     }
+    System.out.println( "Satisfied balances: " + total );
+    System.out.println( "Total cost: " + totalcost );
   }
 
   public static void main( String[] args ) {
