@@ -26,9 +26,9 @@ import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
  * without a given time horizon.
  * The implementation is done with time-expanded networks.
  * For the variant without a time horizon, binary search
- * is used. 
+ * is used.
  */
-public class EATransshipmentMinCost extends TransshipmentFramework<DynamicTransshipmentProblem,DynamicTransshipment/*,EATransshipmentWithTHMinCost*/> {
+public class EATransshipmentMinCost extends TransshipmentFramework<DynamicTransshipmentProblem,DynamicTransshipment<DynamicTransshipmentProblem>/*,EATransshipmentWithTHMinCost*/> {
     public EATransshipmentMinCost() {
 			super( new DynamicTransshipment()/*, new EATransshipmentWithTHMinCost() */);
 			setName( "Earliest Arrival Transshipment TH MinCost" );
@@ -37,8 +37,8 @@ public class EATransshipmentMinCost extends TransshipmentFramework<DynamicTranss
 	@Override
 	protected FlowOverTime runAlgorithm( DynamicTransshipmentProblem problem ) {
 		FlowOverTime transshipmentWithoutTimeHorizon = super.runAlgorithm( problem );
-		
-		/* if an additional algorithm was set, it is applied for the optimal time horizon. 
+
+		/* if an additional algorithm was set, it is applied for the optimal time horizon.
 		 * The new flow is than the result flow. */
 		if( getFeasibleTimeHorizon() > -1 && transshipmentWithoutTimeHorizon != null ) {
 			EATransshipmentWithTHMinCost eat = new EATransshipmentWithTHMinCost();
@@ -57,6 +57,6 @@ public class EATransshipmentMinCost extends TransshipmentFramework<DynamicTranss
 			//}
 		return transshipmentWithoutTimeHorizon;
 	}
-		
-		
+
+
 }

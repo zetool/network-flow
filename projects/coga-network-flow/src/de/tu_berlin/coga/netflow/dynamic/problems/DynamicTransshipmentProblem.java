@@ -1,7 +1,4 @@
-/**
- * DynamicTransshipmentProblem.java
- * Created: 05.06.2012, 17:22:29
- */
+
 package de.tu_berlin.coga.netflow.dynamic.problems;
 
 import de.tu_berlin.coga.graph.Edge;

@@ -21,27 +21,27 @@ import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
  * The class {@code QuickestTransshipment} calculates the smallest
  * time horizon T such that it is
  * possible to fulfill given supplies and demands in a network
- * with capacities and transit times within this time horizon. 
+ * with capacities and transit times within this time horizon.
  * A corresponding flow that satisfies the supplies and
  * demands is also computed.
- * 
- * The algorithm to find the so called quickest transshipment 
+ *
+ * The algorithm to find the so called quickest transshipment
  * is implemented by using binary search and calling a dynamic transshipment
  * algorithm at each point of the search. Therefore
  * the classes {@link DynamicTransshipment} is used.
  * The class {@code TransshipmentFramework} implements the binary search
  * for an arbitrary dynamic transshipment algorithm which possibly guarantees more properties.
  */
-public class QuickestTransshipment extends TransshipmentFramework<DynamicTransshipmentProblem,DynamicTransshipment> {
+public class QuickestTransshipment extends TransshipmentFramework<DynamicTransshipmentProblem,DynamicTransshipment<DynamicTransshipmentProblem>> {
 
-	/** 
+	/**
 	 * Creates a new quickest transshipment algorithm instance.
 	 */
 	public QuickestTransshipment(){
 		//super(network, transitTimes, capacities, null, supplies, DynamicTransshipment.class, null);
 		super( new DynamicTransshipment() );
 	}
-	
+
 /*    *//**
      * A static method to compute a quickest transshipment in a given network.
      * Should always return a transshipment, otherwise a bug occurred.

@@ -130,6 +130,7 @@ public class SEAAPAlgorithm extends Algorithm<EarliestArrivalFlowProblem, FlowOv
       path.setCapacity( Math.min( path.getCapacity(), problem.getTotalSupplies() - flowUnitsSent ) );
       flowUnitsSent += path.getCapacity();
       log.log( Level.FINEST, "Found path {0} with capacity {1}", new Object[]{path.toString(), path.getCapacity()});
+      System.out.println( "(arrival time) " + path.getArrivalTime() + " -amount: " + path.getCapacity() );
       //System.out.println( "Progress: " + (flowUnitsSent * 1.0 / problem.getTotalSupplies()) );
       fireProgressEvent( flowUnitsSent * 1.0 / problem.getTotalSupplies(), String.format( "%1$s von %2$s Personen evakuiert.", flowUnitsSent, problem.getTotalSupplies() ) );
       // Compute the next path

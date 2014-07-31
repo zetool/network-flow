@@ -31,8 +31,9 @@ import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
  * is implemented by calling a static transshipment algorithm on the
  * time-expanded network. Therefore the classes {@link TimeExpandedNetwork} and
  * {@link StaticTransshipment} are used.
+ * @param <E> the type of transhipment problem used for the dynamic transshipment
  */
-public class DynamicTransshipment extends TransshipmentWithTimeHorizon<DynamicTransshipmentProblem> {
+public class DynamicTransshipment<E extends DynamicTransshipmentProblem> extends TransshipmentWithTimeHorizon<E> {
 
   /**
    * Creates a new instance of the dynamic transshipment algorithm by calling
