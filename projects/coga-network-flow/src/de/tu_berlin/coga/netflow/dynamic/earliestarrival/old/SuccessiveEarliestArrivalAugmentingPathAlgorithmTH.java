@@ -25,12 +25,12 @@ import de.tu_berlin.coga.netflow.dynamic.earliestarrival.SuccessiveEarliestArriv
 
 /**
  * This class calculates an earliest arrival transshipment for a given time horizon
- * by using a successive earliest arrival augmenting path algorithm. 
+ * by using a successive earliest arrival augmenting path algorithm.
  */
 public class SuccessiveEarliestArrivalAugmentingPathAlgorithmTH extends TransshipmentWithTimeHorizon<EarliestArrivalFlowProblem> {
 	/**
 	 * Creates a new {@code SuccessiveEarliestArrivalAugmentingPathAlgorithmTH} object
-	 * with the given parameters. The method {@code runAlgorithm()} tests a time horizon and 
+	 * with the given parameters. The method {@code runAlgorithm()} tests a time horizon and
 	 * finds an earliest arrival transshipment for the time horizon, if possible.
 	 */
 	public SuccessiveEarliestArrivalAugmentingPathAlgorithmTH() {
@@ -39,9 +39,8 @@ public class SuccessiveEarliestArrivalAugmentingPathAlgorithmTH extends Transshi
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	@Override
 	public void runAlgorithm() {
 		EarliestArrivalFlowProblem problem = new EarliestArrivalFlowProblem( getProblem() );
 		SuccessiveEarliestArrivalAugmentingPathAlgorithm algo = new SuccessiveEarliestArrivalAugmentingPathAlgorithm();

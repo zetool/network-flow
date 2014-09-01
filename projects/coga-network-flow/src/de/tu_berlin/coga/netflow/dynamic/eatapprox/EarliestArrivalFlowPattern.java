@@ -53,6 +53,10 @@ public class EarliestArrivalFlowPattern {
 		return sb.toString();
 	}
 
+  public int getTimeHorizon() {
+    return timeHorizon;
+  }
+
 
 
 }

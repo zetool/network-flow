@@ -160,13 +160,14 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
         continue;
       }
       // Find a cost minimal source-sink-path
-      MooreBellmanFord mbf = new MooreBellmanFord( residualNetwork, costs, source );
-      mbf.run();
-      Path shortestPath = mbf.getShortestPath( sink );
+      //MooreBellmanFord mbf = new MooreBellmanFord( residualNetwork, costs, source );
+      //mbf.run();
+      //Path shortestPath = mbf.getShortestPath( sink );
 
       //Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source );
-      //dijkstra.run();
-      //Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
+      Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source, sink );
+      dijkstra.run();
+      Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
 
 
       paths.add( shortestPath );
@@ -186,9 +187,9 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
       }
       total += amount;
       totalcost += amount * pathCost;
-      System.out.println( "Sending on path with cost (arrival time) " + pathCost );
-      System.out.println( " -amount: " + amount );
-//      System.out.println( "Sent: " + total + " witch cost: " + totalcost );
+      //System.out.println( "Sending on path with cost (arrival time) " + pathCost );
+      //System.out.println( " -amount: " + amount );
+      //System.out.println( "Sent: " + total + " witch cost: " + totalcost );
 
       balances.decrease( source, amount );
       balances.increase( sink, amount );

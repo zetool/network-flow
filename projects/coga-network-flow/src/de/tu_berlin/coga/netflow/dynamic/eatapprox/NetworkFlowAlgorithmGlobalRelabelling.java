@@ -244,7 +244,7 @@ public class NetworkFlowAlgorithmGlobalRelabelling extends NetworkFlowAlgorithm 
 		nm = 6 * n + m;
 		globalRelabelThreshold = (int) 0.5 * nm;
 		// set distances correct!
-		//globalUpdate();
+		globalUpdate(); // this is necessary for correctness!
 
 //		for( Node n : toAdd ) {
 //			if( !activeBuckets.active[n.id()] && excess.get( n ) > 0 ) {
