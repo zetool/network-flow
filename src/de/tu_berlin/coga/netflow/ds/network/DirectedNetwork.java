@@ -97,4 +97,33 @@ public class DirectedNetwork extends GeneralNetwork implements DirectedGraph {
   public int outDegree( Node node ) {
     return graph.outDegree( node );
   }
+
+  /**
+   * Returns an extended network with a single source and single sink for a
+   * given graph.
+   * @param graph
+   * @param capacities
+   * @param sources
+   * @param sinks
+   * @return 
+   */
+  public static Network getExtendedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
+    ExtendedGraph extended = new ExtendedGraph( graph, 2, sources.size() + sinks.size() );
+
+    Node newSource = extended.getFirstNewNode();
+    Node newSink = extended.getNode( newSource.id() + 1 );
+
+    IdentifiableIntegerMapping<Edge> newCapacities = new IdentifiableIntegerMapping<>( capacities, extended.edgeCount() );
+    for( Node s : sources ) {
+      Edge e = extended.createAndSetEdge( newSource, s );
+      newCapacities.set( e, Integer.MAX_VALUE );
+    }
+    for( Node t : sinks ) {
+      Edge e = extended.createAndSetEdge( t, newSink );
+      newCapacities.set( e, Integer.MAX_VALUE );
+    }
+
+    Network n = new DirectedNetwork( extended, newCapacities, newSource, newSink );
+    return n;
+  }
 }

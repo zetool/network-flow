@@ -1,9 +1,9 @@
-/**
- * ExtendedNetwork.java
- * Created: 09.12.2011, 16:36:14
- */
+
 package de.tu_berlin.coga.netflow.ds.network;
 
+import de.tu_berlin.coga.container.collection.ShiftedArraySet;
+import de.tu_berlin.coga.container.collection.CombinedCollection;
+import de.tu_berlin.coga.container.collection.ArraySet;
 import de.tu_berlin.coga.container.collection.DependingListSequence;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.container.collection.ListSequence;
@@ -11,7 +11,6 @@ import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.IteratorIterator;
 import de.tu_berlin.coga.graph.Node;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -21,14 +20,12 @@ import java.util.Iterator;
  * edges. Slow implementation!
  * @author Jan-Philipp Kappmeier
  */
-public class ExtendedNetwork implements DirectedGraph {
-	//private int newNodes;
-	//private int newEdges;
+public class ExtendedGraph implements DirectedGraph {
 	private final int originalEdgeCount;
 	private final int originalNodeCount;
-  private DirectedGraph graph;
-  private ArrayList<Node> newNodes;
-  private ArrayList<Edge> newEdges;
+  private final DirectedGraph graph;
+  private final ArraySet<Node> newNodes;
+  private final ArraySet<Edge> newEdges;
 
   // Node information
 	/** Caches the edges incident to a node for all nodes in the graph. * Must not be null. */
@@ -44,93 +41,88 @@ public class ExtendedNetwork implements DirectedGraph {
 	/** Caches the number of edges starting at a node for all nodes in the graph. Must not be null. */
 	protected HashMap<Node,Integer> outdegree;
 
-	public ExtendedNetwork( DirectedGraph graph, int newNodes, int newEdges ) {
-		//super( network );
+	public ExtendedGraph( DirectedGraph graph, int newNodes, int newEdges ) {
 		originalNodeCount = graph.nodeCount();
-		//network.setNodeCapacity( graph.getNodeCapacity() + newNodes );
-		originalEdgeCount = graph.nodeCount();
-		//graph.setEdgeCapacity( graph.getEdgeCapacity() + newEdges );
+		originalEdgeCount = graph.edgeCount();
+    this.graph = graph;
+    this.newNodes = new ShiftedArraySet<>( Node.class, newNodes, originalNodeCount );
     for( int i = 0; i < newNodes; ++i ) {
-      this.newNodes.add( new Node( originalEdgeCount + i ) );
+      this.newNodes.add( new Node( originalNodeCount + i ) );
     }
+    this.newEdges = new ShiftedArraySet<>( Edge.class, newEdges, originalEdgeCount );
 	}
 
 	public Node getFirstNewNode() {
-		return newNodes.get( 0 ); //this.getNode( originalNodeCount );
+		return newNodes.get( 0 );
 	}
 
 	public int getFirstNewEdgeIndex() {
 		return originalEdgeCount;
 	}
 
-	public void undo() {
-//		setNodeCapacity( originalNodeCount );
-//		setEdgeCapacity( originalEdgeCount );
-	}
-
   @Override
   public IdentifiableCollection<Edge> incomingEdges( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public IdentifiableCollection<Edge> outgoingEdges( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public IdentifiableCollection<Node> predecessorNodes( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public IdentifiableCollection<Node> successorNodes( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public int inDegree( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public int outDegree( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public boolean isDirected() {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public IdentifiableCollection<Edge> edges() {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    return new CombinedCollection<>( graph.edges(), this.newEdges );
   }
 
   @Override
   public IdentifiableCollection<Node> nodes() {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    return new CombinedCollection<>( graph.nodes(), this.newNodes );
   }
 
   @Override
   public int edgeCount() {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    return graph.edgeCount() + newEdges.size();
   }
 
   @Override
   public int nodeCount() {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    return graph.nodeCount() + newNodes.size();
   }
 
   @Override
   public IdentifiableCollection<Edge> incidentEdges( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
   public IdentifiableCollection<Node> adjacentNodes( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException( "Not supported yet." );
   }
 
   @Override
@@ -200,10 +192,10 @@ public class ExtendedNetwork implements DirectedGraph {
   }
 
   private boolean isOriginalNode( int id ) {
-    return id <= originalNodeCount;
+    return id < originalNodeCount;
   }
   private boolean isOriginalEdge( int id ) {
-    return id <= originalEdgeCount;
+    return id < originalEdgeCount;
   }
 
   @Override
@@ -217,6 +209,16 @@ public class ExtendedNetwork implements DirectedGraph {
   }
 
   public Edge createAndSetEdge( Node start, Node end ) {
-    return null;
+    if( newEdges.size() >= newEdges.getCapacity() ) {
+      throw new IllegalArgumentException( "Cannot add more edges to extended graph!" );
+    }
+    Edge edge = new Edge( originalEdgeCount + newEdges.size(), start, end );
+    newEdges.add( edge );
+    return edge;
+  }
+
+  @Override
+  public String toString() {
+    return DirectedGraph.stringRepresentation( this );
   }
 }

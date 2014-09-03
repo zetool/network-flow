@@ -42,6 +42,7 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
   public DefaultResidualGraph( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities ) {
     super( graph.nodeCount(), graph.edgeCount() * 2 );
     this.originalNumberOfEdges = graph.edgeCount();
+    System.out.println( "Setting up a graph with " + originalNumberOfEdges + " edges." );
     this.graph = graph;
     this.capacities = capacities;
 
@@ -57,6 +58,7 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
 
     int maxID = -1;
     for( Edge edge : graph.edges() ) {
+      System.out.println( "Iterating over edge " + edge );
       setEdge( edge );
       maxID = Math.max( edge.id(), maxID );
     }

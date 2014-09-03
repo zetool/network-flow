@@ -21,7 +21,9 @@ import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Graph;
 import de.tu_berlin.coga.graph.Node;
+import de.tu_berlin.coga.netflow.ds.network.ExtendedGraph;
 import de.tu_berlin.coga.netflow.ds.network.Network;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,27 +45,20 @@ public class MaximumFlowProblem {
 	}
 
 	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, List<Node> sinks ) {
-		this( graph, capacities, new LinkedList<>(), sinks );
-		sources.add( source );
+		this( graph, capacities, Collections.singletonList( source ) , sinks );
 	}
 
 	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, Node sink ) {
-		this( graph, capacities, sources, new LinkedList<>() );
-		sinks.add( sink );
+		this( graph, capacities, sources, Collections.singletonList( sink ) );
 	}
 
 	public MaximumFlowProblem( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, Node sink ) {
-		this( graph, capacities, new LinkedList<>(), new LinkedList<>() );
-		sources.add( source );
-		sinks.add( sink );
+		this( graph, capacities, Collections.singletonList( source ), Collections.singletonList( sink ) );
 	}
 
   public MaximumFlowProblem( Network network ) {
     if( network.sinkCount() == 0 || network.sourceCount() == 0 ) {
       throw new IllegalArgumentException( "At least one sink and source must be specified." );
-    }
-    if( network.sinkCount() > 1 || network.sourceCount() > 1 ) {
-      throw new UnsupportedOperationException( "Not implemented yet!" );
     }
 		this.graph = network.getGraph();
 		this.capacities = network.getCapacities();
@@ -98,4 +93,29 @@ public class MaximumFlowProblem {
 	public List<Node> getSources() {
 		return sources;
 	}
+
+  public MaximumFlowProblem asSingleSourceProblem() {
+    if( !(graph instanceof DirectedGraph) ) {
+      throw new UnsupportedOperationException( "Only works for directed grpahs!" );
+    }
+    ExtendedGraph extended = new ExtendedGraph( (DirectedGraph)graph, 2, sources.size() + sinks.size() );
+
+    Node newSource = extended.getFirstNewNode();
+    Node newSink = extended.getNode( newSource.id() + 1 );
+
+    IdentifiableIntegerMapping<Edge> newCapacities = new IdentifiableIntegerMapping<>( capacities, extended.edgeCount() );
+    for( Node s : sources ) {
+      Edge e = extended.createAndSetEdge( newSource, s );
+      newCapacities.set( e, Integer.MAX_VALUE );
+    }
+    for( Node t : sinks ) {
+      Edge e = extended.createAndSetEdge( t, newSink );
+      newCapacities.set( e, Integer.MAX_VALUE );
+    }
+    return new MaximumFlowProblem( extended, newCapacities, newSource, newSink );
+  }
+
+  public final boolean isSingleSourceSink() {
+    return getSources().size() == 1 && getSinks().size() == 1;
+  }
 }
