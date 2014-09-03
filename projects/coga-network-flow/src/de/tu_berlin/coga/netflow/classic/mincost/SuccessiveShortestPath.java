@@ -160,14 +160,15 @@ public class SuccessiveShortestPath /*extends Algorithm<MinimumCostFlowProblem, 
         continue;
       }
       // Find a cost minimal source-sink-path
-      //MooreBellmanFord mbf = new MooreBellmanFord( residualNetwork, costs, source );
-      //mbf.run();
-      //Path shortestPath = mbf.getShortestPath( sink );
+      MooreBellmanFord mbf = new MooreBellmanFord( residualNetwork, costs, source );
+      mbf.run();
+      Path shortestPath = mbf.getShortestPath( sink );
 
+      // Can use Dijkstra only if executed on reduced costs, e.g. first shortest path should be moore bellman ford.
       //Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source );
-      Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source, sink );
-      dijkstra.run();
-      Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
+      //Dijkstra dijkstra = new Dijkstra( residualNetwork, costs, source, sink );
+      //dijkstra.run();
+      //Path shortestPath = dijkstra.getShortestPathTree().getPathToRoot( sink ); // mbf.getShortestPath( sink );
 
 
       paths.add( shortestPath );
