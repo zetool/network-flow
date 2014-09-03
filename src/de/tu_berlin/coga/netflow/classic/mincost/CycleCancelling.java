@@ -14,10 +14,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-/*
- * CycleCancelling.java
- *
- */
 package de.tu_berlin.coga.netflow.classic.mincost;
 
 import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
