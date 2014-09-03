@@ -2,17 +2,15 @@ package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.common.algorithm.Algorithm;
-import de.tu_berlin.coga.common.util.Helper;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.Graph;
 import de.tu_berlin.coga.graph.traversal.BreadthFirstSearch;
 import de.tu_berlin.coga.graph.util.GraphUtil;
-import de.tu_berlin.coga.graph.util.UnifiedGraphAccess;
-import de.tu_berlin.coga.netflow.ds.network.DirectedResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -34,6 +32,7 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
   boolean verbose = true;
   boolean useLower = true;
   private IdentifiableIntegerMapping<Edge> lowerCapacities;
+  private MaximumFlowProblem problem;
 
   @Override
   protected MaximumFlow runAlgorithm( MaximumFlowProblem problem ) {
@@ -74,21 +73,30 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
       StaticPath p = findPath();
       value = residualCapacity( p );
       augmentFlow( p, value );
-      fireProgressEvent( value < Integer.MAX_VALUE ? (double)flow / maxPossibleFlow : 1 );
+      fireProgressEvent( value < Integer.MAX_VALUE ? (double)flow / maxPossibleFlow2 : 1 );
     } while( value > 0 && value < Integer.MAX_VALUE ); //while( augmentFlow() != 0 )
 
-    return new MaximumFlow( getProblem(), residualNetwork.flow() );
+    // TODO: convert flow back to original network
+    if( getProblem().isSingleSourceSink() ) {
+      return new MaximumFlow( getProblem(), residualNetwork.flow() );      
+    } else {
+      residualNetwork.flow().setDomainSize( getProblem().getNetwork().edgeCount() );
+      return new MaximumFlow( getProblem(), residualNetwork.flow() );
+    }
   }
 
   private void initializeDatastructures() {
+    // Set up network
+    problem = getProblem().isSingleSourceSink() ? getProblem() : getProblem().asSingleSourceProblem();
+
     if( useLower ) {
-      residualNetwork = ResidualNetwork.getResidualNetwork( getProblem().getNetwork(), getProblem().getCapacities(), getProblem().getSource(), getProblem().getSink() );
+      residualNetwork = ResidualNetwork.getResidualNetwork( problem.getNetwork(), problem.getCapacities(), problem.getSource(), problem.getSink() );
       //((ResidualNetworkExtended)residualNetwork).setLower( lowerCapacities );
     } else {
-      residualNetwork = ResidualNetwork.getResidualNetwork( getProblem().getNetwork(), getProblem().getCapacities(), getProblem().getSource(), getProblem().getSink() );
+      residualNetwork = ResidualNetwork.getResidualNetwork( problem.getNetwork(), problem.getCapacities(), problem.getSource(), problem.getSink() );
     }
-    source = getProblem().getSource();
-    sink = getProblem().getSink();
+    source = problem.getSource();
+    sink = problem.getSink();
   }
 
   protected StaticPath findPath() {
@@ -146,7 +154,7 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     if( contained == null ) {
       contained = new IdentifiableBooleanMapping<>( residualNetwork.nodeCount() );
     }
-    for( Node n : getProblem().getNetwork() ) {
+    for( Node n : problem.getNetwork() ) {
       contained.set( n, false );
     }
     BreadthFirstSearch bfs = new BreadthFirstSearch();
@@ -172,17 +180,13 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     }
 
     //UnifiedGraphAccess g;
-    //g = GraphUtil.getUnifiedAccess( getProblem().getNetwork() );
     for( Node n : cut ) {
-      //for( Edge e : Helper.in( g.incident( n ) ) ) {
-      //for( Edge e : getProblem().getNetwork().outgoingEdges( n ) ) {
       for( Edge e :  GraphUtil.outgoingIterator( residualNetwork, n ) ) {
        // find outgoing edges
         if( !contained.get( e.end() ) && !cutOutgoing.contains( e ) ) {
           cutOutgoing.add( e );
         }
       }
-      //for( Edge e : getProblem().getNetwork().incomingEdges( n ) ) {
       for( Edge e :  GraphUtil.incomingIterator( residualNetwork, n ) ) {
         if( !contained.get( e.start() ) && !cutIncoming.contains( e ) ) {
           cutIncoming.add( e );

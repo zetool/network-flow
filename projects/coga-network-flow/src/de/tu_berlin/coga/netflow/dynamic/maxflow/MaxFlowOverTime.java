@@ -1,4 +1,4 @@
-/* zet evacuation tool copyright (c) 2007-09 zet evacuation team
+/* zet evacuation tool copyright (c) 2007-14 zet evacuation team
  *
  * This program is free software; you can redistribute it and/or
  * as published by the Free Software Foundation; either version 2
@@ -30,7 +30,7 @@ import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
 import de.tu_berlin.coga.netflow.ds.flow.TimeReapeatedFlow;
-import de.tu_berlin.coga.netflow.ds.network.ExtendedNetwork;
+import de.tu_berlin.coga.netflow.ds.network.ExtendedGraph;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
 import java.util.List;
@@ -50,7 +50,7 @@ public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeR
 	private Node superNode;
 	private int timeHorizon;
 	private IdentifiableIntegerMapping<Edge> transitTimes;
-	private ExtendedNetwork ex;
+	private ExtendedGraph ex;
 
 	/** Creates a new instance of MaxFlowOverTime */
 	public MaxFlowOverTime() {}
@@ -60,7 +60,7 @@ public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeR
 	 * minimum cost flow computation.
 	 */
 	private void reduction() {
-		ex = new ExtendedNetwork( network, 1, sources.size() + sinks.size() );
+		ex = new ExtendedGraph( network, 1, sources.size() + sinks.size() );
 		superNode = ex.getFirstNewNode();
 
 		edgeCapacities.setDomainSize( ex.getEdgeCapacity() ); // reserve space
@@ -84,7 +84,7 @@ public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeR
 	 * back the original network. The added Edges in the flow are also removed.
 	 */
 	private void reconstruction( IdentifiableIntegerMapping<Edge> flow ) {
-		ex.undo();
+		//ex.undo();
 		// the additional edges have the highest numbers, so we can just get rid of them
 		flow.setDomainSize( flow.getDomainSize() - (sources.size() + sinks.size()) );
 		transitTimes.setDomainSize( flow.getDomainSize() );
