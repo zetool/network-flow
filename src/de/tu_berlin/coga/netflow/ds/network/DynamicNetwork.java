@@ -89,7 +89,7 @@ public class DynamicNetwork implements DirectedGraph {
 		incomingEdges.put( node, new ListSequence<>() );
 		outgoingEdges.put( node, new ListSequence<>() );
 	}
-
+  
 	public void addNodes( Iterable<Node> nodes ) {
 		for( Node node : nodes )
 			addNode( node );
@@ -139,6 +139,7 @@ public class DynamicNetwork implements DirectedGraph {
 		return incomingEdges.get( node );
 	}
 
+  @Override
 	public ListSequence<Edge> incidentEdges( Node node ) {
 		ListSequence<Edge> incidentEdges = new ListSequence<>();
 		incidentEdges.addAll( incomingEdges( node ) );
@@ -146,10 +147,12 @@ public class DynamicNetwork implements DirectedGraph {
 		return incidentEdges;
 	}
 
+  @Override
 	public ListSequence<Edge> outgoingEdges( Node node ) {
 		return outgoingEdges.get( node );
 	}
 
+  @Override
 	public ListSequence<Node> nodes() {
 		return nodes;
 	}
