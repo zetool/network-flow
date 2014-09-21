@@ -8,7 +8,6 @@ import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.graph.Graph;
 import de.tu_berlin.coga.graph.traversal.BreadthFirstSearch;
 import de.tu_berlin.coga.graph.util.GraphUtil;
 import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
