@@ -4,7 +4,6 @@ package de.tu_berlin.coga.netflow.ds.network;
 import de.tu_berlin.coga.container.collection.ShiftedArraySet;
 import de.tu_berlin.coga.container.collection.CombinedCollection;
 import de.tu_berlin.coga.container.collection.ArraySet;
-import de.tu_berlin.coga.container.collection.DependingListSequence;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.DirectedGraph;
@@ -29,11 +28,11 @@ public class ExtendedGraph implements DirectedGraph {
 
   // Node information
 	/** Caches the edges incident to a node for all nodes in the graph. * Must not be null. */
-	protected HashMap<Node, DependingListSequence<Edge>> incidentEdges;
+	protected HashMap<Node, ListSequence<Edge>> incidentEdges;
 	/** Caches the edges ending at a node for all nodes in the graph. Must not be null. */
-	protected HashMap<Node, DependingListSequence<Edge>> incomingEdges;
+	protected HashMap<Node, ListSequence<Edge>> incomingEdges;
 	/** Caches the edges starting at a node for all nodes in the graph. Must not be null. */
-	protected HashMap<Node, DependingListSequence<Edge>> outgoingEdges;
+	protected HashMap<Node, ListSequence<Edge>> outgoingEdges;
 	/** Caches the number of edges incident to a node for all nodes in the graph. Must not be null. */
 	protected HashMap<Node,Integer> degree;
 	/** Caches the number of edges ending at a node for all nodes in the graph. Must not be null. */
@@ -50,6 +49,13 @@ public class ExtendedGraph implements DirectedGraph {
       this.newNodes.add( new Node( originalNodeCount + i ) );
     }
     this.newEdges = new ShiftedArraySet<>( Edge.class, newEdges, originalEdgeCount );
+    
+		//outgoingEdges = new IdentifiableObjectMapping<>( (originalNodeCount + newNodes) );
+    outgoingEdges = new HashMap<>();
+		for( Node node : this ) {
+			outgoingEdges.put( node, new ListSequence<>() );
+		}
+    
 	}
 
 	public Node getFirstNewNode() {
@@ -67,7 +73,11 @@ public class ExtendedGraph implements DirectedGraph {
 
   @Override
   public IdentifiableCollection<Edge> outgoingEdges( Node node ) {
-    throw new UnsupportedOperationException( "Not supported yet." );
+    if( isOriginalNode( node.id() ) ) {
+      return new CombinedCollection<>( graph.outgoingEdges( node ), outgoingEdges.get( node ) );
+    } else {
+      return outgoingEdges.get( node );
+    }
   }
 
   @Override
@@ -214,6 +224,7 @@ public class ExtendedGraph implements DirectedGraph {
     }
     Edge edge = new Edge( originalEdgeCount + newEdges.size(), start, end );
     newEdges.add( edge );
+    outgoingEdges.get( start ).add( edge );
     return edge;
   }
 

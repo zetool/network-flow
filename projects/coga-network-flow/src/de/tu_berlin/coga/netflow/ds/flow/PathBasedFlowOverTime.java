@@ -13,10 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/*
- * PathBasedFlowOverTime.java
- *
- */
+
 package de.tu_berlin.coga.netflow.ds.flow;
 
 import de.tu_berlin.coga.graph.Edge;
@@ -43,8 +40,9 @@ public class PathBasedFlowOverTime implements Iterable<FlowOverTimePath> {
 	 * @param pathFlow the path flow to be add.
 	 */
 	public void addPathFlow( FlowOverTimePath pathFlow ) {
-		if( pathFlow != null )
+		if( pathFlow != null ) {
 			pathFlows.add( pathFlow );
+    }
 	}
 
 	public boolean remove( FlowOverTimePath pathFlow ) {
