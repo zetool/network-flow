@@ -24,12 +24,18 @@ public class EATApprox {
 	IdentifiableIntegerMapping<Node> supplies;
 	ArrayList<Integer> flowCurve = new ArrayList<>();
 
-		public EATApprox( MaximumFlowOverTimeProblem problem, IdentifiableIntegerMapping<Node> supplies ) {
+	public EATApprox( MaximumFlowOverTimeProblem problem, IdentifiableIntegerMapping<Node> supplies ) {
 		this.problem = problem;
 		this.supplies = supplies;
 	}
 
-	protected void runAlgorithm() {
+  public ArrayList<Integer> getFlowCurve() {
+    return flowCurve;
+  }
+  
+  
+
+	public void runAlgorithm() {
 		if( problem.getSources().isEmpty() || problem.getSinks().isEmpty() ) {
 			System.out.println( "TimeExpandedMaximumFlowOverTime: The problem is invalid - this should not happen!" );
 			//return new PathBasedFlowOverTime();

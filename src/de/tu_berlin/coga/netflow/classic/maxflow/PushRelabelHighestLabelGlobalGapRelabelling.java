@@ -1,7 +1,4 @@
-/**
- * PushRelabelHighestLabelGlobalGapRelabelling.java
- * Created: Oct 21, 2010, 6:03:42 PM
- */
+
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.graph.Edge;
