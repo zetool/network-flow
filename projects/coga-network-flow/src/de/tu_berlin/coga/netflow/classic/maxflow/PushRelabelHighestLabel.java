@@ -1,7 +1,4 @@
-/**
- * PushRelabelHighestLabel.java
- * Created: Oct 21, 2010, 6:03:17 PM
- */
+
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
@@ -275,7 +272,7 @@ public class PushRelabelHighestLabel extends PushRelabel {
    buckets[i-nodes]->firstActive is used for DSF tree
 */
 
-{
+
 	Node j,tos,bos,restart,r;
 	Edge a;
   double delta;
@@ -416,11 +413,15 @@ public class PushRelabelHighestLabel extends PushRelabel {
 				a = residualGraph.getEdge( a.id()+1 );
     }
   }
-}
+
 
 	}
 
 	private boolean isAdmissible( Edge e ) {
 		return residualGraph.getResidualCapacity( e ) > 0 && distanceLabels.get( e.start() ) == distanceLabels.get( e.end() ) + 1;
 	}
+  
+  public static void main( String args[] ) {
+    System.out.println( "Ford Fulkerson kompilieren bitte trololo" );
+  }
 }

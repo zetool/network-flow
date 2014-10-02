@@ -1,7 +1,4 @@
-/*
- * FlowOverTimePathDecomposition.java
- *
- */
+
 package de.tu_berlin.coga.netflow.dynamic;
 
 import de.tu_berlin.coga.common.algorithm.Algorithm;
@@ -246,7 +243,5 @@ public class FlowOverTimePathDecomposition extends Algorithm<ImplicitTimeExpande
 			}
 		}
 	}
-
-
 
 }

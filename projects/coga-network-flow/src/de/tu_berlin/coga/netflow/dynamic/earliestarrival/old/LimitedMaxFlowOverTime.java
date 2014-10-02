@@ -1,7 +1,4 @@
-/**
- * LimitedMaxFlowOverTime.java
- * Created: 02.12.2011, 14:36:51
- */
+
 package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
@@ -24,14 +21,14 @@ public class LimitedMaxFlowOverTime {
 	
 	MaximumFlowOverTimeProblem problem;
 	IdentifiableIntegerMapping<Node> supplies;
-			long hiprf;
+	long hiprf;
 
 	public LimitedMaxFlowOverTime( MaximumFlowOverTimeProblem problem, IdentifiableIntegerMapping<Node> supplies ) {
 		this.problem = problem;
 		this.supplies = supplies;
 	}
 	
-	protected void runAlgorithm() {
+	public void runAlgorithm() {
 		if( problem.getSources().isEmpty() || problem.getSinks().isEmpty() ) {
 			System.out.println( "TimeExpandedMaximumFlowOverTime: The problem is invalid - this should not happen!" );
 			//return new PathBasedFlowOverTime();
@@ -73,6 +70,12 @@ public class LimitedMaxFlowOverTime {
 		//System.out.println( "Fluss auf 13: " + mf.get( ten.getEdge( 13 ) ) );
 		
 	}
+
+  public long getHiprf() {
+    return hiprf;
+  }
+  
+  
 	
 	public static void main( String[] args ) {
 		
@@ -119,7 +122,7 @@ public class LimitedMaxFlowOverTime {
 		
 	}
 
-	long getFlow() {
+	public long getFlow() {
 		return hiprf;
 	}
 

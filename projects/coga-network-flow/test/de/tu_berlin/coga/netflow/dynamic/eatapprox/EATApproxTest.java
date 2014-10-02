@@ -84,7 +84,6 @@ public class EATApproxTest {
     MaximumFlowOverTimeProblem p = new MaximumFlowOverTimeProblem( n, capacities, transitTime, sources, sinks, timeHorizon );
     EATApprox eata = new EATApprox( p, supplies );
     eata.runAlgorithm();
-
   }
 
   @Test
@@ -139,7 +138,7 @@ public class EATApproxTest {
       p = new MaximumFlowOverTimeProblem( n, capacities, transitTime, sources, sinks, timeHorizon );
       lmfot = new LimitedMaxFlowOverTime( p, supplies );
       lmfot.runAlgorithm();
-      flowValues.add( (int) lmfot.hiprf );
+      flowValues.add( (int) lmfot.getHiprf() );
 
     } while( lmfot.getFlow() != totalSupply );
 
@@ -148,8 +147,8 @@ public class EATApproxTest {
     eata.runAlgorithm();
 
     System.out.println( flowValues.toString() );
-    System.out.println( eata.flowCurve.toString() );
-    System.out.println( "beta = " + computeBeta( flowValues, eata.flowCurve ) );
+    System.out.println( eata.getFlowCurve().toString() );
+    System.out.println( "beta = " + computeBeta( flowValues, eata.getFlowCurve() ) );
 
 //		Assert.assertEquals( "Size of the arrival curve", eata.flowCurve.size(), 1 );
 //		Assert.assertEquals( "Flow", eata.flowCurve.get(0).intValue(), k+1 );
@@ -206,7 +205,7 @@ public class EATApproxTest {
       p = new MaximumFlowOverTimeProblem( n, capacities, transitTime, sources, sinks, timeHorizon );
       lmfot = new LimitedMaxFlowOverTime( p, supplies );
       lmfot.runAlgorithm();
-      flowValues.add( (int) lmfot.hiprf );
+      flowValues.add( (int) lmfot.getFlow() );
 
     } while( lmfot.getFlow() != totalSupply );
 
@@ -215,11 +214,11 @@ public class EATApproxTest {
     eata.runAlgorithm();
 
     System.out.println( flowValues.toString() );
-    System.out.println( eata.flowCurve.toString() );
-    System.out.println( "beta = " + computeBeta( flowValues, eata.flowCurve ) );
+    System.out.println( eata.getFlowCurve().toString() );
+    System.out.println( "beta = " + computeBeta( flowValues, eata.getFlowCurve() ) );
 
-    Assert.assertEquals( "Size of the arrival curve", eata.flowCurve.size(), 1 );
-    Assert.assertEquals( "Flow", eata.flowCurve.get( 0 ).intValue(), M + 1 );
+    Assert.assertEquals( "Size of the arrival curve", eata.getFlowCurve().size(), 1 );
+    Assert.assertEquals( "Flow", eata.getFlowCurve().get( 0 ).intValue(), M + 1 );
     Assert.assertEquals( "Optimal solution for time T", flowValues.get( flowValues.size() - 1 ).longValue(), 2 * M );
     Assert.assertEquals( "Optimal flow for time 1", flowValues.get( 0 ).longValue(), M + 1 );
     Assert.assertEquals( "Linear increase of arrival curve", flowValues.size(), M );
@@ -237,12 +236,12 @@ public class EATApproxTest {
 
     DirectedGraph network = gen.getGraph();
     IdentifiableIntegerMapping<Edge> capacities = gen.getCapacities();
-    IdentifiableIntegerMapping<Edge> transitTime = new IdentifiableIntegerMapping<>( network.getEdgeCapacity() );
-    for( int i = 0; i < network.getEdgeCapacity(); ++i ) {
+    IdentifiableIntegerMapping<Edge> transitTime = new IdentifiableIntegerMapping<>( network.edgeCount());
+    for( int i = 0; i < network.edgeCount(); ++i ) {
       transitTime.add( network.getEdge( i ), 0 );
     }
-    IdentifiableIntegerMapping<Node> supplies = new IdentifiableIntegerMapping<>( network.getNodeCapacity() );
-    for( int i = 0; i < network.getNodeCapacity(); ++i ) {
+    IdentifiableIntegerMapping<Node> supplies = new IdentifiableIntegerMapping<>( network.nodeCount());
+    for( int i = 0; i < network.nodeCount(); ++i ) {
       supplies.set( network.getNode( i ), 0 );
     }
     ArrayList<Node> sources = new ArrayList<>( a * a );
@@ -268,7 +267,7 @@ public class EATApproxTest {
       MaximumFlowOverTimeProblem p = new MaximumFlowOverTimeProblem( network, capacities, transitTime, sources, sinks, timeHorizon );
       lmfot = new LimitedMaxFlowOverTime( p, supplies );
       lmfot.runAlgorithm();
-      flowValues.add( (int) lmfot.hiprf );
+      flowValues.add( (int) lmfot.getFlow() );
     } while( lmfot.getFlow() != totalSupply );
 
     timeHorizon = T;
@@ -278,8 +277,8 @@ public class EATApproxTest {
     eata.runAlgorithm();
 
     System.out.println( flowValues.toString() );
-    System.out.println( eata.flowCurve.toString() );
-    System.out.println( "beta = " + computeBeta( flowValues, eata.flowCurve ) );
+    System.out.println( eata.getFlowCurve().toString() );
+    System.out.println( "beta = " + computeBeta( flowValues, eata.getFlowCurve() ) );
   }
 
   @Test
@@ -340,7 +339,7 @@ public class EATApproxTest {
       p = new MaximumFlowOverTimeProblem( n, capacities, transitTime, sources, sinks, timeHorizon );
       lmfot = new LimitedMaxFlowOverTime( p, supplies );
       lmfot.runAlgorithm();
-      flowValues.add( (int) lmfot.hiprf );
+      flowValues.add( (int) lmfot.getFlow() );
 
     } while( lmfot.getFlow() != totalSupply );
 

@@ -1,7 +1,4 @@
-/**
- * PushRelabelHighestLabelGlobalRelabelling.java
- * Created: Oct 21, 2010, 6:03:29 PM
- */
+
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.math.coga.datastructure.Tuple;

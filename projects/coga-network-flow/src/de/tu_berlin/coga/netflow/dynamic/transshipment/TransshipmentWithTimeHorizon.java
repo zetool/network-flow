@@ -132,4 +132,5 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 
 		resultFlowPathBased = dynamicTransshipment;
 	}
+
 }

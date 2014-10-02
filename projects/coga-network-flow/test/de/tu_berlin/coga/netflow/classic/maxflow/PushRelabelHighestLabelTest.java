@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
