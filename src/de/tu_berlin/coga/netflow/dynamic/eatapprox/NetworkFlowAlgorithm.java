@@ -134,7 +134,7 @@ public class NetworkFlowAlgorithm extends PushRelabel {
 			if( excess.get( node ) == 0 ) {
 				if( inactiveBuckets.inactive[node.id()] == false ) {
 					//System.out.println( "Node should be inactive!" );
-					inactiveBuckets.addInactive( distanceLabels.get( node ), node );
+					//inactiveBuckets.addInactive( distanceLabels.get( node ), node );
 				}
 
 			} else {
