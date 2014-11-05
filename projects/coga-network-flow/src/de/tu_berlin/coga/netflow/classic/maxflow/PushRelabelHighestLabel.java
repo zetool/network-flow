@@ -135,10 +135,11 @@ public class PushRelabelHighestLabel extends PushRelabel {
 				continue;
 			}
 			distanceLabels.set( v, id == source.id() ? n : 1 );
-			if( excess.get( v ) > 0 )
-				activeBuckets.addActive( 1, v );
-			else if( distanceLabels.get( v ) < n )
-				inactiveBuckets.addInactive( 1, v );
+      if( excess.get( v ) > 0 ) {
+        activeBuckets.addActive( 1, v );
+      } else if( distanceLabels.get( v ) < n ) {
+        inactiveBuckets.addInactive( 1, v );
+      }
 		}
 		activeBuckets.setdMax( 1 );
 	}

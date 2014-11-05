@@ -135,7 +135,7 @@ public class SimpleResidualGraph implements DirectedGraph, OutgoingStarGraph {
 
 	@Override
 	public boolean isDirected() {
-		throw new UnsupportedOperationException( "Not supported yet." );
+		return true;
 	}
 
 	@Override

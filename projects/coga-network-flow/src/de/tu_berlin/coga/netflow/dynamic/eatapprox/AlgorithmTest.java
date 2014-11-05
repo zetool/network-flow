@@ -68,7 +68,7 @@ public class AlgorithmTest {
 		//EarliestArrivalFlowProblem mfot = new EarliestArrivalFlowProblem(capacities, network, null, network.getNode( 3 ), sources, timeHorizon, transitTimes, supplies );
 	}
 
-	public EarliestArrivalFlowProblem testInstance() {
+	public static EarliestArrivalFlowProblem testInstance() {
 		DefaultDirectedGraph network = new DefaultDirectedGraph( 4, 5 );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 1 ) );
 		network.createAndSetEdge( network.getNode( 0 ), network.getNode( 2 ) );
@@ -98,10 +98,10 @@ public class AlgorithmTest {
 		int timeHorizon = 0;
 
 		IdentifiableIntegerMapping<Node> supplies = new IdentifiableIntegerMapping<> ( 4 );
-		supplies.set( network.getNode( 0 ), 10 );
+		supplies.set( network.getNode( 0 ), 3 );
 		supplies.set( network.getNode( 1 ), 0 );
 		supplies.set( network.getNode( 2 ), 0 );
-		supplies.set( network.getNode( 3 ), -10 );
+		supplies.set( network.getNode( 3 ), -3 );
 
 		EarliestArrivalFlowProblem mfot = new EarliestArrivalFlowProblem(capacities, network, null, network.getNode( 3 ), sources, timeHorizon, transitTimes, supplies );
 		return mfot;
@@ -124,9 +124,10 @@ public class AlgorithmTest {
 
 		EarliestArrivalFlowProblem mfot = readFromDatFile( "../../input/flow/swiss_1_10s.dat" );
 		//EarliestArrivalFlowProblem mfot = readFromDatFile( "../../input/flow/siouxfalls_5_10s-original.dat" );
+    //mfot = testInstance();
 		EarliestArrivalApproximationAlgorithm algo = new EarliestArrivalApproximationAlgorithm();
      
-		mfot.setTimeHorizon( 64 ); // 64: zeitpunkt 42 ist falsch, // 1676 for max flow
+		mfot.setTimeHorizon( 1676 ); // 64: zeitpunkt 42 ist falsch, // 1676 for max flow
 		algo.setProblem( mfot );
 		algo.run();
 
