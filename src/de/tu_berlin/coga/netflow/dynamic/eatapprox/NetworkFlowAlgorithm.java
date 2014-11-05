@@ -139,7 +139,7 @@ public class NetworkFlowAlgorithm extends PushRelabel {
 
 			} else {
 				if( activeBuckets.active[node.id()] == false ) {
-//					System.out.println( "Should be __active!" );
+					System.out.println( "Should be __active!" );
 					//activeBuckets.addActive( distanceLabels.get( node ), node );
 				}
 			}
@@ -191,16 +191,21 @@ public class NetworkFlowAlgorithm extends PushRelabel {
 			final int id = v.id();
 			if( id == sink.id() ) {
 				distanceLabels.set( v, 0 );
+        //System.out.println( v + " active" );
 				inactiveBuckets.addInactive( 0, v );
 				continue;
 			}
 			distanceLabels.set( v, id == source.id() ? n : 1 ); // nodecount hier muss der aktuelle node-count hin.
 			if( excess.get( v ) > 0 ) {
+        //System.out.println( v + " active" );
 				activeBuckets.addActive( 1, v );
 				//gotActive.add( v );
-			}
-			else if( distanceLabels.get( v ) < n )
-				inactiveBuckets.addInactive( 1, v );
+			} else if( distanceLabels.get( v ) < n )  {
+        //System.out.println( v + " inactive" );
+				inactiveBuckets.addInactive( 1, v );        
+      } else  {
+        //System.out.println( v + " nothing" );
+      }
 		}
 		activeBuckets.setdMax( 1 );
 	}
@@ -211,7 +216,7 @@ public class NetworkFlowAlgorithm extends PushRelabel {
 			final Node v = activeBuckets.max();
 			if( v != null ) {
 				if( v.id() == 3457 ) {
-					System.out.println( "Deactivate 3457 with distance " + activeBuckets.getMaxIndex() + " with excess " + excess.get( v ) );
+					//System.out.println( "Deactivate 3457 with distance " + activeBuckets.getMaxIndex() + " with excess " + excess.get( v ) );
 				}
 				activeBuckets.removeActive( activeBuckets.getMaxIndex(), v );
 				//gotActive.remove( v );

@@ -149,12 +149,12 @@ public class HidingResidualGraph extends SimpleResidualGraph implements Directed
 			knownEdges[n.id()] = new KnownEdgesList();
 		//nodes.add( new Node( id++ ) );
 
-			System.out.println( "Nudes akutell: " + getCurrentVisibleNodeCount() );
+		System.out.println( "Nodes akutell: " + getCurrentVisibleNodeCount() );
 	}
 
 
 
-		int edgeCounter = 0;
+	int edgeCounter = 0;
 	private void createEdges() {
 
 		// Outgoing for super source. Without incoming edges!
@@ -245,7 +245,16 @@ public class HidingResidualGraph extends SimpleResidualGraph implements Directed
 
 					if( t + transitTimes.get( e ) > timeHorizon )
 						continue;
-					Node target = getCopy( e.end(), t + transitTimes.get( e ) );
+          Node target = null;
+          try {
+            target = getCopy( e.end(), t + transitTimes.get( e ) );
+          } catch( ArrayIndexOutOfBoundsException ex ) {
+            System.err.println( "Edge: " + e );
+            System.err.println( "Node: " + e.end() );
+            System.err.println( "t = " + t);
+            System.err.println( "transit time: " + transitTimes.get( e ) );
+            throw ex;
+          }
 					if( t + transitTimes.get( e ) == 0 )
 						visibleEdgeCount++; // we have an edge going on level 0 that is visible from the beginning on
 
@@ -494,6 +503,33 @@ public class HidingResidualGraph extends SimpleResidualGraph implements Directed
 
 		return in;
 	}
+
+	@Override
+	public IdentifiableCollection<Edge> outgoingEdges( Node node ) {
+		ListSequence<Edge> out = new ListSequence<>(); // TODO iterator
+
+    for( int i = first.get( node ); i < last.get( node ); ++i ) {
+			Edge e = edges.get( i );
+			//if( isReverseEdge( e ) && (getLayer( e.end().id() ) <= lastLayer || getLayer( e.start().id() ) == -1 ) ) {
+      if( residualCapacity.get( e ) > 0 && getLayer( e.end().id() ) <= lastLayer ) {
+				out.add( e );        
+      }
+			//}
+		}
+
+		return out;
+	}
+
+  void resetFlow() {
+    for( Edge e : edges ) {
+      if( isReverseEdge( e ) ) {
+        int flow = residualCapacity.get( e );
+        augment( e, flow ); // now we have zero flow on the edge again
+      } else {
+        
+      }
+    }
+  }
 
 
 
