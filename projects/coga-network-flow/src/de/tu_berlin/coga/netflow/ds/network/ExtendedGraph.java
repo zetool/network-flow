@@ -6,9 +6,9 @@ import de.tu_berlin.coga.container.collection.CombinedCollection;
 import de.tu_berlin.coga.container.collection.ArraySet;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.container.collection.ListSequence;
+import de.tu_berlin.coga.container.util.IteratorIterator;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.graph.IteratorIterator;
 import de.tu_berlin.coga.graph.Node;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,13 +49,13 @@ public class ExtendedGraph implements DirectedGraph {
       this.newNodes.add( new Node( originalNodeCount + i ) );
     }
     this.newEdges = new ShiftedArraySet<>( Edge.class, newEdges, originalEdgeCount );
-    
+
 		//outgoingEdges = new IdentifiableObjectMapping<>( (originalNodeCount + newNodes) );
     outgoingEdges = new HashMap<>();
 		for( Node node : this ) {
 			outgoingEdges.put( node, new ListSequence<>() );
 		}
-    
+
 	}
 
 	public Node getFirstNewNode() {
