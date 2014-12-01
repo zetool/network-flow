@@ -1,10 +1,9 @@
 
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
-import de.tu_berlin.math.coga.datastructure.Tuple;
+import de.tu_berlin.coga.common.datastructure.Tuple;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-
 
 /**
  *

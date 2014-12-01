@@ -22,7 +22,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.rational.RationalResidualGraph;
 import de.tu_berlin.coga.netflow.ds.flow.RationalMaxFlow;
-import de.tu_berlin.coga.netflow.ds.network.DynamicNetwork;
+import de.tu_berlin.coga.graph.DynamicNetwork;
 import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
 import java.util.Collections;
 import java.util.List;

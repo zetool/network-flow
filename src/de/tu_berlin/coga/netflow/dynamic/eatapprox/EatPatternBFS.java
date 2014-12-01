@@ -95,7 +95,7 @@ public class EatPatternBFS  extends Algorithm<EarliestArrivalFlowProblem, Earlie
       bfs.setStart( g.getNode( g.SUPER_SOURCE ) );
       bfs.setStop( g.getNode( g.SUPER_SINK ) );
       bfs.run();
-      StaticPath path = new StaticPath( g.getNode( g.SUPER_SOURCE ), g.getNode( g.SUPER_SINK ), bfs );
+      StaticPath path = new StaticPath( g.getNode( g.SUPER_SINK ), bfs );
       //System.out.println( "Reachable: " + bfs.getReachableNodes() );
       //System.out.println( "Found path: " + path );
       int delta = Integer.MAX_VALUE;

@@ -27,7 +27,6 @@ import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
-import de.tu_berlin.math.coga.algorithm.shortestpath.Dijkstra;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;

@@ -16,7 +16,7 @@
 package de.tu_berlin.coga.netflow.classic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.netflow.ds.network.DynamicNetwork;
+import de.tu_berlin.coga.graph.DynamicNetwork;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
 
