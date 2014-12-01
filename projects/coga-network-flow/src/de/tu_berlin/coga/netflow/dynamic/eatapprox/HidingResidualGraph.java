@@ -16,8 +16,8 @@
 
 package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 
+import de.tu_berlin.coga.common.datastructure.Tuple;
 import de.tu_berlin.coga.netflow.classic.maxflow.SimpleResidualGraph;
-import de.tu_berlin.math.coga.datastructure.Tuple;
 import de.tu_berlin.coga.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.container.collection.IdentifiableCollection;

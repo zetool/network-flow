@@ -15,8 +15,6 @@
  */
 package de.tu_berlin.coga.netflow.classic.mincost;
 
-import static algo.graph.Flags.MARTIN;
-import static algo.graph.Flags.TIMON;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
@@ -34,6 +32,8 @@ import java.text.NumberFormat;
  * @author Timon Kelter
  */
 public abstract class MinimumMeanCycleDetector {
+  private final static boolean TIMON = false;
+  private final static boolean MARTIN = false;
 
   /**
    * Detects a minimum mean cost cycle. Running time is O(n*(n+m)).

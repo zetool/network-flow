@@ -1,15 +1,15 @@
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
-import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 import de.tu_berlin.coga.common.algorithm.Algorithm;
-import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.graph.structure.StaticPath;
-import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import de.tu_berlin.coga.graph.Edge;
+import de.tu_berlin.coga.graph.Node;
+import de.tu_berlin.coga.graph.structure.Path;
 import de.tu_berlin.coga.graph.traversal.BreadthFirstSearch;
 import de.tu_berlin.coga.graph.util.GraphUtil;
+import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
+import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.netflow.ds.network.ResidualNetwork;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,8 +35,7 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
 
   @Override
   protected MaximumFlow runAlgorithm( MaximumFlowProblem problem ) {
-    if( residualNetwork == null ) // only initialize in the first run!
-    {
+    if( residualNetwork == null ) { // only initialize in the first run!    
       initializeDatastructures();
     } else {
       throw new IllegalStateException( "Whatever." );
@@ -69,7 +68,7 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
 
     int value = 0;
     do {
-      StaticPath p = findPath();
+      Path p = findPath();
       value = residualCapacity( p );
       augmentFlow( p, value );
       fireProgressEvent( value < Integer.MAX_VALUE ? (double)flow / maxPossibleFlow2 : 1 );
@@ -98,16 +97,11 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     sink = problem.getSink();
   }
 
-  protected StaticPath findPath() {
-    BreadthFirstSearch bfs = new BreadthFirstSearch();
-    bfs.setProblem( residualNetwork );
-    bfs.setStart( source );
-    bfs.setStop( sink );
-    bfs.run();
-    return new StaticPath( source, sink, bfs );
+  protected Path findPath() {
+    return GraphUtil.getPath( residualNetwork, source, sink );
   }
 
-  private int residualCapacity( StaticPath path ) {
+  private int residualCapacity( Path path ) {
     if( path.length() == 0 ) {
       return 0;
     }
@@ -118,7 +112,7 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     return min;
   }
 
-  public void augmentFlow( StaticPath path, int value ) {
+  public void augmentFlow( Path path, int value ) {
     residualNetwork.augmentFlow( path, value );
     
     pushes += path.length();

@@ -16,7 +16,6 @@
 
 package de.tu_berlin.coga.netflow.util;
 
-import algo.graph.Flags;
 import de.tu_berlin.coga.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
@@ -126,11 +125,6 @@ public class GraphInstanceChecker {
           sinks.add( node );
         }
       }
-    }
-
-    if( Flags.MEL ) {
-      System.out.println( "Sources: " + sources );
-      System.out.println( "Sinks: " + sinks );
     }
 
     /* A mapping to save which sources can reach a sink.

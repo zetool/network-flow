@@ -26,7 +26,6 @@ import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
-import algo.graph.Flags;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import ds.graph.GraphLocalization;
@@ -36,7 +35,11 @@ import ds.graph.GraphLocalization;
  * to fulfill all supplies and demands.
  */
 public class TransshipmentBoundEstimator {
-
+  private final static boolean ALGO_PROGRESS = false;
+  private final static boolean BOUND_ESTIMATOR_STATIC_FLOW = false;
+  private final static boolean BOUND_ESTIMATOR_LONG = false;
+  private final static boolean BOUND_ESTIMATOR = false;
+  
 	public static int calculateBoundByLongestPath(DirectedGraph network,
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
@@ -83,7 +86,7 @@ public class TransshipmentBoundEstimator {
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies) {
 				
-		if (Flags.ALGO_PROGRESS){
+		if ( ALGO_PROGRESS){
 			System.out.println("Bound calculation by static max flow started.");
 		}
 		LinkedList<Node> sources = new LinkedList<Node>();
@@ -119,10 +122,10 @@ public class TransshipmentBoundEstimator {
 		do {
 			flowLeavingSource = new IdentifiableIntegerMapping<Node>(supplies.getDomainSize());
 			int maxSupplyInThisRun=0;
-			if (Flags.BOUND_ESTIMATOR_STATIC_FLOW){
+			if (BOUND_ESTIMATOR_STATIC_FLOW){
 				System.out.println("New run");
 			}
-			if (Flags.ALGO_PROGRESS){
+			if ( ALGO_PROGRESS){
 				System.out.println("New run of the max flow algorithm starts.");
 			}
 			StaticTransshipment staticTransshipment = new StaticTransshipment(network, edgeCapacities, restSupplies);
@@ -143,10 +146,10 @@ public class TransshipmentBoundEstimator {
 			for (StaticFlowPath staticPathFlow : staticFlowAsPaths){
 				int length = 0;
 				//test += staticPathFlow.getAmount();
-				if (Flags.BOUND_ESTIMATOR_STATIC_FLOW){
+				if (BOUND_ESTIMATOR_STATIC_FLOW){
 					System.out.println("Source: "+staticPathFlow.firstEdge().start()+" Amount: "+staticPathFlow.getAmount());
 				}
-				if (Flags.ALGO_PROGRESS){
+				if (ALGO_PROGRESS){
 					System.out.println("Removed "+staticPathFlow.getAmount()+" supply from "+staticPathFlow.firstEdge().start()+". ");
 				}
 			//	System.out.println(staticPathFlow);
@@ -160,7 +163,7 @@ public class TransshipmentBoundEstimator {
 					sources.remove(staticPathFlow.firstEdge().start());
 				}
 				restSupplies.increase(sink, staticPathFlow.getAmount());
-				if (Flags.BOUND_ESTIMATOR_STATIC_FLOW){
+				if (BOUND_ESTIMATOR_STATIC_FLOW){
 					System.out.println("Sink: "+restSupplies.get(sink));
 				}
 				for (Edge edge : staticPathFlow){
@@ -170,20 +173,20 @@ public class TransshipmentBoundEstimator {
 					maxLength = length;
 				}
 			}
-			if (Flags.BOUND_ESTIMATOR_STATIC_FLOW){
+			if (BOUND_ESTIMATOR_STATIC_FLOW){
 				System.out.println("max supply in this run "+maxSupplyInThisRun);
 				System.out.println("max length "+maxLength);
 			}
 			sumOfMaxSupplies += maxSupplyInThisRun;
 			//System.out.println(restSupplies);
-			if (Flags.BOUND_ESTIMATOR_STATIC_FLOW){
+			if (BOUND_ESTIMATOR_STATIC_FLOW){
 				System.out.println(sources);
 			}
-			if (Flags.ALGO_PROGRESS){
+			if (ALGO_PROGRESS){
 				System.out.println("Max flow run finished. Remaining supplies: "+(-restSupplies.get(sink)));
 			}
 		} while (restSupplies.get(sink) < 0);
-		if (Flags.BOUND_ESTIMATOR_STATIC_FLOW){
+		if (BOUND_ESTIMATOR_STATIC_FLOW){
 			System.out.println("sum of max "+sumOfMaxSupplies);
 		}
 		
@@ -320,10 +323,10 @@ public class TransshipmentBoundEstimator {
 					maxLength = length;
 			}
 			
-			if (Flags.BOUND_ESTIMATOR_LONG) {
+			if (BOUND_ESTIMATOR_LONG) {
 				System.out.println("Path decomposition: " + pathFlows);
 			}
-			if (Flags.BOUND_ESTIMATOR){
+			if (BOUND_ESTIMATOR){
 				System.out.println();
 				System.out.println("Max Length: " + maxLength + " Max Supply: "
 						+ maxSupply + " Sum:" + (maxLength + maxSupply)
@@ -375,7 +378,7 @@ public class TransshipmentBoundEstimator {
 			else
 				multipliedCapacities.set(edge, edgeCapacities.get(edge)*sources.size());
 		}
-		if (Flags.BOUND_ESTIMATOR_LONG){
+		if (BOUND_ESTIMATOR_LONG){
 			System.out.println();
 			System.out.println();
 			System.out.println("network: "+network);
@@ -384,16 +387,16 @@ public class TransshipmentBoundEstimator {
 			System.out.println("supplies: "+supplies);
 			System.out.println("oneSupplies "+oneSupplies);
 		}
-		if (Flags.ALGO_PROGRESS){
+		if (ALGO_PROGRESS){
 			System.out.println("Progress: Static transshipment algorithm is called for calculation of upper bound for time horizon..");
 		}
 		StaticTransshipment staticTransshipment = new StaticTransshipment(network, multipliedCapacities, oneSupplies);
 		staticTransshipment.run();
 		IdentifiableIntegerMapping<Edge> staticFlow = staticTransshipment.getFlow();
-		if (Flags.ALGO_PROGRESS){
+		if (ALGO_PROGRESS){
 			System.out.println("Progress: .. call of static transshipment algorithm finished.");
 		}
-		if (Flags.BOUND_ESTIMATOR_LONG)
+		if (BOUND_ESTIMATOR_LONG)
 			System.out.println("Calculated static flow for upper bound: "+staticFlow);
 		PathBasedFlow pathFlows = PathDecomposition.calculatePathDecomposition(network, supplies, sources, sinks, staticFlow);
 		
@@ -407,10 +410,10 @@ public class TransshipmentBoundEstimator {
 				maxLength = length;
 		}
 		
-		if (Flags.BOUND_ESTIMATOR_LONG) {
+		if (BOUND_ESTIMATOR_LONG) {
 			System.out.println("Path decomposition: " + pathFlows);
 		}
-		if (Flags.BOUND_ESTIMATOR){
+		if (BOUND_ESTIMATOR){
 			System.out.println();
 			System.out.println("Max Length: " + maxLength + " Max Supply: "
 					+ maxSupply + " Sum:" + (maxLength + maxSupply)
@@ -426,7 +429,7 @@ public class TransshipmentBoundEstimator {
 			IdentifiableIntegerMapping<Edge> transitTimes,
 			IdentifiableIntegerMapping<Edge> edgeCapacities,
 			IdentifiableIntegerMapping<Node> supplies){
-		if (Flags.BOUND_ESTIMATOR){
+		if (BOUND_ESTIMATOR){
 			System.out.println("");
 		}
 		int c = Integer.MAX_VALUE;//calculateBoundByStaticTransshipment(network, transitTimes, edgeCapacities, supplies);
