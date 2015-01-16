@@ -15,7 +15,7 @@
  */
 package de.tu_berlin.coga.netflow.ds.structure;
 
-import de.tu_berlin.coga.container.collection.ListSequence;
+import org.zetool.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;

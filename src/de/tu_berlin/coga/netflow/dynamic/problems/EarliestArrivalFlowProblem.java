@@ -17,7 +17,7 @@ package de.tu_berlin.coga.netflow.dynamic.problems;
 
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import java.util.LinkedList;
 import java.util.List;

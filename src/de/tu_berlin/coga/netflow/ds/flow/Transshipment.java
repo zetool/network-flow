@@ -22,7 +22,7 @@ package de.tu_berlin.coga.netflow.ds.flow;
 import de.tu_berlin.coga.netflow.ds.flow.Flow;
 import de.tu_berlin.coga.netflow.classic.problems.TransshipmentProblem;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
 import java.util.LinkedList;
 import java.util.List;

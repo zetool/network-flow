@@ -17,9 +17,9 @@
 package de.tu_berlin.coga.netflow.ds.flow;
 
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.collection.IdentifiableCollection;
-import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
-import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
+import org.zetool.container.collection.IdentifiableCollection;
+import org.zetool.container.mapping.IdentifiableObjectMapping;
+import org.zetool.container.mapping.TimeIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 
 /**

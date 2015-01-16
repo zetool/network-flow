@@ -16,13 +16,13 @@
 
 package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
 
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
-import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableObjectMapping;
+import org.zetool.container.mapping.TimeIntegerMapping;
 import java.util.LinkedList;
 import java.util.Queue;
 

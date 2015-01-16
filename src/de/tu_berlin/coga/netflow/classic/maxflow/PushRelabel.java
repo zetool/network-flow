@@ -5,9 +5,9 @@
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;

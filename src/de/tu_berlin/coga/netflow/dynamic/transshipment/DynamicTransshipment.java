@@ -18,7 +18,7 @@ package de.tu_berlin.coga.netflow.dynamic.transshipment;
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicTransshipmentProblem;
 import de.tu_berlin.coga.netflow.classic.transshipment.StaticTransshipment;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
 
 /**

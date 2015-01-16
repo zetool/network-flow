@@ -18,8 +18,8 @@ package de.tu_berlin.coga.netflow.dynamic.earliestarrival;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import de.tu_berlin.math.coga.algorithm.shortestpath.Dijkstra;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
-import de.tu_berlin.coga.common.algorithm.AlgorithmStatusEvent;
+import org.zetool.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.AlgorithmStatusEvent;
 import de.tu_berlin.coga.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTimeImplicit;

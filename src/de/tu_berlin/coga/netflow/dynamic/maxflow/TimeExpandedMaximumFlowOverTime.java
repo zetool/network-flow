@@ -29,9 +29,7 @@ import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
 import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabelHighestLabelGlobalGapRelabelling;
 import de.tu_berlin.coga.netflow.classic.maxflow.PathDecomposition;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
-import ds.graph.*;
-import ds.graph.flow.*;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
 
 /**

@@ -19,12 +19,11 @@ package de.tu_berlin.coga.netflow.dynamic.maxflow;
 import de.tu_berlin.coga.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
 import de.tu_berlin.coga.netflow.classic.mincost.MinimumMeanCycleCancelling;
 import de.tu_berlin.coga.netflow.classic.maxflow.PathDecomposition;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.netflow.ds.structure.DynamicPath;
 import de.tu_berlin.coga.netflow.ds.structure.FlowOverTimePath;
 import de.tu_berlin.coga.graph.Edge;
-import ds.graph.GraphLocalization;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.graph.structure.StaticPath;
@@ -32,6 +31,7 @@ import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
 import de.tu_berlin.coga.netflow.ds.flow.TimeReapeatedFlow;
 import de.tu_berlin.coga.netflow.ds.network.ExtendedGraph;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
+import de.tu_berlin.coga.graph.localization.GraphLocalization;
 import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
 import java.util.List;
 
@@ -128,7 +128,7 @@ public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeR
 		timeHorizon = problem.getTimeHorizon();
 
 		if( (sources == null) || (sinks == null) )
-			throw new IllegalArgumentException( GraphLocalization.loc.getString( "algo.graph.MaxFlowOverTime.SpecifySourceSinkFirst" ) );
+			throw new IllegalArgumentException( GraphLocalization.LOC.getString( "algo.graph.MaxFlowOverTime.SpecifySourceSinkFirst" ) );
 
 		if( (sources.isEmpty()) || (sinks.isEmpty()) )
 			return new TimeReapeatedFlow( timeHorizon );

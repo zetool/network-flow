@@ -18,12 +18,12 @@ package de.tu_berlin.coga.netflow.ds.network;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.container.collection.ListSequence;
+import org.zetool.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
+import de.tu_berlin.coga.graph.localization.GraphLocalization;
 import de.tu_berlin.coga.netflow.ds.structure.DynamicPath;
-import ds.graph.GraphLocalization;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -290,13 +290,13 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, Node source, Node sink, int timeHorizon, boolean allowStorageInNodes ) {
     this( allowStorageInNodes, graph, timeHorizon );
     if( source == null && sink == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.SinkSourceNullException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SinkSourceNullException" ) );
     }
     if( source == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.SourceIsNullException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SourceIsNullException" ) );
     }
     if( sink == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.SinkIsNullException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SinkIsNullException" ) );
     }
     sources = new ListSequence<>();
     sources.add( source );
@@ -342,10 +342,10 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   private void createSuperSourceAndSink( int supersouceOutgoingCapacitiy ) {
 
     if( originalSources.size() <= 0 ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.OriginalSourcesException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.OriginalSourcesException" ) );
     }
     if( originalSinks.size() <= 0 ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.OriginalSinksException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.OriginalSinksException" ) );
     }
 
     if( originalSources.size() > 1 ) {
@@ -391,7 +391,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     int overallSupply = 0;
     for( Node node : graph.nodes() ) {
       if( !supplies.isDefinedFor( node ) ) {
-        throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.NoSupplyNodeException" ) );
+        throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.NoSupplyNodeException" ) );
       } else {
         overallSupply += supplies.get( node );
         if( supplies.get( node ) > 0 ) {
@@ -405,7 +405,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     originalSources = sources;
 
     if( overallSupply != 0 ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.SumNotZeroException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SumNotZeroException" ) );
     }
 
     createTimeExpansion( graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
@@ -524,10 +524,10 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     }
 
     if( originalSources.size() <= 0 ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.OriginalSourcesException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.OriginalSourcesException" ) );
     }
     if( originalSinks.size() <= 0 ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.OriginalSinksException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.OriginalSinksException" ) );
     }
 
     if( originalSources.size() > 1 ) {
@@ -625,13 +625,13 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    */
   private boolean isHoldoverArc( Edge edge ) {
     if( edge == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.EdgeIsNullException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.EdgeIsNullException" ) );
     }
     if( edge.start() == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.StartNodeIsNullException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.StartNodeIsNullException" ) );
     }
     if( edge.end() == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.EndNodeIsNullException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.EndNodeIsNullException" ) );
     }
     return (originalID.get( edge.start() ) == originalID.get( edge.end() ));
   }
@@ -676,7 +676,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    */
   public Node singleSink() {
     if( sink == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.NoSingleSinkException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.NoSingleSinkException" ) );
     } else {
       return sink;
     }
@@ -699,7 +699,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    */
   public Node singleSource() {
     if( source == null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "ds.graph.NoSingleSourceException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.NoSingleSourceException" ) );
     }
     return source;
   }

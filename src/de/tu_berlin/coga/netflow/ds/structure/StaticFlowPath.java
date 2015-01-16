@@ -16,9 +16,9 @@
 
 package de.tu_berlin.coga.netflow.ds.structure;
 
-import ds.graph.GraphLocalization;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.collection.IdentifiableCollection;
+import de.tu_berlin.coga.graph.localization.GraphLocalization;
+import org.zetool.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.graph.structure.StaticPath;
 import java.util.Iterator;
 
@@ -58,7 +58,7 @@ public class StaticFlowPath implements Iterable<Edge> {
    */
   public StaticFlowPath( StaticPath path, int amount ) {
     if( path == null ) {
-      throw new NullPointerException( GraphLocalization.loc.getString( "ds.graph.PathIsNullException" ) );
+      throw new NullPointerException( GraphLocalization.LOC.getString( "ds.graph.PathIsNullException" ) );
     }
     setPath( path );
     setAmount( amount );
@@ -138,7 +138,7 @@ public class StaticFlowPath implements Iterable<Edge> {
    */
   public void setPath( StaticPath path ) {
     if( path == null ) {
-      throw new NullPointerException( GraphLocalization.loc.getString( "ds.graph.PathIsNullException" ) );
+      throw new NullPointerException( GraphLocalization.LOC.getString( "ds.graph.PathIsNullException" ) );
     }
     this.path = path;
   }

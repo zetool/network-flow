@@ -21,7 +21,7 @@
 package de.tu_berlin.coga.netflow.ds.flow;
 
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
+import org.zetool.container.mapping.IdentifiableDoubleMapping;
 
 /**
  *

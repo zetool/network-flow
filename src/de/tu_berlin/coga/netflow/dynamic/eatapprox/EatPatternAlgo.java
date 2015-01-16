@@ -16,10 +16,10 @@
 
 package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 
-import de.tu_berlin.coga.common.algorithm.Algorithm;
-import de.tu_berlin.coga.common.util.Formatter;
-import de.tu_berlin.coga.common.util.units.TimeUnits;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.common.algorithm.Algorithm;
+import org.zetool.common.util.Formatter;
+import org.zetool.common.util.units.TimeUnits;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;

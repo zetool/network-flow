@@ -17,10 +17,10 @@
 package de.tu_berlin.coga.netflow.classic.mincost;
 
 import de.tu_berlin.coga.netflow.classic.problems.MinimumCostFlowProblem;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.netflow.classic.transshipment.StaticTransshipment;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.netflow.ds.network.OldResidualNetwork;

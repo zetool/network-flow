@@ -18,13 +18,13 @@ package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabelHighestLabel;
-import de.tu_berlin.math.coga.zet.DatFileReaderWriter;
-import de.tu_berlin.math.coga.zet.viewer.NodePositionMapping;
+//import de.tu_berlin.math.coga.zet.DatFileReaderWriter;
+//import de.tu_berlin.math.coga.zet.viewer.NodePositionMapping;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -136,11 +136,12 @@ public class AlgorithmTest {
 	}
 
 	public static EarliestArrivalFlowProblem readFromDatFile( String filename ) throws IOException {
-		NodePositionMapping nodePositionMapping = new NodePositionMapping();
+		//NodePositionMapping nodePositionMapping = new NodePositionMapping();
 
-		EarliestArrivalFlowProblem  eafp = DatFileReaderWriter.read( filename, nodePositionMapping ); // new .dat-format
+		//EarliestArrivalFlowProblem  eafp = DatFileReaderWriter.read( filename, nodePositionMapping ); // new .dat-format
 
-		return eafp;
+		//return eafp;
+    return null;
 	}
 
 

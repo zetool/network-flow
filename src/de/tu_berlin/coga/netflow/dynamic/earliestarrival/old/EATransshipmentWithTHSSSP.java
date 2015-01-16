@@ -19,7 +19,7 @@ package de.tu_berlin.coga.netflow.dynamic.earliestarrival.old;
 import de.tu_berlin.coga.netflow.dynamic.transshipment.TransshipmentWithTimeHorizon;
 import de.tu_berlin.coga.netflow.classic.mincost.SuccessiveShortestPath;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.netflow.ds.network.TimeExpandedNetwork;
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 

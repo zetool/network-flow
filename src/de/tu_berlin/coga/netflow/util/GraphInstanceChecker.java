@@ -16,10 +16,10 @@
 
 package de.tu_berlin.coga.netflow.util;
 
-import de.tu_berlin.coga.container.collection.ListSequence;
+import org.zetool.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableObjectMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import de.tu_berlin.coga.graph.traversal.DepthFirstSearch;
 import java.util.Collections;

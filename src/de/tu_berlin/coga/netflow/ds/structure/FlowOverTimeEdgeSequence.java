@@ -23,7 +23,7 @@ import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.graph.structure.Path;
 import de.tu_berlin.coga.graph.structure.StaticPath;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import java.util.LinkedList;
 
 /**

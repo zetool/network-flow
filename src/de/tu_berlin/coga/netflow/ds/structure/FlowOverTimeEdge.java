@@ -21,7 +21,7 @@
 package de.tu_berlin.coga.netflow.ds.structure;
 
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 
 /**
  * This class represents an edge in a flow over time setting. 

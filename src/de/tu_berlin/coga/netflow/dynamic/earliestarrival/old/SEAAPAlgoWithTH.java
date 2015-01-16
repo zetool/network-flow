@@ -12,8 +12,8 @@ import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTimeImplicit;
 import java.util.Arrays;
 import java.util.LinkedList;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
-import de.tu_berlin.coga.common.algorithm.AlgorithmStatusEvent;
+import org.zetool.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.AlgorithmStatusEvent;
 import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathAlgorithm;
 import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathProblem;
 /**

@@ -28,7 +28,7 @@ import de.tu_berlin.coga.netflow.ds.structure.FlowOverTimePath;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlowOverTime;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import java.util.logging.Level;
 
 /**

@@ -21,14 +21,14 @@ import java.util.LinkedList;
 import de.tu_berlin.coga.netflow.classic.transshipment.StaticTransshipment;
 import de.tu_berlin.coga.netflow.classic.maxflow.PathDecomposition;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.collection.IdentifiableCollection;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.collection.IdentifiableCollection;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlow;
 import de.tu_berlin.coga.netflow.ds.structure.StaticFlowPath;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
 import de.tu_berlin.coga.graph.DirectedGraph;
-import ds.graph.GraphLocalization;
+import de.tu_berlin.coga.graph.localization.GraphLocalization;
 
 /** 
  * Calculates an upper bound for the time horizon needed
@@ -96,7 +96,7 @@ public class TransshipmentBoundEstimator {
 		for (Node node : network.nodes()){
 			if (supplies.get(node)<0){
 				if (sink!= null)
-					throw new AssertionError(GraphLocalization.loc.getString ("algo.graph.dynamicflow.OnlyOneSinkException"));
+					throw new AssertionError(GraphLocalization.LOC.getString ("algo.graph.dynamicflow.OnlyOneSinkException"));
 				if (sink==null)
 					sink = node;
 			}
@@ -207,7 +207,7 @@ public class TransshipmentBoundEstimator {
 		for (Node node : network.nodes()){
 			if (supplies.get(node)<0){
 				if (sink!= null)
-					throw new AssertionError(GraphLocalization.loc.getString ("algo.graph.dynamicflow.OnlyOneSinkException"));
+					throw new AssertionError(GraphLocalization.LOC.getString ("algo.graph.dynamicflow.OnlyOneSinkException"));
 				if (sink==null)
 					sink = node;
 			}
@@ -348,14 +348,14 @@ public class TransshipmentBoundEstimator {
 		
 		/* Find sink and sources and the maximal supply. Create a supply mapping that is 1 for all sources, -1 for the sink and 0 else. */
 		Node sink = null;
-		IdentifiableIntegerMapping<Node> oneSupplies = new IdentifiableIntegerMapping<Node>(supplies.getDomainSize());
-		LinkedList<Node> sources = new LinkedList<Node>();
-		LinkedList<Node> sinks = new LinkedList<Node>();
+		IdentifiableIntegerMapping<Node> oneSupplies = new IdentifiableIntegerMapping<>(supplies.getDomainSize());
+		LinkedList<Node> sources = new LinkedList<>();
+		LinkedList<Node> sinks = new LinkedList<>();
 		int maxSupply = 0;
 		for (Node node : network.nodes()){
 			if (supplies.get(node)<0){
 				if (sink!= null)
-					throw new AssertionError(GraphLocalization.loc.getString ("algo.graph.dynamicflow.OnlyOneSinkException"));
+					throw new AssertionError(GraphLocalization.LOC.getString ("algo.graph.dynamicflow.OnlyOneSinkException"));
 				if (sink==null)
 					sink = node;
 			}

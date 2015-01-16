@@ -22,9 +22,9 @@ import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPath;
 import de.tu_berlin.coga.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPath.NodeTimePair;
 import de.tu_berlin.coga.graph.DefaultDirectedGraph;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
-import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableObjectMapping;
+import org.zetool.container.mapping.TimeIntegerMapping;
 
 /**
  * A class representing an implicit time-expanded residual network, i.e. a 

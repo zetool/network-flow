@@ -16,10 +16,10 @@
 
 package de.tu_berlin.coga.netflow.dynamic;
 
+import de.tu_berlin.coga.graph.localization.GraphLocalization;
 import de.tu_berlin.coga.netflow.dynamic.problems.DynamicFlowProblem;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.netflow.classic.PathComposition;
-import ds.graph.GraphLocalization;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlowOverTime;
 import de.tu_berlin.coga.netflow.ds.flow.EdgeBasedFlowOverTime;
 import de.tu_berlin.coga.netflow.ds.flow.FlowOverTime;
@@ -51,7 +51,7 @@ public abstract class DynamicFlowAlgorithm<U extends DynamicFlowProblem> extends
       return resultFlowPathBased;
     }
     if( resultFlowEdgeBased != null ) {
-      throw new AssertionError( GraphLocalization.loc.getString( "algo.graph.dynmicflow.NoEdgeBasedFlowException" ) );
+      throw new AssertionError( GraphLocalization.LOC.getString( "algo.graph.dynmicflow.NoEdgeBasedFlowException" ) );
     }
     return null;
   }

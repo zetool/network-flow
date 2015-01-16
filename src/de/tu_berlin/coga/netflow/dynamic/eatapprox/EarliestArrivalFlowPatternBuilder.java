@@ -19,9 +19,9 @@ package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.netflow.ds.structure.FlowOverTimePath;
 import de.tu_berlin.coga.netflow.ds.flow.PathBasedFlowOverTime;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.container.mapping.TimeIntegerMapping;
-import de.tu_berlin.coga.container.mapping.TimeIntegerPair;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.TimeIntegerMapping;
+import org.zetool.container.mapping.TimeIntegerPair;
 import de.tu_berlin.coga.netflow.ds.flow.EdgeBasedFlowOverTime;
 import java.util.ArrayList;
 

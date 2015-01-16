@@ -16,13 +16,13 @@
 
 package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 
-import de.tu_berlin.coga.common.datastructure.Tuple;
+import org.zetool.common.datastructure.Tuple;
 import de.tu_berlin.coga.netflow.classic.maxflow.SimpleResidualGraph;
-import de.tu_berlin.coga.container.collection.ListSequence;
+import org.zetool.container.collection.ListSequence;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.collection.IdentifiableCollection;
+import org.zetool.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import java.util.HashMap;
 import java.util.HashSet;

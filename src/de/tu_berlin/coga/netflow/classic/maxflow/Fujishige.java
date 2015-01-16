@@ -17,13 +17,13 @@
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.netflow.classic.problems.RationalMaxFlowProblem;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.graph.Edge;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.network.rational.RationalResidualGraph;
 import de.tu_berlin.coga.netflow.ds.flow.RationalMaxFlow;
 import de.tu_berlin.coga.graph.DynamicNetwork;
-import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
+import org.zetool.container.mapping.IdentifiableDoubleMapping;
 import java.util.Collections;
 import java.util.List;
 

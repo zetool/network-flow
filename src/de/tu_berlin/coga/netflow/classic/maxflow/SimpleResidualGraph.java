@@ -6,13 +6,13 @@
 package de.tu_berlin.coga.netflow.classic.maxflow;
 
 import de.tu_berlin.coga.graph.OutgoingStarGraph;
-import de.tu_berlin.coga.container.collection.ArraySet;
+import org.zetool.container.collection.ArraySet;
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.collection.IdentifiableCollection;
+import org.zetool.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.graph.Node;
-import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
-import de.tu_berlin.coga.container.mapping.IdentifiableObjectMapping;
+import org.zetool.container.mapping.IdentifiableBooleanMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableObjectMapping;
 import de.tu_berlin.coga.graph.DirectedGraph;
 import java.util.Iterator;
 

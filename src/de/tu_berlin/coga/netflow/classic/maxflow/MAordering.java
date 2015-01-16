@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import de.tu_berlin.coga.graph.Edge;
 import java.util.HashMap;
 import de.tu_berlin.coga.netflow.ds.network.rational.RationalResidualGraph;
-import de.tu_berlin.coga.container.mapping.IdentifiableDoubleMapping;
+import org.zetool.container.mapping.IdentifiableDoubleMapping;
 
 /**
  *

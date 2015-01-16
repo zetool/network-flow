@@ -20,7 +20,7 @@
 package de.tu_berlin.coga.netflow.ds.structure;
 
 import de.tu_berlin.coga.graph.Edge;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.structure.Path;
 
 /**

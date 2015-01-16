@@ -18,7 +18,7 @@ package de.tu_berlin.coga.netflow.dynamic;
 
 import de.tu_berlin.coga.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import de.tu_berlin.math.coga.algorithm.shortestpath.Dijkstra;
-import de.tu_berlin.coga.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.Algorithm;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.dynamic.TimeHorizonBounds;
 

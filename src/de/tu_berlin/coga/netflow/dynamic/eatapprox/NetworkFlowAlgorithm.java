@@ -16,16 +16,16 @@
 
 package de.tu_berlin.coga.netflow.dynamic.eatapprox;
 
-import de.tu_berlin.coga.common.datastructure.Tuple;
-import de.tu_berlin.coga.container.bucket.BucketPriorityQueue;
-import de.tu_berlin.coga.container.bucket.BucketSet;
+import org.zetool.common.datastructure.Tuple;
+import org.zetool.container.bucket.BucketPriorityQueue;
+import org.zetool.container.bucket.BucketSet;
 import de.tu_berlin.coga.netflow.classic.maxflow.PushRelabel;
-import de.tu_berlin.coga.container.collection.IdentifiableCollection;
+import org.zetool.container.collection.IdentifiableCollection;
 import de.tu_berlin.coga.graph.Node;
 import de.tu_berlin.coga.netflow.ds.flow.MaximumFlow;
 import de.tu_berlin.coga.netflow.classic.problems.MaximumFlowProblem;
-import de.tu_berlin.coga.container.mapping.IdentifiableBooleanMapping;
-import de.tu_berlin.coga.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableBooleanMapping;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import de.tu_berlin.coga.graph.Edge;
 import java.util.HashSet;
 import java.util.LinkedList;
