@@ -16,7 +16,6 @@
 package org.zetool.netflow.dynamic.earliestarrival.old;
 
 import org.zetool.netflow.dynamic.problems.EarliestArrivalFlowProblem;
-import org.zetool.netflow.dynamic.problems.DynamicTransshipmentProblem;
 import org.zetool.netflow.dynamic.transshipment.TransshipmentWithTimeHorizon;
 import org.zetool.graph.Edge;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
@@ -38,10 +37,11 @@ public class SuccessiveEarliestArrivalAugmentingPathAlgorithmTH extends Transshi
 		setName( "Successive Earliest Arrival Augmenting Path Algorithm TH" );
 	}
 
-	/**
+  /**
 	 *
 	 */
-	public void runAlgorithm() {
+  @Override
+	protected void computeFlow() {
 		EarliestArrivalFlowProblem problem = new EarliestArrivalFlowProblem( getProblem() );
 		SuccessiveEarliestArrivalAugmentingPathAlgorithm algo = new SuccessiveEarliestArrivalAugmentingPathAlgorithm();
 		algo.setProblem( problem );
@@ -55,6 +55,7 @@ public class SuccessiveEarliestArrivalAugmentingPathAlgorithmTH extends Transshi
 	/**
 	 * As we do not use the original {@code runAlgorithm()} method, {@code transshipmentWithTimeHorizon}
 	 * is never called. Thus it's only a stub.
+   * @return 
 	 */
 	@Override
 	protected IdentifiableIntegerMapping<Edge> transshipmentWithTimeHorizon( TimeExpandedNetwork network ) {

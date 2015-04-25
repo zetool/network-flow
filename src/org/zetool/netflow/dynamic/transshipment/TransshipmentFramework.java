@@ -77,7 +77,7 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 
 	@Override
 	protected FlowOverTime runAlgorithm( W problem ) {
-		runAlgorithm();
+		computeFlowOverTime();
 		return new FlowOverTime( resultFlowPathBased, getProblem() );
 	}
 
@@ -87,7 +87,7 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 	 * defined by the object @code{transshipmentAlgorithm} is used to check
 	 * whether the time horizon is sufficient.
 	 */
-	public void runAlgorithm() {
+	private void computeFlowOverTime() {
 		if( ALGO_PROGRESS ) {
 			System.out.println( "Progress: Transshipment algorithm was started." );
 			System.out.flush();

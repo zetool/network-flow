@@ -49,7 +49,7 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 
 	@Override
 	protected FlowOverTime runAlgorithm( U problem ) {
-		runAlgorithm();
+		computeFlow();
 		return new FlowOverTime( resultFlowPathBased, getProblem() );
 	}
 
@@ -61,9 +61,9 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 	 * If {@code runTransshipment} returns {@code null}
 	 * this method also returns {@code null}.
 	 */
-	private void runAlgorithm() {
+	protected void computeFlow() {
 		/* Short debug output telling that a time expanded network is created. */
-    log.log( Level.INFO, "The {0} algorithm creates a time expanded network.", getName());
+    LOG.log( Level.INFO, "The {0} algorithm creates a time expanded network.", getName());
     fireEvent( "Time-Expanded Network-Creation. The " + getName() + " algorithm creates a time expanded network." );
 
 		/* Create the time expanded network up to the given time horizon. */
@@ -72,24 +72,24 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
             getProblem().getTimeHorizon(), getProblem().getSupplies(), false );
 
 		/* Short debug output including the size of the created expanded network. */
-    log.finest( "The time expanded network was created." );
-    log.log( Level.FINEST, "It has {0} nodes and {1} edges.",
+    LOG.finest( "The time expanded network was created." );
+    LOG.log( Level.FINEST, "It has {0} nodes and {1} edges.",
             new Object[]{tnetwork.nodes().size(), tnetwork.edges().size()});
     fireEvent( "Time-Expanded Network created. It has " + tnetwork.nodes().size()
             + " nodes and " + tnetwork.edges().size() + " edges." );
 
     /* Long debug output including the complete expanded network.*/
-    log.finest( tnetwork.toString() );
+    LOG.finest( tnetwork.toString() );
 
 		/* Progress output. */
-    log.log( Level.INFO, "the {0} algorithm is called.. ", getName());
+    LOG.log( Level.INFO, "the {0} algorithm is called.. ", getName());
 		fireEvent( getName() + " algorithm. The " + getName() + " algorithm is called." );
 
 		/* Compute the static flow according to the specifit transshipment with time horizon. */
 		IdentifiableIntegerMapping<Edge> flow = transshipmentWithTimeHorizon( tnetwork );
 
 		/* Short debug output telling whether the current time horizon was sufficient. */
-		log.log( Level.INFO, "A time horizon of {0} is {1}", new Object[]{getProblem().getTimeHorizon(),
+		LOG.log( Level.INFO, "A time horizon of {0} is {1}", new Object[]{getProblem().getTimeHorizon(),
       flow == null ? "not sufficient." : "sufficient."} );
 
 		/* If flow==null, there does not exists a feasible static transshipment (with wished properties)
@@ -100,8 +100,8 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 		}
 
 		/* Long debug output including the flow function of the found flow. */
-		log.log( Level.FINEST, "\nStatic transshipment as flow function:\n{0}", flow);
-    log.log( Level.FINER, "\nCalculating path decomposition from sources {0} to sinks {1}.",
+		LOG.log( Level.FINEST, "\nStatic transshipment as flow function:\n{0}", flow);
+    LOG.log( Level.FINER, "\nCalculating path decomposition from sources {0} to sinks {1}.",
             new Object[]{tnetwork.sources(), tnetwork.sinks()});
 
 		/* Decompose the flow into static paths flows.*/
@@ -109,7 +109,7 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 						tnetwork, tnetwork.sources(), tnetwork.sinks(), flow );
 
 		/* Long debug output containing the path flows.*/
-    log.log( Level.FINEST, "\nStatic transshipment path based:{0}", decomposedFlow);
+    LOG.log( Level.FINEST, "\nStatic transshipment path based:{0}", decomposedFlow);
 
 		/* Translating the static flow into a dynamic flow.*/
 		PathBasedFlowOverTime dynamicTransshipment = new PathBasedFlowOverTime();
@@ -128,7 +128,7 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 			dynamicTransshipment.addPathFlow( dynamicPathFlow );
 		}
 
-    log.log( Level.FINEST, "Dynamic transshipment: {0}", dynamicTransshipment);
+    LOG.log( Level.FINEST, "Dynamic transshipment: {0}", dynamicTransshipment);
 
 		resultFlowPathBased = dynamicTransshipment;
 	}
