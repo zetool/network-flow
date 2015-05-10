@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
 package org.zetool.netflow.ds.network;
 
 import org.zetool.graph.structure.StaticPath;
@@ -38,81 +39,41 @@ import java.util.List;
  */
 public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
-  /**
-   * The underlying base graph.
-   */
+  /** The underlying base graph. */
   protected DirectedGraph graph = null;
-
-  /**
-   * The capacities belonging to the time expanded graph.
-   */
+  /** The capacities belonging to the time expanded graph. */
   protected IdentifiableIntegerMapping<Edge> capacities = null;
-
-  /**
-   * The transit times belonging to the time expanded graph.
-   */
+  /** The transit times belonging to the time expanded graph. */
   protected IdentifiableIntegerMapping<Edge> costs = null;
-
-  /**
-   * The supply function belonging to the time expanded graph.
-   */
+  /** The supply function belonging to the time expanded graph. */
   protected IdentifiableIntegerMapping<Node> supplies = null;
-
-  /**
-   * The sink of the time expanded graph if it has exactly one sink.
-   */
+  /** The sink of the time expanded graph if it has exactly one sink. */
   protected Node sink = null;
-
-  /**
-   * The sinks of the time expanded graph, can also contain only one sink.
-   */
+  /** The sinks of the time expanded graph, can also contain only one sink. */
   protected ListSequence<Node> sinks = null;
-
-  /**
-   * The sinks of the original graph.
-   */
+  /** The sinks of the original graph. */
   protected ListSequence<Node> originalSinks = null;
-
-  /**
-   * The source of the time expanded graph if it has exactly one source.
-   */
+  /** The source of the time expanded graph if it has exactly one source. */
   protected Node source = null;
-
-  /**
-   * The sources of the time expanded graph, can also contain only one source.
-   */
+  /** The sources of the time expanded graph, can also contain only one source. */
   protected ListSequence<Node> sources = null;
-
-  /**
-   * The sources of the original graph.
-   */
+  /** The sources of the original graph. */
   protected ListSequence<Node> originalSources = null;
-
   /**
    * A grid to store references to all nodes of the time expanded graph. The first dimension is addressed with the IDs
    * of the nodes in the base graph, the second dimension represents the time layers of the time expanded graph.
    */
   private Node[][] grid = null;
-
-  /**
-   * A mapping storing for each node the ID of the node that it is a copy of.
-   */
+  /** A mapping storing for each node the ID of the node that it is a copy of. */
   IdentifiableIntegerMapping<Node> originalID = null;
-
-  /**
-   * The time horizon of the time expanded graph.
-   */
+  /** The time horizon of the time expanded graph. */
   protected int timeHorizon = -1;
-
   /**
    * A flag used during the creation of time expanded networks. If set to true waiting is possible in every node. If set
    * to false it is only possible for source and sink.
    */
   protected boolean allowStorageInNodes = false;
-
-  /**
-   * The number of non-storage edges.
-   */
+  /** The number of non-storage edges. */
   protected transient int realEdges = -1;
 
   /**
@@ -122,17 +83,145 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     super( initialNodeCapacity, initialEdgeCapacity );
   }
 
+  private TimeExpandedNetwork( boolean allowStorageInNodes, DirectedGraph graph, int timeHorizon ) {
+    super( 0, 0 );
+    this.allowStorageInNodes = allowStorageInNodes;
+    this.graph = graph;
+    this.timeHorizon = timeHorizon;
+  }
+
+  /**
+   * Creates a new time expanded graph for a dynamic flow problem.
+   *
+   * @param graph               the graph underlying the flow problem.
+   * @param capacities          the flow problem's capacities.
+   * @param transitTimes        the flow problem's transit times.
+   * @param source              the flow problem's source, may not be null.
+   * @param sink                the flow problem's sink, may not be null.
+   * @param timeHorizon         the flow problem's time horizon.
+   * @param allowStorageInNodes {@code true} if flow can wait in all nodes, {@code false} otherwise.
+   */
+  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, Node source, Node sink, int timeHorizon, boolean allowStorageInNodes ) {
+    this( allowStorageInNodes, graph, timeHorizon );
+    if( source == null && sink == null ) {
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SinkSourceNullException" ) );
+    }
+    if( source == null ) {
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SourceIsNullException" ) );
+    }
+    if( sink == null ) {
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SinkIsNullException" ) );
+    }
+    sources = new ListSequence<>();
+    sources.add( source );
+    originalSources = sources;
+    originalSinks = new ListSequence<>();
+    originalSinks.add( sink );
+    createTimeExpansion( graph, capacities, transitTimes, timeHorizon,
+            sources, originalSinks, allowStorageInNodes );
+    this.source = grid[source.id()][0];
+    this.sink = grid[sink.id()][timeHorizon - 1];
+    sinks = new ListSequence<>();
+    sinks.add( this.sink );
+  }
+
+
+  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, boolean allowStorageInNodes ) {
+    this( graph, capacities, transitTimes, timeHorizon, sources, sinks, Integer.MAX_VALUE, allowStorageInNodes );
+  }
+
+  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, int supersouceOutgoingCapacitiy, boolean allowStorageInNodes ) {
+    this( allowStorageInNodes, graph, timeHorizon );
+    originalSources = new ListSequence<>( sources );
+    this.sources = originalSources;
+    originalSinks = new ListSequence<>( sinks );
+
+    createTimeExpansion( graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
+
+    createSuperSourceAndSink( supersouceOutgoingCapacitiy );
+  }
+
+  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes ) {
+    this( graph, capacities, transitTimes, timeHorizon, supplies, allowStorageInNodes, true );
+  }
+
+  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes, boolean createSuperSouce ) {
+    this( allowStorageInNodes, graph, timeHorizon );
+    sources = new ListSequence<>();
+    originalSinks = new ListSequence<>();
+    int overallSupply = 0;
+    for( Node node : graph.nodes() ) {
+      if( !supplies.isDefinedFor( node ) ) {
+        throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.NoSupplyNodeException" ) );
+      } else {
+        overallSupply += supplies.get( node );
+        if( supplies.get( node ) > 0 ) {
+          sources.add( node );
+        }
+        if( supplies.get( node ) < 0 ) {
+          originalSinks.add( node );
+        }
+      }
+    }
+    originalSources = sources;
+
+    if( overallSupply != 0 ) {
+      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SumNotZeroException" ) );
+    }
+
+    createTimeExpansion( graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
+
+    if( createSuperSouce ) {
+      createSuperSourceAndSink( supplies );
+    } else {
+      // do not create a super source!
+      // create time expanded supply-vector and copy source supplies
+
+      sources = new ListSequence<>();
+
+      int negativeSupplies = 0;
+
+      this.supplies = new IdentifiableIntegerMapping<>( this.nodes().size() );
+      for( Node n : this.nodes() ) {
+        if( supplies.isDefinedFor( n ) ) {
+          if( supplies.get( n ) >= 0 ) {
+            this.supplies.set( n, supplies.get( n ) );
+          } else {
+            negativeSupplies += supplies.get( n );
+            this.supplies.set( n, 0 ); // old sinks are no sinks any more
+          }
+          if( supplies.get( n ) > 0 ) {
+            sources.add( n );
+          }
+        } else {
+          this.supplies.set( n, 0 );
+        }
+      }
+
+      // This only works for one single sink
+      this.sink = grid[originalSinks.get( 0 ).id()][timeHorizon - 1];
+      sinks = new ListSequence<>();
+      sinks.add( sink );
+
+      //if (sink.id() >= this.supplies.getDomainSize())
+      //	this.supplies.setDomainSize(sink.id()+1);
+      this.supplies.set( sink, negativeSupplies );
+      //}
+    }
+  }
+
   /**
    * Private method to extend the base graph into time by constructing time layers. The base graph is included in the
    * expanded version as the bottom layer.
-   * @param network The base graph.
-   * @param capacities The capacity function of the base graph.
-   * @param transitTimes The transit time function of the base graph.
-   * @param timeHorizon The time horizon, i.e. the number of layers.
-   * @param sources The sources of the base graph, may also be only one.
-   * @param sinks The sinks of the base graph, may also be only one.
+   *
+   * @param network             The base graph.
+   * @param capacities          The capacity function of the base graph.
+   * @param transitTimes        The transit time function of the base graph.
+   * @param timeHorizon         The time horizon, i.e. the number of layers.
+   * @param sources             The sources of the base graph, may also be only one.
+   * @param sinks               The sinks of the base graph, may also be only one.
    * @param allowStorageInNodes Says whether it shall be allowed to store flow in nodes, i.e. whether there are
-   * hold-over arcs for all nodes or only for sources and sinks.
+   *                            hold-over arcs for all nodes or only for sources and sinks.
    */
   private void createTimeExpansion( DirectedGraph network,
           IdentifiableIntegerMapping<Edge> capacities,
@@ -265,8 +354,9 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
         } else {
           e = createAndSetEdge( start, end );
         }
-        if( e != null )
+        if( e != null ) {
           this.capacities.set( e, Integer.MAX_VALUE );
+        }
 
         if( isSink ) {
           //this.costs.set( e, 0 );
@@ -277,40 +367,6 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     }
   }
 
-  /**
-   * Creates a new time expanded graph for a dynamic flow problem.
-   * @param graph the graph underlying the flow problem.
-   * @param capacities the flow problem's capacities.
-   * @param transitTimes the flow problem's transit times.
-   * @param source the flow problem's source, may not be null.
-   * @param sink the flow problem's sink, may not be null.
-   * @param timeHorizon the flow problem's time horizon.
-   * @param allowStorageInNodes {@code true} if flow can wait in all nodes, {@code false} otherwise.
-   */
-  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, Node source, Node sink, int timeHorizon, boolean allowStorageInNodes ) {
-    this( allowStorageInNodes, graph, timeHorizon );
-    if( source == null && sink == null ) {
-      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SinkSourceNullException" ) );
-    }
-    if( source == null ) {
-      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SourceIsNullException" ) );
-    }
-    if( sink == null ) {
-      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SinkIsNullException" ) );
-    }
-    sources = new ListSequence<>();
-    sources.add( source );
-    originalSources = sources;
-    originalSinks = new ListSequence<>();
-    originalSinks.add( sink );
-    createTimeExpansion( graph, capacities, transitTimes, timeHorizon,
-            sources, originalSinks, allowStorageInNodes );
-    this.source = grid[source.id()][0];
-    this.sink = grid[sink.id()][timeHorizon - 1];
-    sinks = new ListSequence<>();
-    sinks.add( this.sink );
-  }
-
   private void createSuperSource( int supersouceOutgoingCapacitiy ) {
     // Create super source
     int nodeCount = this.getNodeCapacity();
@@ -319,7 +375,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     this.setNodeCapacity( nodeCount );
     this.setNode( supersource );
     source = supersource;
-    sources = new ListSequence<Node>();
+    sources = new ListSequence<>();
     sources.add( source );
 
     int edgeCount = this.getEdgeCapacity();
@@ -329,8 +385,8 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     // The super source is connected to all sources
     // on layer zero with edges having maximal capacity
     // and no costs.
-    for( Node source : originalSources ) {
-      Edge newEdge = new Edge( edgeCount, supersource, grid[source.id()][0] ); // only source should also work
+    for( Node originalSource : originalSources ) {
+      Edge newEdge = new Edge( edgeCount, supersource, grid[originalSource.id()][0] ); // only source should also work
       this.setEdge( newEdge );
       capacities.set( newEdge, supersouceOutgoingCapacitiy );
       costs.set( newEdge, 0 );
@@ -363,90 +419,6 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
       sinks.add( sink );
     }
 
-  }
-
-  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, boolean allowStorageInNodes ) {
-    this( graph, capacities, transitTimes, timeHorizon, sources, sinks, Integer.MAX_VALUE, allowStorageInNodes );
-  }
-
-  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, List<Node> sources, List<Node> sinks, int supersouceOutgoingCapacitiy, boolean allowStorageInNodes ) {
-    this( allowStorageInNodes, graph, timeHorizon );
-    originalSources = new ListSequence<>( sources );
-    this.sources = originalSources;
-    originalSinks = new ListSequence<>( sinks );
-
-    createTimeExpansion( graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
-
-    createSuperSourceAndSink( supersouceOutgoingCapacitiy );
-  }
-
-  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes ) {
-    this( graph, capacities, transitTimes, timeHorizon, supplies, allowStorageInNodes, true );
-  }
-
-  public TimeExpandedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon, IdentifiableIntegerMapping<Node> supplies, boolean allowStorageInNodes, boolean createSuperSouce ) {
-    this( allowStorageInNodes, graph, timeHorizon );
-    sources = new ListSequence<>();
-    originalSinks = new ListSequence<>();
-    int overallSupply = 0;
-    for( Node node : graph.nodes() ) {
-      if( !supplies.isDefinedFor( node ) ) {
-        throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.NoSupplyNodeException" ) );
-      } else {
-        overallSupply += supplies.get( node );
-        if( supplies.get( node ) > 0 ) {
-          sources.add( node );
-        }
-        if( supplies.get( node ) < 0 ) {
-          originalSinks.add( node );
-        }
-      }
-    }
-    originalSources = sources;
-
-    if( overallSupply != 0 ) {
-      throw new AssertionError( GraphLocalization.LOC.getString( "ds.graph.SumNotZeroException" ) );
-    }
-
-    createTimeExpansion( graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
-
-    if( createSuperSouce ) {
-      createSuperSourceAndSink( supplies );
-    } else {
-      // do not create a super source!
-      // create time expanded supply-vector and copy source supplies
-
-      sources = new ListSequence<>();
-
-      int negativeSupplies = 0;
-
-      this.supplies = new IdentifiableIntegerMapping<>( this.nodes().size() );
-      for( Node n : this.nodes() ) {
-        if( supplies.isDefinedFor( n ) ) {
-          if( supplies.get( n ) >= 0 ) {
-            this.supplies.set( n, supplies.get( n ) );
-          } else {
-            negativeSupplies += supplies.get( n );
-            this.supplies.set( n, 0 ); // old sinks are no sinks any more
-          }
-          if( supplies.get( n ) > 0 ) {
-            sources.add( n );
-          }
-        } else {
-          this.supplies.set( n, 0 );
-        }
-      }
-
-      // This only works for one single sink
-      this.sink = grid[originalSinks.get( 0 ).id()][timeHorizon - 1];
-      sinks = new ListSequence<>();
-      sinks.add( sink );
-
-      //if (sink.id() >= this.supplies.getDomainSize())
-      //	this.supplies.setDomainSize(sink.id()+1);
-      this.supplies.set( sink, negativeSupplies );
-      //}
-    }
   }
 
   private void createSuperSource( IdentifiableIntegerMapping<Node> supplies ) {
@@ -514,7 +486,6 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   }
 
   private void createSuperSourceAndSink( IdentifiableIntegerMapping<Node> supplies ) {
-
     this.supplies = new IdentifiableIntegerMapping<>( this.nodes().size() );
     for( Node n : this.nodes() ) {
       if( n.id() >= this.supplies.getDomainSize() ) {
@@ -547,7 +518,6 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     }
 
     // create arcs from sink copies to super sink
-
     for( int t = 0; t < timeHorizon - 1; t++ ) {
       for( Node originalSink : originalSinks ) {
         // Get the correct copies of the node as
@@ -564,36 +534,15 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
       }
     }
 
-
-
     if( sink.id() >= this.supplies.getDomainSize() ) {
       this.supplies.setDomainSize( sink.id() + 1 );
     }
     this.supplies.set( sink, -this.supplies.get( source ) );
-
-  }
-
-  /*  public TimeExpandedNetwork(AbstractNetwork graph,
-   IdentifiableIntegerMapping<Edge> capacities,
-   IdentifiableIntegerMapping<Edge> transitTimes,
-   LinkedList<Node> sources, LinkedList<Node> sinks,
-   int timeHorizon,
-   boolean allowStorageInNodes) {
-   this(allowStorageInNodes, graph, timeHorizon);
-   this.sinks = new ListSequence<Node>(sinks);
-   this.sources = new ListSequence<Node>(sources);
-   createTimeExpansion(graph, capacities, transitTimes, timeHorizon,
-   sources, sinks, allowStorageInNodes);
-   }*/
-  private TimeExpandedNetwork( boolean allowStorageInNodes, DirectedGraph graph, int timeHorizon ) {
-    super( 0, 0 );
-    this.allowStorageInNodes = allowStorageInNodes;
-    this.graph = graph;
-    this.timeHorizon = timeHorizon;
   }
 
   /**
    * Translates a static path in this time expanded graph into a string. O(edges in the path).
+   *
    * @param path the static path to be translated.
    * @return a dynamic path in the underlying base graph that is equivalent to this path.
    */
@@ -620,6 +569,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   // This method uses that the original graph does not include loops!
   /**
    * Decides if an arc is a holdover arc, or not. The method assumes that the original graph does not include loops.
+   *
    * @param edge the tested edge
    * @return the holdover status
    */
@@ -638,6 +588,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns whether flow can wait in all nodes, or only in sources and sinks. Runtime O(1).
+   *
    * @return {@code true} if flow can wait in all nodes, {@code false} otherwise.
    */
   public boolean allowStorageInNodes() {
@@ -646,6 +597,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns the capacities belonging to this time expanded graph. Runtime O(1).
+   *
    * @return the capacities belonging to this time expanded graph.
    */
   public IdentifiableIntegerMapping<Edge> capacities() {
@@ -654,6 +606,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns the graph underlying the time expanded graph. Runtime O(1).
+   *
    * @return the graph underlying the time expanded graph.
    */
   public DirectedGraph network() {
@@ -663,6 +616,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   /**
    * Returns the sinks of the time expanded graph. Runtime O(1). All original sinks will be returned, even if a super
    * sink exists, but the super sink will not be returned.
+   *
    * @return the sinks of the time expanded graph.
    */
   public LinkedList<Node> sinks() {
@@ -672,6 +626,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   /**
    * Returns the single sink of the time expanded graph, if it has one. Else an {@code AssertionError} will be thrown.
    * The graph does for example not contain a single sink if it has multiple sinks and does not contain a super sink.
+   *
    * @return the single sink of this time expanded graph, if it has one.
    */
   public Node singleSink() {
@@ -685,6 +640,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   /**
    * Returns the sources of the time expanded graph. Runtime O(1). All original sources will be returned, even if a
    * super source exists, but the super source will not be returned.
+   *
    * @return the sources of the time expanded graph.
    */
   public LinkedList<Node> sources() {
@@ -695,6 +651,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    * Returns the single source of the time expanded graph, if it has one. Else an {@code AssertionError} will be thrown.
    * The graph does for example not contain a single source if it has multiple sources and does not contain a super
    * source.
+   *
    * @return the single source of this time expanded graph, if it has one.
    */
   public Node singleSource() {
@@ -706,6 +663,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns the time horizon of this time expanded graph. Runtime O(1).
+   *
    * @return the time horizon of this time expanded graph.
    */
   public int timeHorizon() {
@@ -714,6 +672,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns the cost function belonging to this time expanded graph. Runtime O(1).
+   *
    * @return the cost function belonging to this time expanded graph.
    */
   public IdentifiableIntegerMapping<Edge> costs() {
@@ -722,6 +681,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Return the supply function belonging to this time expanded graph. Runtime O(1)
+   *
    * @return the supply function belonging to this time expanded graph.
    */
   public IdentifiableIntegerMapping<Node> supplies() {
@@ -730,6 +690,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Creates a copy of this time expanded graph.
+   *
    * @return a copy of this time expanded graph.
    */
   @Override
@@ -741,8 +702,12 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     clone.allowStorageInNodes = allowStorageInNodes;
     clone.capacities = capacities.clone();
     clone.realEdges = realEdges;
-    clone.sink = sink.clone();
-    clone.source = source.clone();
+    try {
+      clone.sink = sink.clone();
+      clone.source = source.clone();
+    } catch( CloneNotSupportedException ex ) {
+
+    }
     clone.sinks = sinks.clone();
     clone.sources = sources.clone();
     clone.timeHorizon = timeHorizon;
@@ -755,6 +720,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    * returned, {@code false
    * } otherwise. A object is considered equivalent if and only if it is a time expanded graph with equals components
    * (nodes, edges, base graph, capacities, ...). Runtime O(n + m).
+   *
    * @param o the object to compare this one to.
    * @return {@code true} if the specified object is equivalent to this one, {@code false
    * } otherwise.
@@ -762,7 +728,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   @Override
   public boolean equals( Object o ) {
     if( o instanceof TimeExpandedNetwork ) {
-      TimeExpandedNetwork ten = (TimeExpandedNetwork)o;
+      TimeExpandedNetwork ten = (TimeExpandedNetwork) o;
       return graph.equals( ten.graph ) && capacities.equals( ten.capacities )
               && costs.equals( ten.costs ) && super.equals( o );
 //                   && (sink.equals(ten.sink) && (source.equals(ten.source))
@@ -774,6 +740,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns a hash code for this time expanded graph. Runtime O(n + m).
+   *
    * @return a hash code computed by the sum of the hash codes of its components.
    */
   @Override
@@ -784,6 +751,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
 
   /**
    * Returns a string representation of this time expanded graph. Runtime O(n + m).
+   *
    * @return a string representation of this residual graph.
    */
   @Override
@@ -866,5 +834,4 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     builder.append( ".\n" );
     return builder.toString();
   }
-
 }
