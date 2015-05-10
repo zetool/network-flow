@@ -56,30 +56,35 @@ public class MaximumFlow extends Flow {
    * graphs.
    * @return 
    */
-	public boolean check() {
-		boolean problems = false;
-		for( Node v : problem.getNetwork() ) {
-			if( problem.getSources().contains( v ) || problem.getSinks().contains( v ) )
-				continue;
-			// check flow conservation
-			int sum = 0;
-			// sum incoming
-			for( Edge e : GraphUtil.incomingIterator( problem.getNetwork(), v ) )
-			//for( Edge e : problem.getNetwork().incomingEdges( v ) )
-				sum += get( e );
-			// sum outcoming
-			for( Edge e : GraphUtil.outgoingIterator( problem.getNetwork(), v ) )
-			//for( Edge e : problem.getNetwork().outgoingEdges( v ) )
-				sum -= get( e );
+  public boolean check() {
+    boolean problems = false;
+    for( Node v : problem.getNetwork() ) {
+      if( problem.getSources().contains( v ) || problem.getSinks().contains( v ) ) {
+        continue;
+      }
+      // check flow conservation
+      int sum = 0;
+      // sum incoming
+      for( Edge e : GraphUtil.incomingIterator( problem.getNetwork(), v ) )
+      {
+        sum += get( e );
+      }
+      // sum outcoming
+      for( Edge e : GraphUtil.outgoingIterator( problem.getNetwork(), v ) )
+      {
+        sum -= get( e );
+      }
 
-			if( sum != 0 )
-				System.out.println( "Flow conservation at node " + v.toString() + " is violated. Value is " + sum );
-			problems = sum != 0;
-		}
+      if( sum != 0 ) {
+        System.out.println( "Flow conservation at node " + v.toString() + " is violated. Value is " + sum );
+      }
+      problems = sum != 0;
+    }
 
 		for( Edge e : problem.getNetwork().edges() ) {
 			if( get( e ) > problem.getCapacities().get( e ) ) {
-				System.out.println( "Capacity on edge " + e.toString() + " is violated: " + get( e ) + " > " + problem.getCapacities().get( e ) );
+				System.out.println( "Capacity on edge " + e.toString() + " is violated: " + get( e ) + " > "
+                + problem.getCapacities().get( e ) );
 				problems = false;
 			}
 			if( get( e ) < 0 ) {
