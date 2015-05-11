@@ -3,7 +3,6 @@
  */
 package org.zetool.netflow.classic.maxflow;
 
-import org.zetool.netflow.classic.maxflow.FordFulkerson;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import org.zetool.graph.DefaultDirectedGraph;
 import org.zetool.graph.Edge;

@@ -29,9 +29,7 @@ import java.util.List;
  * @author Jan-Philipp Kappmeier
  */
 public class DirectedNetwork extends GeneralNetwork implements DirectedGraph {
-  private DirectedGraph graph;
-
-  // TODO: replace constructors and change to a builder that maybe also automatically builds the network!
+  private final DirectedGraph graph;
 
   public DirectedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
     super( graph, capacities, sources, sinks );
@@ -55,18 +53,12 @@ public class DirectedNetwork extends GeneralNetwork implements DirectedGraph {
 
   @Override
   public DirectedGraph getGraph() {
-    return (DirectedGraph)super.getGraph(); //To change body of generated methods, choose Tools | Templates.
+    return (DirectedGraph)super.getGraph();
   }
 
-  @Override
-  public DirectedGraph getNetwork() {
-    return (DirectedGraph)super.getNetwork(); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  
-  
-  //******************************************************************************************************
-  // Delegated methods of the graph of the network such that the network can be accessed as a graph itself
+  /****************************************************************************************************************
+   * Delegated methods of the directed graph of the network such that the network can be accessed as a graph itself
+   */
 
   @Override
   public IdentifiableCollection<Edge> incomingEdges( Node node ) {
@@ -107,23 +99,18 @@ public class DirectedNetwork extends GeneralNetwork implements DirectedGraph {
    * @param sinks
    * @return 
    */
-  public static Network getExtendedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
-    ExtendedGraph extended = new ExtendedGraph( graph, 2, sources.size() + sinks.size() );
+  public static Network getExtendedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities,
+          List<Node> sources, List<Node> sinks ) {
+    final ExtendedGraph extended = new ExtendedGraph( graph, 2, sources.size() + sinks.size() );
 
-    Node newSource = extended.getFirstNewNode();
-    Node newSink = extended.getNode( newSource.id() + 1 );
+    final Node newSource = extended.getFirstNewNode();
+    final Node newSink = extended.getNode( newSource.id() + 1 );
 
-    IdentifiableIntegerMapping<Edge> newCapacities = new IdentifiableIntegerMapping<>( capacities, extended.edgeCount() );
-    for( Node s : sources ) {
-      Edge e = extended.createAndSetEdge( newSource, s );
-      newCapacities.set( e, Integer.MAX_VALUE );
-    }
-    for( Node t : sinks ) {
-      Edge e = extended.createAndSetEdge( t, newSink );
-      newCapacities.set( e, Integer.MAX_VALUE );
-    }
+    final IdentifiableIntegerMapping<Edge> newCapacities
+            = new IdentifiableIntegerMapping<>( capacities, extended.edgeCount() );
+    sources.stream().forEach( s -> newCapacities.set( extended.createAndSetEdge( newSource, s ), Integer.MAX_VALUE ) );
+    sinks.stream().forEach( t -> newCapacities.set( extended.createAndSetEdge( t, newSink ), Integer.MAX_VALUE ) );
 
-    Network n = new DirectedNetwork( extended, newCapacities, newSource, newSink );
-    return n;
+    return new DirectedNetwork( extended, newCapacities, newSource, newSink );
   }
 }

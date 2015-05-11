@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package org.zetool.netflow.ds.network;
 
@@ -15,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -26,13 +22,11 @@ private Graph graph;
   private List<Node> sources;
   private List<Node> sinks;
 
-  // TODO: replace constructors and change to a builder that maybe also automatically builds the network!
-
   public GeneralNetwork( Graph graph, IdentifiableIntegerMapping<Edge> capacities, List<Node> sources, List<Node> sinks ) {
-    this.graph = graph;
-    this.capacities = capacities;
-    this.sources = sources;
-    this.sinks = sinks;
+    this.graph = Objects.requireNonNull( graph );
+    this.capacities = Objects.requireNonNull( capacities );
+    this.sources = Objects.requireNonNull( sources );
+    this.sinks = Objects.requireNonNull( sinks );
   }
 
   public GeneralNetwork( Graph graph, IdentifiableIntegerMapping<Edge> capacities, Node source, List<Node> sinks ) {
@@ -54,10 +48,6 @@ private Graph graph;
   @Override
   public IdentifiableIntegerMapping<Edge> getCapacities() {
     return capacities;
-  }
-
-  public Graph getNetwork() {
-    return graph;
   }
 
   public Node getSink() {

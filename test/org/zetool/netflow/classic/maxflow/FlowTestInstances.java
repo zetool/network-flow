@@ -1,23 +1,42 @@
-/**
- * FlowTestInstances.java
- * Created: 06.06.2014, 15:59:34
- */
+
 package org.zetool.netflow.classic.maxflow;
 
-import org.zetool.container.mapping.IdentifiableIntegerMapping;
-import org.zetool.graph.DefaultDirectedGraph;
-import org.zetool.graph.Edge;
-import org.zetool.graph.SimpleUndirectedGraph;
-import org.zetool.netflow.ds.network.DirectedNetwork;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import org.junit.Test;
 import org.zetool.netflow.ds.network.Network;
-import org.zetool.netflow.ds.network.UndirectedNetwork;
-
+import static org.zetool.netflow.ds.network.NetworkUtil.generateDirected;
+import static org.zetool.netflow.ds.network.NetworkUtil.generateUndirected;
 
 /**
  *
  * @author Jan-Philipp Kappmeier
  */
 public class FlowTestInstances {
+  
+  @Test
+  public void testDirectedGraphGenerator() {
+    Network n = generateDirected( 4, DIAMOND_EXAMPLE, 0, 3 );
+    assertThat( n.nodeCount(), is( equalTo( 4 ) ) );
+    assertThat( n.edgeCount(), is( equalTo( 5 ) ) );
+    assertThat( n.sourceCount(), is( equalTo( 1 ) ) );
+    assertThat( n.sinkCount(), is( equalTo( 1 ) ) );
+    assertThat( n.sources().iterator().next(), is( equalTo( n.getNode( 0 ) ) ) );
+    assertThat( n.sinks().iterator().next(), is( equalTo( n.getNode( 3 ) ) ) );
+  }
+  
+  @Test
+  public void testUndirectedGraphGenerator() {
+    Network n = generateUndirected( 4, DIAMOND_EXAMPLE, 0, 3 );
+    assertThat( n.nodeCount(), is( equalTo( 4 ) ) );
+    assertThat( n.edgeCount(), is( equalTo( 5 ) ) );
+    assertThat( n.sourceCount(), is( equalTo( 1 ) ) );
+    assertThat( n.sinkCount(), is( equalTo( 1 ) ) );
+    assertThat( n.sources().iterator().next(), is( equalTo( n.getNode( 0 ) ) ) );
+    assertThat( n.sinks().iterator().next(), is( equalTo( n.getNode( 3 ) ) ) );
+  }
+  
   private final static int[][] DIAMOND_EXAMPLE = new int[][] {
       {0,1,2}, {0,2,1}, {1,2,1}, {1,3,1}, {2,3,2}
     };
@@ -53,45 +72,15 @@ public class FlowTestInstances {
 
   
   public static Network getDiamondExample() {
-    return fromArray( 4, DIAMOND_EXAMPLE, 0, 3 );
+    return generateDirected( 4, DIAMOND_EXAMPLE, 0, 3 );
   }
   
   public static Network getDiamondExampleUndirected() {
-    return fromArrayUndirected( 4, DIAMOND_EXAMPLE, 0, 3 );
+    return generateUndirected( 4, DIAMOND_EXAMPLE, 0, 3 );
   }
 
   public static Network getHarrisRossOriginal() {
-    return fromArray( 53, HARRID_ROSS_EXAMPLE, 0, 35 );
+    return generateDirected( 53, HARRID_ROSS_EXAMPLE, 0, 35 );
   }
 
-  private static Network fromArray( int nodeCount, int[][] array, int source, int sink ) {
-    if( array[0].length != 3 ) {
-      throw new IllegalArgumentException( "Illegal Format!" );
-    }
-
-    DefaultDirectedGraph graph = new DefaultDirectedGraph( nodeCount, array.length );
-    IdentifiableIntegerMapping<Edge> capacities = new IdentifiableIntegerMapping<>( array.length );
-
-    for( int i = 0; i < array.length; ++i ) {
-      Edge e = graph.createAndSetEdge( graph.getNode( array[i][0] ), graph.getNode( array[i][1] ) );
-      capacities.add( e, array[i][2] );
-    }
-    return new DirectedNetwork( graph, capacities, graph.getNode( source ), graph.getNode( sink ) );
-  }
-  
-  private static Network fromArrayUndirected( int nodeCount, int[][] array, int source, int sink ) {
-    if( array[0].length != 3 ) {
-      throw new IllegalArgumentException( "Illegal Format!" );
-    }
-
-    SimpleUndirectedGraph graph = new SimpleUndirectedGraph( nodeCount );
-    IdentifiableIntegerMapping<Edge> capacities = new IdentifiableIntegerMapping<>( array.length );
-
-    for( int i = 0; i < array.length; ++i ) {
-      //Edge e = graph.createAndSetEdge( graph.getNode( array[i][0] ), graph.getNode( array[i][1] ) );
-      Edge e = graph.addEdge( graph.getNode( array[i][0] ), graph.getNode( array[i][1] ) );
-      capacities.add( e, array[i][2] );
-    }
-    return new UndirectedNetwork( graph, capacities, graph.getNode( source ), graph.getNode( sink ) );
-  }
 }

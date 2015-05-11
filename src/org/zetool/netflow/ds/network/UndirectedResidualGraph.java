@@ -112,6 +112,9 @@ public class UndirectedResidualGraph extends SimpleUndirectedGraph implements Re
 
   @Override
   public void augmentFlow( Path path, int amount ) {
+    if( path.length() == 0 ) {
+      return;
+    }
     Node lastStart = path.start();
     
     for( Edge e : path ) {

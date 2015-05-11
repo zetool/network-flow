@@ -38,14 +38,9 @@ public class UndirectedNetwork extends GeneralNetwork implements UndirectedGraph
 
   @Override
   public UndirectedGraph getGraph() {
-    return (UndirectedGraph)super.getGraph(); //To change body of generated methods, choose Tools | Templates.
+    return (UndirectedGraph)super.getGraph();
   }
 
-  @Override
-  public UndirectedGraph getNetwork() {
-    return (UndirectedGraph)super.getNetwork(); //To change body of generated methods, choose Tools | Templates.
-  }
-  
   //******************************************************************************************************
   // Delegated methods of the graph of the network such that the network can be accessed as a graph itself
 

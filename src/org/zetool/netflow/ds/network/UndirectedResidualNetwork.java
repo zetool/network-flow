@@ -44,7 +44,7 @@ public class UndirectedResidualNetwork extends UndirectedNetwork implements Resi
    * Initializes the instance by setting up the residual graph.
    */
   private void init() {
-    this.residualGraph = (ResidualGraph)super.getNetwork();
+    this.residualGraph = (ResidualGraph)super.getGraph();
 
   }
 

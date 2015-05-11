@@ -59,7 +59,7 @@ public class DirectedResidualNetwork extends DirectedNetwork implements Residual
    * Initializes the instance by setting up the residual graph.
    */
   private void init() {
-    this.residualGraph = (DefaultResidualGraph)super.getNetwork();
+    this.residualGraph = (DefaultResidualGraph)super.getGraph();
 
   }
 
