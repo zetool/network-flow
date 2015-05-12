@@ -27,7 +27,7 @@ import org.zetool.graph.util.GraphUtil;
  * @author Martin Groß
  */
 public class MaximumFlow extends Flow {
-	private MaximumFlowProblem problem;
+	private final MaximumFlowProblem problem;
 
 	public MaximumFlow( MaximumFlowProblem problem, IdentifiableIntegerMapping<Edge> flow ) {
 		super( flow );
@@ -38,18 +38,18 @@ public class MaximumFlow extends Flow {
 		return problem;
 	}
 
-	public int getFlowValue() {
-		int result = 0;
-		for( Node source : problem.getSources() ) {
-			for( Edge edge : GraphUtil.outgoingIterator( problem.getNetwork(), source ) )
-//      for( Edge edge : problem.getNetwork().outgoingEdges( source ) )
-				result += get( edge );
-			for( Edge edge : GraphUtil.incomingIterator( problem.getNetwork(), source ) )
-			//for( Edge edge : problem.getNetwork().incomingEdges( source ) )
-				result -= get( edge );
-		}
-		return result;
-	}
+  public long getFlowValue() {
+    long result = 0;
+    for( Node source : problem.getSources() ) {
+      for( Edge edge : GraphUtil.outgoingIterator( problem.getNetwork(), source ) ) {
+        result += get( edge );
+      }
+      for( Edge edge : GraphUtil.incomingIterator( problem.getNetwork(), source ) ) {
+        result -= get( edge );
+      }
+    }
+    return result;
+  }
 
   /**
    * The check methods checks flow conservation. It only works for directed
@@ -65,13 +65,11 @@ public class MaximumFlow extends Flow {
       // check flow conservation
       int sum = 0;
       // sum incoming
-      for( Edge e : GraphUtil.incomingIterator( problem.getNetwork(), v ) )
-      {
+      for( Edge e : GraphUtil.incomingIterator( problem.getNetwork(), v ) ) {
         sum += get( e );
       }
       // sum outcoming
-      for( Edge e : GraphUtil.outgoingIterator( problem.getNetwork(), v ) )
-      {
+      for( Edge e : GraphUtil.outgoingIterator( problem.getNetwork(), v ) ) {
         sum -= get( e );
       }
 
@@ -81,17 +79,17 @@ public class MaximumFlow extends Flow {
       problems = sum != 0;
     }
 
-		for( Edge e : problem.getNetwork().edges() ) {
-			if( get( e ) > problem.getCapacities().get( e ) ) {
-				System.out.println( "Capacity on edge " + e.toString() + " is violated: " + get( e ) + " > "
+    for( Edge e : problem.getNetwork().edges() ) {
+      if( get( e ) > problem.getCapacities().get( e ) ) {
+        System.out.println( "Capacity on edge " + e.toString() + " is violated: " + get( e ) + " > "
                 + problem.getCapacities().get( e ) );
-				problems = false;
-			}
-			if( get( e ) < 0 ) {
-				System.out.println( "Capacity on edge " + e.toString() + " is violated: " + get( e ) + " < 0" );
-				problems = false;
-			}
-		}
-		return !problems;
-	}
+        problems = false;
+      }
+      if( get( e ) < 0 ) {
+        System.out.println( "Capacity on edge " + e.toString() + " is violated: " + get( e ) + " < 0" );
+        problems = false;
+      }
+    }
+    return !problems;
+  }
 }

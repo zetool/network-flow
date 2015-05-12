@@ -1,19 +1,21 @@
 package org.zetool.netflow.classic.maxflow;
 
-import org.zetool.netflow.classic.maxflow.EdmondsKarp;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import org.zetool.netflow.classic.problems.MaximumFlowProblem;
 import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
 import org.zetool.graph.DefaultDirectedGraph;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
  *
  * @author Jan-Philipp Kappmeier
  */
-public class EdmondsKarpTest extends TestCase {
+public class EdmondsKarpTest {
 
   @Test
   public void testHiddenEdges() {
@@ -48,9 +50,9 @@ public class EdmondsKarpTest extends TestCase {
     ek.setProblem( mfp );
     ek.run();
 
-    assertEquals( 4, ek.getSolution().getFlowValue() );
+    assertThat( ek.getSolution().getFlowValue(), is( equalTo( 4L )) );
     System.out.println( ek.getSolution().toString() );
-    assertEquals( "Check the solution.", true, ek.getSolution().check() );
+    assertThat( "Check the solution.", ek.getSolution().check(), is( true ) );
 
     n.setHidden( BC, false );
     //ek.residualNetwork.update();
@@ -62,31 +64,40 @@ public class EdmondsKarpTest extends TestCase {
 //    assertEquals( "Check the solution.", true, ek.getSolution().check() );
   }
 
+  
   @Test
   public void testInstance() {
-    DefaultDirectedGraph network = new DefaultDirectedGraph( 4, 5 );
-    network.createAndSetEdge( network.getNode( 0 ), network.getNode( 1 ) );
-    network.createAndSetEdge( network.getNode( 0 ), network.getNode( 2 ) );
-    network.createAndSetEdge( network.getNode( 1 ), network.getNode( 2 ) );
-    network.createAndSetEdge( network.getNode( 1 ), network.getNode( 3 ) );
-    network.createAndSetEdge( network.getNode( 2 ), network.getNode( 3 ) );
+    MaximumFlowProblem mfp = new MaximumFlowProblem( FlowTestInstances.getDiamondExample() );
+    EdmondsKarp ff = new EdmondsKarp();
+    ff.setProblem( mfp );
 
-    IdentifiableIntegerMapping<Edge> capacities = new IdentifiableIntegerMapping<>( 5 );
-    capacities.add( network.getEdge( 0 ), 2 );
-    capacities.add( network.getEdge( 1 ), 1 );
-    capacities.add( network.getEdge( 2 ), 1 );
-    capacities.add( network.getEdge( 3 ), 1 );
-    capacities.add( network.getEdge( 4 ), 2 );
+    ff.run();
 
-    MaximumFlowProblem mfp = new MaximumFlowProblem( network, capacities, network.getNode( 0 ), network.getNode( 3 ) );
+    assertThat( "Flow value", ff.getSolution().getFlowValue(), is( equalTo( 3L )) );
+    assertThat( "Check the solution.", ff.getSolution().check(), is( true ) );
+  }
 
-    EdmondsKarp ek = new EdmondsKarp();
+  @Test
+  public void testInstanceUndirected() {
+    MaximumFlowProblem mfp = new MaximumFlowProblem( FlowTestInstances.getDiamondExampleUndirected() );
+    EdmondsKarp ff = new EdmondsKarp();
+    ff.setProblem( mfp );
 
-    ek.setProblem( mfp );
-    ek.run();
+    ff.run();
 
-    assertEquals( "Flow value", 3, ek.getSolution().getFlowValue() );
-    System.out.println( ek.getSolution().toString() );
-    assertEquals( "Check the solution.", true, ek.getSolution().check() );
+    assertThat( "Flow value", ff.getSolution().getFlowValue(), is( equalTo( 0L ) ) );
+    assertThat( "Check the solution.", ff.getSolution().check(), is( true ) );
+  }
+
+  @Test
+  public void testHarrisRoss() {
+    MaximumFlowProblem mfp = new MaximumFlowProblem( FlowTestInstances.getHarrisRossOriginal() );
+    EdmondsKarp ff = new EdmondsKarp();
+    ff.setProblem( mfp );
+
+    ff.run();
+    
+    assertEquals( "Flow value", 163, ff.getSolution().getFlowValue() );
+    assertEquals( "Check the solution.", true, ff.getSolution().check() );
   }
 }

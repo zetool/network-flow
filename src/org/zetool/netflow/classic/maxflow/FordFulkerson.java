@@ -39,48 +39,43 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
       initializeDatastructures();
     } else {
       throw new IllegalStateException( "Whatever." );
-      //residualNetwork.update(); // second round
     }
     cut = null;
 
-    int maxPossibleFlow = 0;
-    //for( Edge e : residualNetwork.outgoingEdges( source ) ) {
-    //for( Edge e :  Helper.in( GraphUtil.getUnifiedAccess( residualNetwork ).outgoing( source ) ) ) {
-    for( Edge e :  GraphUtil.outgoingIterator( residualNetwork, source ) ) {
-      maxPossibleFlow += residualNetwork.residualCapacity( e );
-    }
-
-    int maxPossibleFlow2 = 0;
-    //for( Edge e : residualNetwork.incomingEdges( sink ) ) {
-    for( Edge e :  GraphUtil.incomingIterator( residualNetwork, sink ) ) {
-    //for( Edge e : Helper.in( GraphUtil.getUnifiedAccess( residualNetwork ).outgoing( sink ) ) ) {
-      if( residualNetwork.residualCapacity( e ) == Integer.MAX_VALUE ) {
-        maxPossibleFlow2 = Integer.MAX_VALUE;
-        break;
-      } else {
-        maxPossibleFlow2 += residualNetwork.residualCapacity( e );
-      }
-    }
-
-    if( maxPossibleFlow2 < maxPossibleFlow ) {
-      maxPossibleFlow = maxPossibleFlow2;
-    }
-
+    final long maxPossibleFlow = getUpperBound();
+    
     int value = 0;
     do {
       Path p = findPath();
       value = residualCapacity( p );
       augmentFlow( p, value );
-      fireProgressEvent( value < Integer.MAX_VALUE ? (double)flow / maxPossibleFlow2 : 1 );
-    } while( value > 0 && value < Integer.MAX_VALUE ); //while( augmentFlow() != 0 )
+      fireProgressEvent( value < Integer.MAX_VALUE ? (double)flow / maxPossibleFlow : 1 );
+    } while( value > 0 && value < Integer.MAX_VALUE );
 
-    // TODO: convert flow back to original network
     if( getProblem().isSingleSourceSink() ) {
       return new MaximumFlow( getProblem(), residualNetwork.flow() );      
     } else {
       residualNetwork.flow().setDomainSize( getProblem().getNetwork().edgeCount() );
       return new MaximumFlow( getProblem(), residualNetwork.flow() );
     }
+  }
+  
+  /**
+   * Computes an upper bound for the flow value.
+   * @return an upper bound for the flow value
+   */
+  private long getUpperBound() {
+    long maxPossibleFlow = 0;
+    for( Edge e :  GraphUtil.outgoingIterator( residualNetwork, source ) ) {
+      maxPossibleFlow += residualNetwork.residualCapacity( e );
+    }
+
+    long maxPossibleFlow2 = 0;
+    for( Edge e :  GraphUtil.incomingIterator( residualNetwork, sink ) ) {
+      maxPossibleFlow2 += residualNetwork.residualCapacity( e );
+    }
+
+    return Math.min( maxPossibleFlow, maxPossibleFlow2 );
   }
 
   private void initializeDatastructures() {

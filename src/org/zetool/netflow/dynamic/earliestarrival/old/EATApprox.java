@@ -52,7 +52,7 @@ public class EATApprox {
 
 		int sumOfSupplies = 0;
 
-		int lastFlow = -1;
+		long lastFlow = -1;
 		int totalFlow = 0;
 
 		do {

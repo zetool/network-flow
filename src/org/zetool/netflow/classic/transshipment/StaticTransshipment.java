@@ -40,7 +40,7 @@ public class StaticTransshipment implements Runnable {
   private IdentifiableIntegerMapping<Edge> flow;
   private OldResidualNetwork residualNetwork;
   private boolean feasible;
-  private int valueOfFlow;
+  private long valueOfFlow;
   private Algorithm<MaximumFlowProblem, MaximumFlow> algorithm;
 
   public Algorithm<MaximumFlowProblem, MaximumFlow> getAlgorithm() {
@@ -139,7 +139,7 @@ public class StaticTransshipment implements Runnable {
     return flow;
   }
 
-  public int getFlowValueEvenIfInfeasibleFlow() {
+  public long getFlowValueEvenIfInfeasibleFlow() {
     return valueOfFlow;
   }
 

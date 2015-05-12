@@ -14,6 +14,10 @@ import org.zetool.graph.util.GraphUtil;
  */
 public class NetworkUtil {
   
+  /** Private constructor for utility class. */
+  private NetworkUtil() {
+  }
+  
   /**
    * Generates a directed graph out of edges in an array. The edges are defined as start and end id in the first two
    * array indices, the third array index defines the edge's capacity. Two dimensional arrays where the second
@@ -58,9 +62,5 @@ public class NetworkUtil {
       capacities.add( graph.getEdge( i ), edges[i][2] );
     }
     return capacities;
-  }
-
-  /** Private constructor for utility class. */
-  private NetworkUtil() {
   }
 }

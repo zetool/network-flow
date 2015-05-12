@@ -38,7 +38,7 @@ public class PushRelabelHighestLabelTest {
 
     // Assert
     int[] expectedMaximumFlow = {2, 1, 1, 1, 2};
-    assertThat( "Max flow not 3", hipr.getSolution().getFlowValue(), is( equalTo( 3 ) ) );
+    assertThat( "Max flow not 3", hipr.getSolution().getFlowValue(), is( equalTo( 3L ) ) );
 		assertThat( hipr.getSolution().check(), is( true ) );
     assertFlow( network, hipr.getSolution(), expectedMaximumFlow );
 	}
