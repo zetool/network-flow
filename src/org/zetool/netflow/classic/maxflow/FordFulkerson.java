@@ -14,8 +14,8 @@ import org.zetool.netflow.ds.network.ResidualNetwork;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  *
@@ -24,14 +24,18 @@ import java.util.Stack;
 public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
   protected ResidualNetwork residualNetwork;
   protected long pushes;
-  protected int flow;
+  protected long flow;
   protected int augmentations;
   protected Node source;
   protected Node sink;
   boolean verbose = true;
   boolean useLower = true;
   private IdentifiableIntegerMapping<Edge> lowerCapacities;
-  private MaximumFlowProblem problem;
+  IdentifiableBooleanMapping<Node> contained;
+  Set<Node> cut;
+  List<Edge> cutOutgoing = new LinkedList<>();
+  List<Edge> cutIncoming = new LinkedList<>();
+
 
   @Override
   protected MaximumFlow runAlgorithm( MaximumFlowProblem problem ) {
@@ -78,9 +82,12 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     return Math.min( maxPossibleFlow, maxPossibleFlow2 );
   }
 
+  private MaximumFlowProblem getProblemSingleSource() {
+    return getProblem().isSingleSourceSink() ? getProblem() : getProblem().asSingleSourceProblem();
+  }
+  
   private void initializeDatastructures() {
-    // Set up network
-    problem = getProblem().isSingleSourceSink() ? getProblem() : getProblem().asSingleSourceProblem();
+    final MaximumFlowProblem problem = getProblemSingleSource();
 
     if( useLower ) {
       residualNetwork = ResidualNetwork.getResidualNetwork( problem.getNetwork(), problem.getCapacities(), problem.getSource(), problem.getSink() );
@@ -107,26 +114,26 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     return min;
   }
 
+  /**
+   * Augments flow along a path.
+   * @param path the path
+   * @param value the value by what the flow is augmented
+   */
   public void augmentFlow( Path path, int value ) {
     residualNetwork.augmentFlow( path, value );
-    
     pushes += path.length();
-    
-    Stack<Edge> s = new Stack<>();
-    System.out.print( "Augmented on " );
-    for( Edge e : path ) {
-      System.out.print( e );
-    }
-    System.out.println( " by " + value );
-
     flow += value;
     augmentations++;
   }
 
-  public int getFlow() {
+  public long getFlow() {
     return flow;
   }
 
+  /**
+   * Returns the number of augmentation steps performed during the execution of the algorithm.
+   * @return the number of augmentation steps
+   */
   public int getAugmentations() {
     return augmentations;
   }
@@ -135,18 +142,20 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     return pushes;
   }
 
-  IdentifiableBooleanMapping<Node> contained;
-  Set<Node> cut;
-
+  /**
+   * Computes the cut nodes.
+   * @return a set containing all nodes in the cut.
+   */
   public Set<Node> computeCutNodes() {
     if( contained == null ) {
       contained = new IdentifiableBooleanMapping<>( residualNetwork.nodeCount() );
     }
-    for( Node n : problem.getNetwork() ) {
+    for( Node n : getProblemSingleSource().getNetwork() ) {
       contained.set( n, false );
     }
     BreadthFirstSearch bfs = new BreadthFirstSearch();
     bfs.setProblem( residualNetwork );
+    Objects.requireNonNull( source );
     bfs.setStart( source );
     bfs.run();
     Set<Node> reachable = bfs.getReachableNodes();
@@ -157,9 +166,6 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
     return reachable;
   }
 
-  LinkedList<Edge> cutOutgoing = new LinkedList<>();
-  LinkedList<Edge> cutIncoming = new LinkedList<>();
-
   public void computeCutEdges() {
     if( cut == null ) {
       cut = computeCutNodes();
@@ -167,9 +173,8 @@ public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
       cutIncoming.clear();
     }
 
-    //UnifiedGraphAccess g;
     for( Node n : cut ) {
-      for( Edge e :  GraphUtil.outgoingIterator( residualNetwork, n ) ) {
+      for( Edge e : GraphUtil.outgoingIterator( residualNetwork, n ) ) {
        // find outgoing edges
         if( !contained.get( e.end() ) && !cutOutgoing.contains( e ) ) {
           cutOutgoing.add( e );

@@ -37,6 +37,10 @@ public class FlowTestInstances {
     assertThat( n.sinks().iterator().next(), is( equalTo( n.getNode( 3 ) ) ) );
   }
   
+  private final static int[][] SIMPLE = new int[][] {
+    {0,1,1}
+  };
+  
   private final static int[][] DIAMOND_EXAMPLE = new int[][] {
       {0,1,2}, {0,2,1}, {1,2,1}, {1,3,1}, {2,3,2}
     };
@@ -70,6 +74,9 @@ public class FlowTestInstances {
       {0,13,100}, {0,52,100}, {0,15,100}, {32,35,100},
     };
 
+  public static Network getSimpleExample() {
+    return generateDirected( 2, SIMPLE, 0, 1 );
+  }
   
   public static Network getDiamondExample() {
     return generateDirected( 4, DIAMOND_EXAMPLE, 0, 3 );
