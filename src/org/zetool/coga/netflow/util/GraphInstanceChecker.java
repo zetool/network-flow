@@ -37,8 +37,8 @@ public class GraphInstanceChecker {
   private ListSequence<Node> sources, sinks;
   private LinkedList<Node> newSources;
   private LinkedList<Node> deletedSources;
-  private DirectedGraph network;
-  private IdentifiableIntegerMapping<Node> supplies;
+  private final DirectedGraph network;
+  private final IdentifiableIntegerMapping<Node> supplies;
   private IdentifiableIntegerMapping<Node> newSupplies;
   boolean hasRun = false;
 

@@ -43,7 +43,6 @@ public abstract class TransshipmentFramework<W extends DynamicTransshipmentProbl
 
 	/** Node capacities
 	 * @param standardTHTAlgorithm
-	 * @param additionalTHTAlgorithm
 	 */
 	public TransshipmentFramework( TS standardTHTAlgorithm/*, TA additionalTHTAlgorithm*/ ) {
 		this.standardTHTAlgorithm = standardTHTAlgorithm;

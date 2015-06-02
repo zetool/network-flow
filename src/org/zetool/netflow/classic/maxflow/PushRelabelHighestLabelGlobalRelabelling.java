@@ -1,6 +1,7 @@
 
 package org.zetool.netflow.classic.maxflow;
 
+import org.zetool.common.datastructure.SimpleTuple;
 import org.zetool.common.datastructure.Tuple;
 import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
@@ -74,7 +75,7 @@ public class PushRelabelHighestLabelGlobalRelabelling extends PushRelabelHighest
 				minEdge = e;
 			}
 		}
-		return new Tuple<>( minDistance+1, minEdge );
+		return new SimpleTuple<>( minDistance+1, minEdge );
 	}
 
 	protected void globalUpdate() {

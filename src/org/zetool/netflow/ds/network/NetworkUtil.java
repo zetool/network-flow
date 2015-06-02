@@ -39,12 +39,14 @@ public class NetworkUtil {
   }
 
   /**
-   * 
-   * @param nodes
-   * @param edges
-   * @param source
-   * @param sink
-   * @return 
+   * Generates an undirected instance of {@link Network} containing the given edges. The edges
+   * are specified as two dimensional array of ids start and end nodes which can take allowed
+   * values from {@literal 0} to {@code nodes-1}, similar for the source and sink id.
+   * @param nodes the umber of sources to generate, with ids starting from 0
+   * @param edges the edges
+   * @param source the id of the source node
+   * @param sink the id of the sink node
+   * @return an undirected {@link Network} according to the given data
    */
   public static Network generateUndirected( int nodes, int[][] edges, int source, int sink ) {
     if( edges[0].length < 3 ) {

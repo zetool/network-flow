@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import org.zetool.common.datastructure.SimpleTuple;
 
 /**
  *
@@ -360,7 +361,7 @@ public class NetworkFlowAlgorithm extends PushRelabel {
 		}
 		//System.out.println( "searchForMinDistance für " + v );
 
-		return new Tuple<>( minDistance+1, minEdge );
+		return new SimpleTuple<>( minDistance+1, minEdge );
 	}
 
 	//HashSet<Node> gotActive = new HashSet<>();

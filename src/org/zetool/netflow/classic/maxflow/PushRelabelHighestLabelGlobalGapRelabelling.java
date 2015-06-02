@@ -53,7 +53,7 @@ public class PushRelabelHighestLabelGlobalGapRelabelling extends PushRelabelHigh
 	/**
 	 * Gap relabeling (maybe move to bucket?)
 	 * @param emptyBucket
-	 * @return
+	 * @return the gap value of an empty bucket for the gap heuristic
 	 */
 	protected int gap( int emptyBucket ) {
 		gaps++;

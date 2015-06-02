@@ -54,7 +54,7 @@ public class MaximumFlow extends Flow {
   /**
    * The check methods checks flow conservation. It only works for directed
    * graphs.
-   * @return 
+   * @return {@literal true} if the flow satisfies flow conservation, {@literal false} otherwise
    */
   public boolean check() {
     boolean problems = false;

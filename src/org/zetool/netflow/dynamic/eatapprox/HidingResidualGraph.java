@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
+import org.zetool.common.datastructure.SimpleTuple;
 
 /**
  *
@@ -320,7 +321,7 @@ public class HidingResidualGraph extends SimpleResidualGraph implements Directed
 		isReverseEdge.add( newEdge, false );
 
 		// store the information of the reverse edge in some kind of map
-		Tuple<Node,Edge> tup = new Tuple<>( from, newEdge );
+		Tuple<Node,Edge> tup = new SimpleTuple<>( from, newEdge );
 //		knownEdges.get( to ).add( tup );
 		knownEdges[to.id()].add( tup );
 		return newEdge;

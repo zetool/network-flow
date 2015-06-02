@@ -1,6 +1,7 @@
 
 package org.zetool.netflow.classic.maxflow;
 
+import org.zetool.common.datastructure.SimpleTuple;
 import org.zetool.common.datastructure.Tuple;
 import org.zetool.container.bucket.BucketPriorityQueue;
 import org.zetool.container.bucket.BucketSet;
@@ -246,7 +247,7 @@ public class PushRelabelHighestLabel extends PushRelabel {
 				}
 			}
 		}
-		return new Tuple<>( minDistance+1, minEdge );
+		return new SimpleTuple<>( minDistance+1, minEdge );
 	}
 
 	private static enum FeasibleState {

@@ -24,8 +24,8 @@ import org.zetool.graph.Node;
 import java.util.List;
 
 /**
- * An implementation of the {@link de.tu_berlin.coga.ds.network.Network} interface based on the
- * {@link org.zetool.graph.DefaultDirectedGraph}.
+ * An implementation of the {@link Network} interface based on the
+ * {@link GeneralNetwork}.
  * @author Jan-Philipp Kappmeier
  */
 public class DirectedNetwork extends GeneralNetwork implements DirectedGraph {
@@ -97,7 +97,7 @@ public class DirectedNetwork extends GeneralNetwork implements DirectedGraph {
    * @param capacities
    * @param sources
    * @param sinks
-   * @return 
+   * @return an extended network with a single source and single sink for a given graph
    */
   public static Network getExtendedNetwork( DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities,
           List<Node> sources, List<Node> sinks ) {

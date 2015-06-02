@@ -92,7 +92,7 @@ public class FlowOverTimeImplicit implements FlowOverTimeInterface {
 
 	/**
 	 * Returns the total costs for the flow.
-	 * @return
+	 * @return the total costs for the flow
 	 */
 	public int getTotalCost() {
 		return totalCost;

@@ -28,7 +28,7 @@ import org.zetool.graph.structure.Path;
  * {@link Path} in a network. The delay time in the first node of the path
  * implies the time when the represented flow would start to leave the first node.
  * The flow is send with a constant rate of {@code rate}. It sends a
- * total quantity of {@code amount{@code  units of flow. Together with the rate
+ * total quantity of {@code amount} {@code units} of flow. Together with the rate
  * and the starting time this implies the point in time where the flow
  * will stop sending.
  * {@code DynamicPathFlows} are needed to represent dynamic flows path based.

@@ -55,7 +55,7 @@ public class SuccessiveEarliestArrivalAugmentingPathAlgorithmTH extends Transshi
 	/**
 	 * As we do not use the original {@code runAlgorithm()} method, {@code transshipmentWithTimeHorizon}
 	 * is never called. Thus it's only a stub.
-   * @return 
+   * @return {@literal null}
 	 */
 	@Override
 	protected IdentifiableIntegerMapping<Edge> transshipmentWithTimeHorizon( TimeExpandedNetwork network ) {

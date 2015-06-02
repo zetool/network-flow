@@ -20,6 +20,7 @@ import org.zetool.common.datastructure.Tuple;
 import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
 import java.util.Set;
+import org.zetool.common.datastructure.SimpleTuple;
 
 /**
  *
@@ -116,7 +117,7 @@ public class NetworkFlowAlgorithmGlobalRelabelling extends NetworkFlowAlgorithm 
 //			}
 
 		}
-		return new Tuple<>( minDistance+1, minEdge );
+		return new SimpleTuple<>( minDistance+1, minEdge );
 	}
 
 
@@ -263,8 +264,4 @@ public class NetworkFlowAlgorithmGlobalRelabelling extends NetworkFlowAlgorithm 
 //		toAdd.clear();
 
 	}
-
-public static void main( String[] args ) {
-  System.out.println( "testmain" );
-}
 }
