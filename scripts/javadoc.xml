@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project>
+  <target name="init-javadoc" depends="init">
+    <mkdir dir="${javadoc.dir}"/>
+  </target>
+  
+  <target name="javadoc" depends="init-javadoc" description="Creates the JavaDoc documentation for the project.">
+    <javadoc destdir="${javadoc.dir}" sourcepath="${src.dir}" windowtitle="${lib.name}" author="true" version="true"
+             use="true" charset="UTF-8" encoding="UTF-8" docencoding="UTF-8">
+      <doctitle><![CDATA[<h1>${lib.name} javadoc documentation</h1>]]></doctitle>
+      <bottom><![CDATA[<i>${lib.copyright}</i>]]></bottom>
+      <tag name="todo" scope="all" description="To do:"/>
+      <link href="http://docs.oracle.com/javase/8/docs/api/"/>
+    </javadoc>
+    <!-- Further possible additions: Groups, links to other javadocs
+      <group title="Group 1 Packages" packages="org.zetool.common.a*"/>
+      <group title="Group 2 Packages" packages="org.zetool.common.b*:org.zetool.common.o*"/>
+    -->
+  </target>
+</project>    

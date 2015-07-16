@@ -1,22 +1,26 @@
 <ivy-module version="2.0">
-  <info organisation="org.zetool" module="zetool-math"/>
+  <info organisation="org.zetool" module="zetool-network-flow"/>
 
   <configurations>
-    <conf name="dist" description="Required to set up the build environment." extends="core" />
+    <conf name="dist" description="Required to set up the build environment."/>
     <conf name="core" description="Required to compile application."/>
     <conf name="test" description="Required for test only." />
   </configurations>
 
-  <dependencies>
+  <dependencies defaultconfmapping="*->default">
+    <!-- dist dependencies -->
+    <dependency org="org.eclipse.jgit" name="org.eclipse.jgit.ant" rev="4.0.0.201506090130-r" conf="dist"/>
+    <dependency org="org.eclipse.jgit" name="org.eclipse.jgit" rev="4.0.0.201506090130-r" conf="dist"/>
+    <dependency org="com.jcraft" name="jsch" rev="0.1.53" conf="dist"/>
+    <dependency org="com.rimerosolutions.ant" name="ant-git-tasks" rev="1.3.1" changing="true" conf="dist"/>
+    <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="dist"/>
+    
     <!-- test dependencies -->
-    <dependency org="junit" name="junit" rev="4.12" conf="test->default"/>
-    <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="test->default"/>
-    <dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.4.201502262128" conf="test->default"/>
-    <dependency org="org.jmock" name="jmock" rev="2.8.1" conf="test->default"/>
-    <dependency org="org.jmock" name="jmock-junit4" rev="2.8.1" conf="test->default"/>
-    <!--<dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="2.1" conf="build->default"/>-->
-    <!--<dependency org="net.sourceforge.cobertura" name="cobertura" rev="2.1.1" conf="cob->default"/>-->
-    <!--<dependency org="com.sun" name="tools" rev="0" conf="cob->default"/>-->
+    <dependency org="junit" name="junit" rev="4.12" conf="test"/>
+    <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="test"/>
+    <dependency org="org.jacoco" name="org.jacoco.ant" rev="0.7.4.201502262128" conf="test"/>
+    <dependency org="org.jmock" name="jmock" rev="2.8.1" conf="test"/>
+    <dependency org="org.jmock" name="jmock-junit4" rev="2.8.1" conf="test"/>
     
     <!-- core dependencies -->
 

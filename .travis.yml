@@ -1,0 +1,10 @@
+language: java
+
+install: ant resolve
+
+script: 
+  - ant test.travis
+
+jdk:
+  - oraclejdk8
+

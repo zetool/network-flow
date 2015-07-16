@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project>
+  <!-- Tasks with regards to Cobertura code covering tasks. Note, that these include normal testing process. -->
+
+  <path id="cobertura.classpath">
+    <fileset dir="${cobertura.dir}">
+      <include name="cobertura*.jar" />
+      <include name="lib/**/*.jar" />
+    </fileset>
+    <pathelement path="${classpath}"/>
+  </path>
+	<!--<taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>-->
+
+	<target name="init.coverage" depends="init">
+		<mkdir dir="${instrumented.dir}" />
+		<mkdir dir="${reports.xml.dir}" />
+		<mkdir dir="${reports.html.dir}" />
+		<mkdir dir="${coverage.xml.dir}" />
+		<mkdir dir="${coverage.summaryxml.dir}" />
+		<mkdir dir="${coverage.html.dir}" />
+	</target>
+
+  <target name="build.coverage" depends="init.coverage">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="yes">
+      <classpath refid="cobertura.classpath" />
+      <compilerarg value="-Xlint"/> <!-- enabled in normal build -->
+    </javac>
+  </target>
+
+	<target name="instrument" depends="clean.coverage,init.coverage,build.coverage">
+		<!-- Instrument the application classes, writing the
+         instrumented classes into ${build.instrumented.dir}. -->
+		<cobertura-instrument todir="${instrumented.dir}">
+			<!-- Ignore references to slf4j/logback, for the purposes of coverage reporting. -->
+			<ignore regex="org.slf4j.*" />
+
+      <!-- Instrument the library classes. No test classes. -->
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</cobertura-instrument>
+	</target>
+
+	<target name="test.coverage" depends="init.coverage,build.coverage,build.test">
+		<junit fork="yes" dir="${basedir}" failureProperty="test.failed"  printsummary="yes" haltonfailure="no" showoutput="true">
+			<!-- Note the classpath order: instrumented classes are before the
+           original (uninstrumented) classes.  This is important. -->
+			<classpath location="${instrumented.dir}" />
+			<classpath location="${classes.dir}" />
+
+			<!-- The instrumented classes reference classes used by the Cobertura
+           runtime, so Cobertura and its dependencies must be on your classpath. -->
+			<classpath refid="cobertura.classpath" />
+
+      <!-- Add the test binaries as well. -->
+      <classpath location="${test.build.dir}/classes"/>
+      
+      <!-- The libraries for the original library. -->
+      <classpath>
+        <pathelement path="${classpath}"/>
+      </classpath>
+
+      <formatter type="xml"/>
+
+			<batchtest todir="${reports.xml.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<!--<junitreport todir="${reports.xml.dir}">
+			<fileset dir="${reports.xml.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${reports.html.dir}" />
+		</junitreport>-->
+	</target>
+
+	<target name="coverage-report">
+		<!-- Generate an XML file containing the coverage data. -->
+		<cobertura-report srcdir="${src.dir}" destdir="${coverage.xml.dir}" format="xml" />
+	</target>
+
+	<target name="summary-coverage-report">
+		<!-- Generate an summary XML file containing the coverage data. -->
+		<cobertura-report srcdir="${src.dir}" destdir="${coverage.summaryxml.dir}" format="summaryXml" />
+	</target>
+
+	<target name="alternate-coverage-report">
+		<!-- Generate HTML coverage data in a user-readable form using nested source filesets. -->
+		<cobertura-report destdir="${coverage.html.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java"/>
+			</fileset>
+		</cobertura-report>
+	</target>
+
+  <target name="clean.coverage" description="delete coverage data" >
+		<!-- The coverage data file and any old instrumentation. -->
+		<delete file="cobertura.ser"/>
+		<delete dir="${classes.dir}" />
+		<delete dir="${instrumented.dir}" />
+  </target>
+
+  <target name="coverage" depends="clean.coverage,init.coverage,build.coverage,instrument,test.coverage,coverage-report,summary-coverage-report,alternate-coverage-report"/>
+ </project>
