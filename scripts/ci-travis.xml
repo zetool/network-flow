@@ -13,6 +13,7 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
     <!-- Common direcotry for libraries and ivy libs for subtasks. -->
     <property name="ivy.jar.dir" location="${travis.ivy.jar.dir}"/>
     <property name="ivy.lib.dir" location="${travis.ivy.lib.dir}"/>
+    <property name="core.lib.dir" value="${travis.ivy.lib.dir}/core"/>
   </target>
 
   <target name="init.travis">
@@ -21,7 +22,11 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
     <property name="ivy.lib.dir" location="${build.dir}/tmp/git-deps/lib/"/>
   </target>
 
-  <target name="test.travis" depends="init.travis,build.submodules,test"> <!-- depends: build.submodules, -->
+  <target name="travis.classpath" depends="init-ant-contrib">
+    <concatenate-manual-dependencies lineparam="${manual.dependencies}"/>
+  </target>
+
+  <target name="test.travis" depends="init.travis,build.submodules,travis.classpath,build,test">
   </target>
 
   <macrodef name="compile-dependency">
@@ -65,6 +70,23 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
     </sequential>
   </macrodef>
 
+  <!-- concatenates the manual dependencies into a custom classpath -->
+  <macrodef name="concatenate-manual-dependencies">
+    <attribute name="lineparam"/>
+    <sequential>
+      <var name="classpath.manual" value="" /> <!-- Defined a variable with null value --> 
+      <for list="@{lineparam}" param="dependency">
+        <sequential>
+          <echo>Depends on manual dependency @{dependency}</echo>
+          <!-- pattern: 
+               ${core.lib.dir}/@{dependency}: -->
+          <var name="classpath.manual" value="${classpath.manual}${core.lib.dir}/@{dependency}:" />
+        </sequential>
+      </for>
+      <echo>classpath.manual: ${classpath.manual}</echo>
+    </sequential>
+  </macrodef>
+
   <target name="build.git" depends="init-ant-contrib">
     <concatenate-dependencies lineparam="${dependencies}" base="../../lib/"/>
   </target>
@@ -80,6 +102,7 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
   </macrodef>
  
   <target name="git-clone" depends="init-git,init-ant-contrib" if="dependencies">
+    <property name="core.lib.dir" value="${core.lib.dir.default}"/>
     <mkdir dir="${build.dir}/tmp/git-deps"/>
     <echo>Cloning depending git directories:</echo>
     <make-github/>
