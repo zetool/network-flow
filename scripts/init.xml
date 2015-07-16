@@ -78,11 +78,35 @@
     </sequential>
   </macrodef>
 
-  <target name="resolve" depends="init-ivy" description="Use ivy to resolve classpaths">
+  <target name="resolve" depends="init-ivy" description="Use ivy to resolve classpaths.">
     <property name="ivy.jar.dir" value="${ivy.home.default}" />
     <property name="ivy.lib.dir" location="${ivy.lib.dir.default}"/>
     <resolve location="${ivy.lib.dir}"/>
   </target>
+
+  <macrodef name="download-dependency">
+    <attribute name="location"/>
+    <attribute name="name"/>
+    <sequential>
+      <echo>Storing @{location}/@{name} in ${core.lib.dir}</echo>
+      <get dest="${core.lib.dir}" skipexisting="true">
+        <url url="@{location}/@{name}"/>
+      </get>
+    </sequential>
+  </macrodef>
+  
+  <!-- Additional download task for non-ivy files. -->
+  <target name="download" depends="init,init-ant-contrib" description="manually downloads stuff" if="manual.dependencies">
+    <property name="core.lib.dir" value="${core.lib.dir.default}"/>
+    <for list="${manual.dependencies}" param="dependency">
+      <sequential>
+        <echo>Depends on @{dependency}</echo>
+        <download-dependency location="${manual.dependencies.location}" name="@{dependency}"/>
+      </sequential>
+    </for>
+  </target>
+
+  <target name="dependencies" depends="resolve,download" description="Get all the dependencies"/>
 
   <!--
   ==================================================
