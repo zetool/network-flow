@@ -12,12 +12,14 @@
 
   <macrodef name="setup-test">
     <sequential>
+      <echo>Setup test is am ausgeführt werden dran.</echo>
       <property name="classpath.custom" value="${classpath}"/>
       <path id="test.classpath">
         <path refid="test.path"/>
         <path refid="core.path"/>
         <pathelement path="${classes.dir}"/>
-        <pathelement path="${classpath.custom}"/>                    
+        <pathelement path="${classpath.custom}"/>
+        <pathelement path="${classpath.manual}"/>
         <pathelement path="${test.build.dir}/classes"/>
       </path>
       <fileset id="test.fileset" dir="${test.src.dir}">
@@ -42,6 +44,7 @@
   <target name="build.test" depends="init.test,build" description="Build test classes.">
     <property name="classpath.custom" value="${classpath}"/>
     <echo>Classpath: ${classpath.custom}</echo>
+    <echo>Manual: ${classpath.manual}</echo>
     <setup-test/>
     <javac srcdir="${test.src.dir}" destdir="${test.build.dir}/classes" debug="yes">
       <classpath>
