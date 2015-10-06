@@ -23,12 +23,9 @@
         <pathelement path="${test.build.dir}/classes"/>
       </path>
       <fileset id="test.fileset" dir="${test.src.dir}">
-<!--        <include name="**/*Test*.java"/>
-        <exclude name="**/AllTests.java"/>-->
           <include name="**/*Test*"/>
-          <!-- a '$' in the filename means it's an inner class -->
+          <!-- A '$' in the filename means it's an inner class. -->
           <exclude name="**/*$*"/>
-        
       </fileset>
     </sequential>
   </macrodef>
@@ -51,8 +48,13 @@
         <path refid="test.classpath"/>
       </classpath>
     </javac>
+    <echo>Copying files from source directory to classes.</echo>
     <copy todir="${classes.dir}">
       <fileset dir="src" includes="**/*.xml,**/*.properties,**/*.txt,**/*.ico" />
+    </copy>
+    <echo>Copying files from test directory to test classes.</echo>
+    <copy todir="${test.build.dir}/classes">
+      <fileset dir="test" includes="**/*.properties" />
     </copy>
   </target>
 
