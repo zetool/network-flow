@@ -16,6 +16,7 @@
 
 package org.zetool.netflow.dynamic.maxflow;
 
+import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.netflow.ds.structure.DynamicPath;
 import org.zetool.netflow.ds.network.TimeExpandedNetwork;
 import org.zetool.netflow.ds.structure.StaticFlowPath;
@@ -37,11 +38,11 @@ import org.zetool.netflow.classic.problems.MaximumFlowProblem;
  * problem using a time expanded network.
  * @author Martin Groß
  */
-public class TimeExpandedMaximumFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, PathBasedFlowOverTime> {
+public class TimeExpandedMaximumFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProblem, PathBasedFlowOverTime> {
 
     @Override
     protected PathBasedFlowOverTime runAlgorithm(MaximumFlowOverTimeProblem problem) {
-			if( problem.getSources().isEmpty() || problem.getSinks().isEmpty() ) {
+            if( problem.getSources().isEmpty() || problem.getSinks().isEmpty() ) {
             System.out.println("TimeExpandedMaximumFlowOverTime: The problem is invalid - this should not happen!");
             return new PathBasedFlowOverTime();
         }

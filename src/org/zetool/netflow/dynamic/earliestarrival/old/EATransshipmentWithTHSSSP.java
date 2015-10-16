@@ -13,7 +13,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 package org.zetool.netflow.dynamic.earliestarrival.old;
 
 import org.zetool.netflow.dynamic.transshipment.TransshipmentWithTimeHorizon;
@@ -24,15 +23,16 @@ import org.zetool.netflow.ds.network.TimeExpandedNetwork;
 import org.zetool.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 
 public class EATransshipmentWithTHSSSP extends TransshipmentWithTimeHorizon<EarliestArrivalFlowProblem> {
-	public EATransshipmentWithTHSSSP() {
-		setName( "Earliest Arrival Transshipment TH SSSP" );
-	}
 
-	@Override
-	protected IdentifiableIntegerMapping<Edge> transshipmentWithTimeHorizon( TimeExpandedNetwork tnetwork ) {
-		SuccessiveShortestPath sssp = new SuccessiveShortestPath( tnetwork, tnetwork.supplies(), tnetwork.capacities(), tnetwork.costs() );
-		sssp.run();
-		return sssp.getFlow();
-	}
+    public EATransshipmentWithTHSSSP() {
+        setName("Earliest Arrival Transshipment TH SSSP");
+    }
+
+    @Override
+    protected IdentifiableIntegerMapping<Edge> transshipmentWithTimeHorizon(TimeExpandedNetwork tnetwork) {
+        SuccessiveShortestPath sssp = new SuccessiveShortestPath(tnetwork, tnetwork.supplies(), tnetwork.capacities(), tnetwork.costs());
+        sssp.run();
+        return sssp.getFlow();
+    }
 
 }

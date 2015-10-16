@@ -13,36 +13,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 package org.zetool.netflow.dynamic;
 
 import org.zetool.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import org.zetool.algorithm.shortestpath.Dijkstra;
-import org.zetool.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.graph.Node;
-import org.zetool.netflow.dynamic.TimeHorizonBounds;
 
 /**
  *
  * @author Martin Groß
  */
-public class LongestShortestPathTimeHorizonEstimator extends Algorithm<EarliestArrivalFlowProblem, TimeHorizonBounds> {
+public class LongestShortestPathTimeHorizonEstimator
+        extends AbstractAlgorithm<EarliestArrivalFlowProblem, TimeHorizonBounds> {
 
-  @Override
-  protected TimeHorizonBounds runAlgorithm( EarliestArrivalFlowProblem problem ) {
-    int longest = 0;
-    for( Node source : problem.getSources() ) {
-      Dijkstra dijkstra = new Dijkstra( problem.getNetwork(), problem.getTransitTimes(), source );
-      dijkstra.run();
-      if( dijkstra.getDistance( problem.getSink() ) > longest ) {
-        longest = dijkstra.getDistance( problem.getSink() );
-      }
+    @Override
+    protected TimeHorizonBounds runAlgorithm(EarliestArrivalFlowProblem problem) {
+        int longest = 0;
+        for (Node source : problem.getSources()) {
+            Dijkstra dijkstra = new Dijkstra(problem.getNetwork(), problem.getTransitTimes(), source);
+            dijkstra.run();
+            if (dijkstra.getDistance(problem.getSink()) > longest) {
+                longest = dijkstra.getDistance(problem.getSink());
+            }
+        }
+        int supply = 0;
+        for (Node source : problem.getSources()) {
+            supply += problem.getSupplies().get(source);
+        }
+        return new TimeHorizonBounds(longest + 1, longest + supply + 1);
     }
-    int supply = 0;
-    for( Node source : problem.getSources() ) {
-      supply += problem.getSupplies().get( source );
-    }
-    return new TimeHorizonBounds( longest + 1, longest + supply + 1 );
-  }
 
 }

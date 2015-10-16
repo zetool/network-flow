@@ -10,6 +10,9 @@
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${reports.dir}"/>
+    <mkdir dir="${core.lib.dir.default}"/>
+    <mkdir dir="${dist.lib.dir}"/>
+    <mkdir dir="${test.lib.dir}"/>
   </target>
   
   <target name="clean" description="Clean up build, dist, test and report directories." >

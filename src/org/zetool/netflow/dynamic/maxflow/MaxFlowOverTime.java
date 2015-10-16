@@ -13,7 +13,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 package org.zetool.netflow.dynamic.maxflow;
 
 import org.zetool.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
@@ -34,122 +33,130 @@ import org.zetool.graph.DefaultDirectedGraph;
 import org.zetool.graph.localization.GraphLocalization;
 import org.zetool.netflow.classic.problems.MinimumCostFlowProblem;
 import java.util.List;
+import org.zetool.common.algorithm.AbstractAlgorithm;
 
 /**
- * The class {@code MaxFlowOverTime} solves the max flow over time 
- * problem. The flow is computed by a reduction to a minimum cost flow over
- * time computation. The reduction increases the size of the problem input
- * and thus needs the double amount of free space in memory.
- * @author Gordon Schlechter, Jan-Philipp Kappmeier
+ * The class {@code MaxFlowOverTime} solves the max flow over time problem. The flow is computed by a reduction to a
+ * minimum cost flow over time computation. The reduction increases the size of the problem input and thus needs the
+ * double amount of free space in memory.
+ *
+ * @author Jan-Philipp Kappmeier
+ * @author Gordon Schlechter
  */
-public class MaxFlowOverTime extends Algorithm<MaximumFlowOverTimeProblem, TimeReapeatedFlow> {
-	private DefaultDirectedGraph network;
-	private IdentifiableIntegerMapping<Edge> edgeCapacities;
-	private List<Node> sinks;
-	private List<Node> sources;
-	private Node superNode;
-	private int timeHorizon;
-	private IdentifiableIntegerMapping<Edge> transitTimes;
-	private ExtendedGraph ex;
+public class MaxFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProblem, TimeReapeatedFlow> {
 
-	/** Creates a new instance of MaxFlowOverTime */
-	public MaxFlowOverTime() {}
+    private DefaultDirectedGraph network;
+    private IdentifiableIntegerMapping<Edge> edgeCapacities;
+    private List<Node> sinks;
+    private List<Node> sources;
+    private Node superNode;
+    private int timeHorizon;
+    private IdentifiableIntegerMapping<Edge> transitTimes;
+    private ExtendedGraph ex;
 
-	/**
-	 * Reduction for the computation of an maximum flow over time using a
-	 * minimum cost flow computation.
-	 */
-	private void reduction() {
-		ex = new ExtendedGraph( network, 1, sources.size() + sinks.size() );
-		superNode = ex.getFirstNewNode();
+    /**
+     * Creates a new instance of MaxFlowOverTime
+     */
+    public MaxFlowOverTime() {
+    }
 
-		edgeCapacities.setDomainSize( ex.getEdgeCapacity() ); // reserve space
-		transitTimes.setDomainSize( ex.getEdgeCapacity() ); // reserve space
+    /**
+     * Reduction for the computation of an maximum flow over time using a minimum cost flow computation.
+     */
+    private void reduction() {
+        ex = new ExtendedGraph(network, 1, sources.size() + sinks.size());
+        superNode = ex.getFirstNewNode();
 
-		for( Node source : sources ) {
-			Edge newEdge = ex.createAndSetEdge( superNode, source );
-			edgeCapacities.set( newEdge, Integer.MAX_VALUE );
-			transitTimes.set( newEdge, -(timeHorizon + 1) );
-		}
+        edgeCapacities.setDomainSize(ex.getEdgeCapacity()); // reserve space
+        transitTimes.setDomainSize(ex.getEdgeCapacity()); // reserve space
 
-		for( Node sink : sinks ) {
-			Edge newEdge = ex.createAndSetEdge( sink, superNode );
-			edgeCapacities.set( newEdge, Integer.MAX_VALUE );
-			transitTimes.set( newEdge, 0 );
-		}
-	}
+        for (Node source : sources) {
+            Edge newEdge = ex.createAndSetEdge(superNode, source);
+            edgeCapacities.set(newEdge, Integer.MAX_VALUE);
+            transitTimes.set(newEdge, -(timeHorizon + 1));
+        }
 
-	/**
-	 * Hides the added super node and edges in the network. After this you got 
-	 * back the original network. The added Edges in the flow are also removed.
-	 */
-	private void reconstruction( IdentifiableIntegerMapping<Edge> flow ) {
-		//ex.undo();
-		// the additional edges have the highest numbers, so we can just get rid of them
-		flow.setDomainSize( flow.getDomainSize() - (sources.size() + sinks.size()) );
-		transitTimes.setDomainSize( flow.getDomainSize() );
-		edgeCapacities.setDomainSize( flow.getDomainSize() );
-	}
+        for (Node sink : sinks) {
+            Edge newEdge = ex.createAndSetEdge(sink, superNode);
+            edgeCapacities.set(newEdge, Integer.MAX_VALUE);
+            transitTimes.set(newEdge, 0);
+        }
+    }
 
-	/**
-	 * Creates dynamic flow out of the given static flow. At first static 
-	 * flow is divided in the different paths and then it is added to the 
-	 * dynamic flow, if the conditions are met. */
-	private TimeReapeatedFlow translateIntoMaxFlow( PathBasedFlow minCostFlow ) {
-		TimeReapeatedFlow mFlow = new TimeReapeatedFlow( timeHorizon );
+    /**
+     * Hides the added super node and edges in the network. After this you got back the original network. The added
+     * Edges in the flow are also removed.
+     */
+    private void reconstruction(IdentifiableIntegerMapping<Edge> flow) {
+        //ex.undo();
+        // the additional edges have the highest numbers, so we can just get rid of them
+        flow.setDomainSize(flow.getDomainSize() - (sources.size() + sinks.size()));
+        transitTimes.setDomainSize(flow.getDomainSize());
+        edgeCapacities.setDomainSize(flow.getDomainSize());
+    }
 
-		for( StaticFlowPath staticPathFlow : minCostFlow ) {
-			if( staticPathFlow.getAmount() == 0 )
-				continue;
-			StaticPath staticPath = staticPathFlow.getPath();
-			int path_transit_time = 0;
-			for( Edge e : staticPath )
-				path_transit_time += transitTimes.get( e );
+    /**
+     * Creates dynamic flow out of the given static flow. At first static flow is divided in the different paths and
+     * then it is added to the dynamic flow, if the conditions are met.
+     */
+    private TimeReapeatedFlow translateIntoMaxFlow(PathBasedFlow minCostFlow) {
+        TimeReapeatedFlow mFlow = new TimeReapeatedFlow(timeHorizon);
 
-			// Add this path only in case that our given time is long 
-			// enough to send anything at all over this path
-			if( timeHorizon > path_transit_time ) {
-				DynamicPath dynamicPath = new DynamicPath( staticPath );
-				FlowOverTimePath dynamicPathFlow = new FlowOverTimePath( dynamicPath, staticPathFlow.getAmount(), (timeHorizon - path_transit_time) * staticPathFlow.getAmount() );
-				mFlow.addPathFlow( dynamicPathFlow );
-			}
-		}
+        for (StaticFlowPath staticPathFlow : minCostFlow) {
+            if (staticPathFlow.getAmount() == 0) {
+                continue;
+            }
+            StaticPath staticPath = staticPathFlow.getPath();
+            int path_transit_time = 0;
+            for (Edge e : staticPath) {
+                path_transit_time += transitTimes.get(e);
+            }
 
-		return mFlow;
-	}
+            // Add this path only in case that our given time is long 
+            // enough to send anything at all over this path
+            if (timeHorizon > path_transit_time) {
+                DynamicPath dynamicPath = new DynamicPath(staticPath);
+                FlowOverTimePath dynamicPathFlow = new FlowOverTimePath(dynamicPath, staticPathFlow.getAmount(), (timeHorizon - path_transit_time) * staticPathFlow.getAmount());
+                mFlow.addPathFlow(dynamicPathFlow);
+            }
+        }
 
-	@Override
-	protected TimeReapeatedFlow runAlgorithm( MaximumFlowOverTimeProblem problem ) {
-		sinks = problem.getSinks();
-		sources = problem.getSources();
-		network = (DefaultDirectedGraph)problem.getNetwork(); // todo avoid cast here?
-		edgeCapacities = problem.getCapacities();
-		transitTimes = problem.getTransitTimes();
-		timeHorizon = problem.getTimeHorizon();
+        return mFlow;
+    }
 
-		if( (sources == null) || (sinks == null) )
-			throw new IllegalArgumentException( GraphLocalization.LOC.getString( "algo.graph.MaxFlowOverTime.SpecifySourceSinkFirst" ) );
+    @Override
+    protected TimeReapeatedFlow runAlgorithm(MaximumFlowOverTimeProblem problem) {
+        sinks = problem.getSinks();
+        sources = problem.getSources();
+        network = (DefaultDirectedGraph) problem.getNetwork(); // todo avoid cast here?
+        edgeCapacities = problem.getCapacities();
+        transitTimes = problem.getTransitTimes();
+        timeHorizon = problem.getTimeHorizon();
 
-		if( (sources.isEmpty()) || (sinks.isEmpty()) )
-			return new TimeReapeatedFlow( timeHorizon );
+        if ((sources == null) || (sinks == null)) {
+            throw new IllegalArgumentException(GraphLocalization.LOC.getString("algo.graph.MaxFlowOverTime.SpecifySourceSinkFirst"));
+        }
 
-		reduction();
+        if ((sources.isEmpty()) || (sinks.isEmpty())) {
+            return new TimeReapeatedFlow(timeHorizon);
+        }
 
-		MinimumCostFlowProblem p = new MinimumCostFlowProblem( ex, edgeCapacities, transitTimes, new IdentifiableIntegerMapping<Node>( network.nodes().size() ) );
-		Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> algorithm = new MinimumMeanCycleCancelling();
-		algorithm.setProblem( p );
-		algorithm.run();
-		IdentifiableIntegerMapping<Edge> flow = algorithm.getSolution();
+        reduction();
 
-		//SuccessiveShortestPath algo = new SuccessiveShortestPath(network, zeroSupplies, edgeCapacities, transitTimes);
-		//algo.run();
-		//flow = algo.getFlow();
+        MinimumCostFlowProblem p = new MinimumCostFlowProblem(ex, edgeCapacities, transitTimes, new IdentifiableIntegerMapping<>(network.nodes().size()));
+        Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> algorithm = new MinimumMeanCycleCancelling();
+        algorithm.setProblem(p);
+        algorithm.run();
+        IdentifiableIntegerMapping<Edge> flow = algorithm.getSolution();
 
-		reconstruction( flow );
+        //SuccessiveShortestPath algo = new SuccessiveShortestPath(network, zeroSupplies, edgeCapacities, transitTimes);
+        //algo.run();
+        //flow = algo.getFlow();
+        reconstruction(flow);
 
-		PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( null, sources, sinks, flow );
-		//PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( (DefaultDirectedGraph)ex, sources, sinks, flow );
+        PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition(null, sources, sinks, flow);
+        //PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( (DefaultDirectedGraph)ex, sources, sinks, flow );
 
-		return translateIntoMaxFlow( minCostFlow );
-	}
+        return translateIntoMaxFlow(minCostFlow);
+    }
 }

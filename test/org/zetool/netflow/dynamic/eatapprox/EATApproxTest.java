@@ -152,11 +152,11 @@ package org.zetool.netflow.dynamic.eatapprox;
 //    System.out.println( eata.getFlowCurve().toString() );
 //    System.out.println( "beta = " + computeBeta( flowValues, eata.getFlowCurve() ) );
 //
-////		Assert.assertEquals( "Size of the arrival curve", eata.flowCurve.size(), 1 );
-////		Assert.assertEquals( "Flow", eata.flowCurve.get(0).intValue(), k+1 );
-////		Assert.assertEquals( "Optimal solution for time T", flowValues.get( flowValues.size()-1 ).longValue(), 2*k );
-////		Assert.assertEquals( "Optimal flow for time 1", flowValues.get( 0 ).longValue(), k+1 );
-////		Assert.assertEquals( "Linear increase of arrival curve", flowValues.size(), k );
+////        Assert.assertEquals( "Size of the arrival curve", eata.flowCurve.size(), 1 );
+////        Assert.assertEquals( "Flow", eata.flowCurve.get(0).intValue(), k+1 );
+////        Assert.assertEquals( "Optimal solution for time T", flowValues.get( flowValues.size()-1 ).longValue(), 2*k );
+////        Assert.assertEquals( "Optimal flow for time 1", flowValues.get( 0 ).longValue(), k+1 );
+////        Assert.assertEquals( "Linear increase of arrival curve", flowValues.size(), k );
 //  }
 //
 //  @Test
@@ -349,7 +349,7 @@ package org.zetool.netflow.dynamic.eatapprox;
 //
 //    System.out.println( flowValues.toString() );
 //
-//		//Assert.assertEquals( "Optimal solution for time T", flowValues.get( flowValues.size()-1 ).longValue(), 12 );
+//        //Assert.assertEquals( "Optimal solution for time T", flowValues.get( flowValues.size()-1 ).longValue(), 12 );
 //    //Assert.assertEquals( "Optimal flow for time 1", flowValues.get( 0 ).longValue(), 4 );
 //    //Assert.assertEquals( "Linear increase of arrival curve", flowValues.size(), 4 );
 //  }

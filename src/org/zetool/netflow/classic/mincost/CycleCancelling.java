@@ -16,8 +16,8 @@
 
 package org.zetool.netflow.classic.mincost;
 
+import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.netflow.classic.problems.MinimumCostFlowProblem;
-import org.zetool.common.algorithm.Algorithm;
 import org.zetool.netflow.classic.transshipment.StaticTransshipment;
 import org.zetool.graph.Edge;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
@@ -32,7 +32,7 @@ import org.zetool.netflow.ds.flow.Flow;
  * problems.
  * @author Martin Groß
  */
-public abstract class CycleCancelling extends Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> {
+public abstract class CycleCancelling extends AbstractAlgorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> {
 
     /**
      * Solves the given minimum cost flow problem by cycle cancelling. A 

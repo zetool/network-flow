@@ -17,7 +17,6 @@
 package org.zetool.netflow.classic.maxflow;
 
 import org.zetool.netflow.classic.problems.RationalMaxFlowProblem;
-import org.zetool.common.algorithm.Algorithm;
 import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
 import org.zetool.netflow.ds.network.rational.RationalResidualGraph;
@@ -26,12 +25,13 @@ import org.zetool.graph.DynamicNetwork;
 import org.zetool.container.mapping.IdentifiableDoubleMapping;
 import java.util.Collections;
 import java.util.List;
+import org.zetool.common.algorithm.AbstractAlgorithm;
 
 /**
  *
  * @author Sebastian Schenker
  */
-public class Fujishige extends Algorithm<RationalMaxFlowProblem, RationalMaxFlow> {
+public class Fujishige extends AbstractAlgorithm<RationalMaxFlowProblem, RationalMaxFlow> {
 
 	private final static double EPSILON = 0.00001;
 

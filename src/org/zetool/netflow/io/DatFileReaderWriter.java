@@ -22,7 +22,6 @@ import org.zetool.netflow.dynamic.LongestShortestPathTimeHorizonEstimator;
 import org.zetool.netflow.dynamic.earliestarrival.SEAAPAlgorithm;
 //import de.tu_berlin.math.coga.zet.converter.graph.ZToGraphMapping;
 import org.zetool.common.algorithm.Algorithm;
-import org.zetool.common.algorithm.AlgorithmEvent;
 import org.zetool.common.algorithm.AlgorithmListener;
 import org.zetool.common.algorithm.AlgorithmStartedEvent;
 import org.zetool.common.algorithm.AlgorithmTerminatedEvent;
@@ -49,6 +48,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.zetool.common.algorithm.AbstractAlgorithmEvent;
 import org.zetool.math.geom.NDimensional;
 
 /**
@@ -502,7 +502,7 @@ public class DatFileReaderWriter implements AlgorithmListener {
 		return algo;
 	}
 
-	public void eventOccurred( AlgorithmEvent event ) {
+	public void eventOccurred( AbstractAlgorithmEvent event ) {
 		if( event instanceof AlgorithmProgressEvent )
 			//System.out.println( ((AlgorithmProgressEvent)event).getProgress() );
 			System.out.println( Formatter.formatPercent( ((AlgorithmProgressEvent)event).getProgress() ));

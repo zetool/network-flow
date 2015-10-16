@@ -10,6 +10,7 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
   <property name="travis.ivy.jar.dir" location="${travis.ivy.lib.dir}/dist/ivy/"/> 
 
   <target name="init.travis.submodule">
+    <echo>Setting up paths for dependency compilation.</echo>
     <!-- Common direcotry for libraries and ivy libs for subtasks. -->
     <property name="ivy.jar.dir" location="${travis.ivy.jar.dir}"/>
     <property name="ivy.lib.dir" location="${travis.ivy.lib.dir}"/>
@@ -23,7 +24,9 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
   </target>
 
   <target name="travis.classpath" depends="init-ant-contrib">
+    <echo>Setting up classpath for dependencies...</echo>
     <concatenate-manual-dependencies lineparam="${manual.dependencies}"/>
+    <echo>...done.</echo>
   </target>
 
   <target name="test.travis" depends="init.travis,build.submodules,travis.classpath,build,test">
@@ -91,13 +94,14 @@ xmlns:git="antlib:com.rimerosolutions.ant.git">
     <concatenate-dependencies lineparam="${dependencies}" base="../../lib/"/>
   </target>
 
-  <target name="dist-rc-git" depends="init.travis.submodule,build.git,dist-rc" description="generating dist and test" >
+  <target name="dist-rc-git" depends="init.travis.submodule,travis.classpath,build.git,dist-rc">
+    <echo>Completed dependency compilation.</echo>
   </target>
 
   <macrodef name="make-github">
     <sequential>
       <replaceproperty src="dependencies" dest="dependencies-tmp-make-github" replace="zetool-" with="zetool/"/>
-      <replaceproperty src="dependencies-tmp-make-github" dest="dependencies-github" replace="zet-" with="zet/"/>
+      <replaceproperty src="dependencies-tmp-make-github" dest="dependencies-github" replace="zet-" with="zet-evacuation/"/>
     </sequential>
   </macrodef>
  

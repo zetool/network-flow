@@ -21,13 +21,13 @@ import org.zetool.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import org.zetool.graph.Node;
 import org.zetool.netflow.ds.flow.FlowOverTimeImplicit;
 import java.util.LinkedList;
-import org.zetool.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.AbstractAlgorithm;
 
 /**
  *
  * @author Martin Groß
  */
-public class SuccessiveEarliestArrivalAugmentingPathAlgorithm extends Algorithm<EarliestArrivalFlowProblem, FlowOverTimeImplicit> {
+public class SuccessiveEarliestArrivalAugmentingPathAlgorithm extends AbstractAlgorithm<EarliestArrivalFlowProblem, FlowOverTimeImplicit> {
 
   @Override
   protected FlowOverTimeImplicit runAlgorithm( EarliestArrivalFlowProblem problem ) {

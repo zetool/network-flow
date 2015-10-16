@@ -1,6 +1,5 @@
 package org.zetool.netflow.classic.maxflow;
 
-import org.zetool.common.algorithm.Algorithm;
 import org.zetool.container.mapping.IdentifiableBooleanMapping;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
 import org.zetool.graph.Edge;
@@ -16,12 +15,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.zetool.common.algorithm.AbstractAlgorithm;
 
 /**
  *
  * @author Jan-Philipp Kappmeier
  */
-public class FordFulkerson extends Algorithm<MaximumFlowProblem, MaximumFlow> {
+public class FordFulkerson extends AbstractAlgorithm<MaximumFlowProblem, MaximumFlow> {
   protected ResidualNetwork residualNetwork;
   protected long pushes;
   protected long flow;

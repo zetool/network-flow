@@ -13,15 +13,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/*
- * FlowOverTimeImplicit.java
- *
- */
 package org.zetool.netflow.ds.flow;
 
-import org.zetool.netflow.ds.flow.EdgeBasedFlowOverTime;
-import org.zetool.netflow.ds.flow.PathBasedFlowOverTime;
-import org.zetool.netflow.ds.flow.FlowOverTimeInterface;
 import org.zetool.netflow.dynamic.FlowOverTimePathDecomposition;
 import org.zetool.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import org.zetool.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPath;
@@ -34,67 +27,67 @@ import java.util.logging.Logger;
  * @author Martin Groß
  */
 public class FlowOverTimeImplicit implements FlowOverTimeInterface {
-	/** The logger of the main class. */
-	private static final Logger log = Logger.getGlobal();
-	private EdgeBasedFlowOverTime edgeBased;
-	private PathBasedFlowOverTime pathBased;
-	private int flowAmount;
-	private int timeHorizon;
-	private int totalCost;
+    /** The logger of the main class. */
+    private static final Logger log = Logger.getGlobal();
+    private EdgeBasedFlowOverTime edgeBased;
+    private PathBasedFlowOverTime pathBased;
+    private int flowAmount;
+    private int timeHorizon;
+    private int totalCost;
 
-	public FlowOverTimeImplicit( ImplicitTimeExpandedResidualNetwork network, Queue<EarliestArrivalAugmentingPath> eaaPaths ) {
-		edgeBased = new EdgeBasedFlowOverTime( network.flow() );
-		FlowOverTimePathDecomposition decomposition = new FlowOverTimePathDecomposition();
-		decomposition.setProblem( network );
-		decomposition.run();
-		pathBased = decomposition.getSolution();
+    public FlowOverTimeImplicit( ImplicitTimeExpandedResidualNetwork network, Queue<EarliestArrivalAugmentingPath> eaaPaths ) {
+        edgeBased = new EdgeBasedFlowOverTime( network.flow() );
+        FlowOverTimePathDecomposition decomposition = new FlowOverTimePathDecomposition();
+        decomposition.setProblem( network );
+        decomposition.run();
+        pathBased = decomposition.getSolution();
 
-		log.fine( "Value of the flow:" );
-		int sum = 0;
-		for( FlowOverTimePath p : pathBased ) {
+        log.fine( "Value of the flow:" );
+        int sum = 0;
+        for( FlowOverTimePath p : pathBased ) {
                         System.out.println(p.getRate() + ": " + p);
-			sum += p.getRate();
-		}
-		log.fine( Integer.toString( sum ) );
+            sum += p.getRate();
+        }
+        log.fine( Integer.toString( sum ) );
 
-		//pathBased = new PathBasedFlowOverTime();
-		//LinkedList<FlowOverTimeEdgeSequence> paths = new LinkedList<FlowOverTimeEdgeSequence>();
-		//int index = 0;
-		totalCost = 0;
-		for( EarliestArrivalAugmentingPath eaaPath : eaaPaths ) {
-			//paths.add(eaaPath.getFlowOverTimeEdgeSequence(network));
-			flowAmount += eaaPath.getCapacity();
-			timeHorizon = Math.max( timeHorizon, eaaPath.getArrivalTime());
-			totalCost += eaaPath.getCapacity() * eaaPath.getArrivalTime();
-		}
+        //pathBased = new PathBasedFlowOverTime();
+        //LinkedList<FlowOverTimeEdgeSequence> paths = new LinkedList<FlowOverTimeEdgeSequence>();
+        //int index = 0;
+        totalCost = 0;
+        for( EarliestArrivalAugmentingPath eaaPath : eaaPaths ) {
+            //paths.add(eaaPath.getFlowOverTimeEdgeSequence(network));
+            flowAmount += eaaPath.getCapacity();
+            timeHorizon = Math.max( timeHorizon, eaaPath.getArrivalTime());
+            totalCost += eaaPath.getCapacity() * eaaPath.getArrivalTime();
+        }
 
-		if( flowAmount != sum )
-			throw new IllegalStateException( "Flow value in Edge based and Path based differ!\nEdge-Based: " + flowAmount + "\nPath-Based: " + sum );
-	}
+        if( flowAmount != sum )
+            throw new IllegalStateException( "Flow value in Edge based and Path based differ!\nEdge-Based: " + flowAmount + "\nPath-Based: " + sum );
+    }
 
-	@Override
-	public EdgeBasedFlowOverTime getEdgeBased() {
-		return edgeBased;
-	}
+    @Override
+    public EdgeBasedFlowOverTime getEdgeBased() {
+        return edgeBased;
+    }
 
-	public int getFlowAmount() {
-		return flowAmount;
-	}
+    public int getFlowAmount() {
+        return flowAmount;
+    }
 
-	@Override
-	public PathBasedFlowOverTime getPathBased() {
-		return pathBased;
-	}
+    @Override
+    public PathBasedFlowOverTime getPathBased() {
+        return pathBased;
+    }
 
-	public int getTimeHorizon() {
-		return timeHorizon;
-	}
+    public int getTimeHorizon() {
+        return timeHorizon;
+    }
 
-	/**
-	 * Returns the total costs for the flow.
-	 * @return the total costs for the flow
-	 */
-	public int getTotalCost() {
-		return totalCost;
-	}
+    /**
+     * Returns the total costs for the flow.
+     * @return the total costs for the flow
+     */
+    public int getTotalCost() {
+        return totalCost;
+    }
 }

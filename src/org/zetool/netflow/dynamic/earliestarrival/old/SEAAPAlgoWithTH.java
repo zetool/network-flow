@@ -12,7 +12,7 @@ import org.zetool.graph.Node;
 import org.zetool.netflow.ds.flow.FlowOverTimeImplicit;
 import java.util.Arrays;
 import java.util.LinkedList;
-import org.zetool.common.algorithm.Algorithm;
+import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.common.algorithm.AlgorithmStatusEvent;
 import org.zetool.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathAlgorithm;
 import org.zetool.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathProblem;
@@ -20,7 +20,7 @@ import org.zetool.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathP
  *
  * @author schwengf
  */
-public class SEAAPAlgoWithTH extends Algorithm<EarliestArrivalFlowProblem, FlowOverTimeImplicit>{
+public class SEAAPAlgoWithTH extends AbstractAlgorithm<EarliestArrivalFlowProblem, FlowOverTimeImplicit>{
    
     private int arrivalTime;
     private int[] distances;
