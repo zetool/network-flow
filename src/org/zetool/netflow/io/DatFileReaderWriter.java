@@ -11,7 +11,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 package org.zetool.netflow.io;
@@ -636,24 +636,23 @@ public class DatFileReaderWriter implements AlgorithmListener {
 
 
 	public static void writeFileOld( String original, String filename, int nodeCount, int timeHorizon, List<Node> sources, Node sink, IdentifiableCollection<Edge> edges, IdentifiableIntegerMapping<Edge> edgeCapacities, IdentifiableIntegerMapping<Edge> transitTimes, IdentifiableIntegerMapping<Node> currentAssignment ) throws FileNotFoundException, IOException {
-		BufferedWriter writer = new BufferedWriter( new FileWriter( new File( filename ) ) );
-		String s;
-
-		writer.write( "% Written by ZET FlowWriter\n" );
-		writer.write( "% original file: " + original + '\n' );
-		writer.write( "N " + nodeCount + '\n' );
-		writer.write( "TIME " + timeHorizon + '\n' );
-
-		for( Node source : sources ) {
-			writer.write( "S " + source.id() + ' ' + currentAssignment.get( source ) + '\n' );
-		}
-
-		writer.write( "T " + sink.id() + ' ' + (-currentAssignment.get( sink )) + '\n' );
-
-		for( Edge edge : edges ) {
-			writer.write( "E " + edge.start().id() + ' ' + edge.end().id() + ' ' + edgeCapacities.get( edge ) + ' ' + transitTimes.get( edge ) + '\n' );
-		}
-
-		writer.close();
+            try (BufferedWriter writer = new BufferedWriter( new FileWriter( new File( filename ) ) )) {
+                String s;
+                
+                writer.write( "% Written by ZET FlowWriter\n" );
+                writer.write( "% original file: " + original + '\n' );
+                writer.write( "N " + nodeCount + '\n' );
+                writer.write( "TIME " + timeHorizon + '\n' );
+                
+                for( Node source : sources ) {
+                    writer.write( "S " + source.id() + ' ' + currentAssignment.get( source ) + '\n' );
+                }
+                
+                writer.write( "T " + sink.id() + ' ' + (-currentAssignment.get( sink )) + '\n' );
+                
+                for( Edge edge : edges ) {
+                    writer.write( "E " + edge.start().id() + ' ' + edge.end().id() + ' ' + edgeCapacities.get( edge ) + ' ' + transitTimes.get( edge ) + '\n' );
+                }
+            }
 	}
 }
