@@ -105,7 +105,7 @@ public abstract class TransshipmentWithTimeHorizon<U extends DynamicTransshipmen
 
         /* Decompose the flow into static paths flows.*/
         PathBasedFlow decomposedFlow = PathDecomposition.calculatePathDecomposition(
-                tnetwork, tnetwork.sources(), tnetwork.sinks(), flow);
+                tnetwork, tnetwork.sources().asList(), tnetwork.sinks().asList(), flow);
 
         /* Long debug output containing the path flows.*/
         log.log(Level.FINEST, "\nStatic transshipment path based:{0}", decomposedFlow);

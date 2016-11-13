@@ -51,7 +51,7 @@ public class PathDecomposition {
         }
       }
     }
-    if( sackgasse && !path.edges().empty() ) {
+    if( sackgasse && !path.edges().isEmpty() ) {
       path.getPath().removeLastEdge();
     }
     //   visited.set(x,false);
@@ -59,7 +59,7 @@ public class PathDecomposition {
   }
 
   private static boolean pathEndsOnSink( DirectedGraph graph, List<Node> sinks, StaticFlowPath path ) {
-    if( !path.edges().empty() ) {
+    if( !path.edges().isEmpty() ) {
       for( Node t : sinks ) {
         Edge last = path.lastEdge();
         Node NodeA = last.start();
@@ -169,7 +169,7 @@ public class PathDecomposition {
     capacityScaling( network, flow, 1 );
     for( Node s : sources ) {
       DFS( network, s, sinks, path );
-      while( !path.edges().empty() && restSupplies.get( s ) > 0 ) {
+      while( !path.edges().isEmpty() && restSupplies.get( s ) > 0 ) {
         int decreasedBy = saveFlowAmount( restSupplies.get( s ), path, flow );
         restSupplies.decrease( s, decreasedBy );
         updateCapacities( network, path, flow );
@@ -179,7 +179,7 @@ public class PathDecomposition {
           visited.set( n, false );
         }
         DFS( network, s, sinks, path );
-        if( !path.edges().empty() && restSupplies.get( s ) == 0 ) {
+        if( !path.edges().isEmpty() && restSupplies.get( s ) == 0 ) {
           for( Node n : network.nodes() ) {
             visited.set( n, false );
           }
@@ -203,7 +203,7 @@ public class PathDecomposition {
     for( Node s : sources ) {
       // TODO DFS-algorithm
       DFS( network, s, sinks, path );
-      while( !path.edges().empty() ) {
+      while( !path.edges().isEmpty() ) {
         saveFlowAmount( path, flow );
         updateCapacities( network, path, flow );
         pathDecomposition.addPathFlow( path );

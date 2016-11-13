@@ -136,7 +136,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
     this.sources = originalSources;
     originalSinks = new ListSequence<>( sinks );
 
-    createTimeExpansion( graph, capacities, transitTimes, timeHorizon, sources, originalSinks, allowStorageInNodes );
+    createTimeExpansion( graph, capacities, transitTimes, timeHorizon, originalSources, originalSinks, allowStorageInNodes );
 
     createSuperSourceAndSink( supersouceOutgoingCapacitiy );
   }
@@ -226,7 +226,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
   private void createTimeExpansion( DirectedGraph network,
           IdentifiableIntegerMapping<Edge> capacities,
           IdentifiableIntegerMapping<Edge> transitTimes, int timeHorizon,
-          List<Node> sources, List<Node> sinks,
+          ListSequence<Node> sources, ListSequence<Node> sinks,
           boolean allowStorageInNodes ) {
 
     // get ID+1 of node with highest ID
@@ -619,7 +619,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    *
    * @return the sinks of the time expanded graph.
    */
-  public LinkedList<Node> sinks() {
+  public ListSequence<Node> sinks() {
     return sinks;
   }
 
@@ -643,7 +643,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    *
    * @return the sources of the time expanded graph.
    */
-  public LinkedList<Node> sources() {
+  public ListSequence<Node> sources() {
     return sources;
   }
 
@@ -694,7 +694,7 @@ public class TimeExpandedNetwork extends DefaultDirectedGraph {
    * @return a copy of this time expanded graph.
    */
   @Override
-  public TimeExpandedNetwork clone() {
+  public TimeExpandedNetwork clone() throws CloneNotSupportedException {
     TimeExpandedNetwork clone = new TimeExpandedNetwork( nodeCount(), edgeCount() );
     clone.setNodes( nodes() );
     clone.setEdges( edges() );

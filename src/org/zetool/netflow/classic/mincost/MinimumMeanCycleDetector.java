@@ -24,6 +24,8 @@ import org.zetool.graph.Node;
 import org.zetool.graph.structure.Path;
 import org.zetool.graph.structure.StaticPath;
 import java.text.NumberFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class provides a method fpr detecting minimum mean cycles in arbitrary
@@ -54,7 +56,11 @@ public abstract class MinimumMeanCycleDetector {
     if( TIMON ) {
       System.out.println( "Graph old: " + g );
     }
-    g = g.clone();
+      try {
+          g = g.clone();
+      } catch (CloneNotSupportedException ex) {
+          throw new IllegalStateException("failed copying the graph", ex);
+      }
 		// Reserve enough space in the graph structure for our operations
     // MG: int nodes = g.nodeCount() + 1;
     // MG: int edges = g.edgeCount() + g.nodeCount();

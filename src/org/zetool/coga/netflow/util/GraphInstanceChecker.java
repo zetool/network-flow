@@ -34,8 +34,8 @@ import java.util.List;
 public class GraphInstanceChecker {
 
     private ListSequence<Node> sources, sinks;
-    private LinkedList<Node> newSources;
-    private LinkedList<Node> deletedSources;
+    private List<Node> newSources;
+    private List<Node> deletedSources;
     private final DirectedGraph network;
     private final IdentifiableIntegerMapping<Node> supplies;
     private IdentifiableIntegerMapping<Node> newSupplies;
@@ -159,7 +159,7 @@ public class GraphInstanceChecker {
             }
         }
 
-        newSources = sources;
+        newSources = sources.asList();
         deletedSources = new LinkedList<>();
 
         /* Check whether there are error sources. */

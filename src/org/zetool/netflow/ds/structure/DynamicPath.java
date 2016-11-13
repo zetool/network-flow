@@ -276,9 +276,10 @@ public class DynamicPath implements Path {
    *
    * @return a {@code Dynamic} object with clones of the edges and delays of
    * this object.
+     * @throws java.lang.CloneNotSupportedException
    */
   @Override
-  public DynamicPath clone() {
+  public DynamicPath clone() throws CloneNotSupportedException {
     DynamicPath dynamicPath = new DynamicPath();
     Iterator<Edge> it = getEdges().iterator();
     for( int i = 0; i < getEdges().size(); i++ ) {

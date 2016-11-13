@@ -53,12 +53,12 @@ public class TimeExpandedMaximumFlowOverTime extends AbstractAlgorithm<MaximumFl
             }
         }
         TimeExpandedNetwork ten = new TimeExpandedNetwork(problem.getNetwork(), problem.getCapacities(), problem.getTransitTimes(), problem.getTimeHorizon(), problem.getSources(), problem.getSinks(), v, false);
-        MaximumFlowProblem maximumFlowProblem = new MaximumFlowProblem(ten, ten.capacities(), ten.sources(), ten.sinks());
+        MaximumFlowProblem maximumFlowProblem = new MaximumFlowProblem(ten, ten.capacities(), ten.sources().asList(), ten.sinks().asList());
         Algorithm<MaximumFlowProblem, MaximumFlow> algorithm = new PushRelabelHighestLabelGlobalGapRelabelling();
         algorithm.setProblem(maximumFlowProblem);
         algorithm.run();
 
-        PathBasedFlow decomposedFlow = PathDecomposition.calculatePathDecomposition(ten, ten.sources(), ten.sinks(), algorithm.getSolution());
+        PathBasedFlow decomposedFlow = PathDecomposition.calculatePathDecomposition(ten, ten.sources().asList(), ten.sinks().asList(), algorithm.getSolution());
         PathBasedFlowOverTime dynamicFlow = new PathBasedFlowOverTime();
         for (StaticFlowPath staticPathFlow : decomposedFlow) {
             if (staticPathFlow.getAmount() == 0) {

@@ -218,9 +218,10 @@ public class StaticFlowPath implements Iterable<Edge> {
    *
    * @return a {@code StaticFlowPath} object with a clone of the path of this
    * static path flow and the same amount as this static path flow.
+     * @throws java.lang.CloneNotSupportedException
    */
   @Override
-  public StaticFlowPath clone() {
+  public StaticFlowPath clone() throws CloneNotSupportedException {
     return new StaticFlowPath( (StaticPath) this.path.clone(), this.amount );
   }
 }

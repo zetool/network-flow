@@ -192,8 +192,8 @@ public class UndirectedResidualGraph extends SimpleUndirectedGraph implements Re
     }
 
     @Override
-    public void remove( Edge element ) {
-      baseCollection.remove( element );
+    public boolean remove( Edge element ) {
+      return baseCollection.remove( element );
     }
 
     @Override
@@ -207,8 +207,8 @@ public class UndirectedResidualGraph extends SimpleUndirectedGraph implements Re
     }
 
     @Override
-    public boolean empty() {
-      return baseCollection.empty();
+    public boolean isEmpty() {
+      return baseCollection.isEmpty();
     }
 
     @Override
