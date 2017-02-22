@@ -348,18 +348,18 @@ public class DatFileReaderWriter implements AlgorithmListener {
 		int edgeCount = -1;
 		int estimatedTimeHorizon = -1;
 
-		ArrayList<Long> source_id = new ArrayList<Long>();
-		ArrayList<Integer> source_sup = new ArrayList<Integer>();
+		ArrayList<Long> source_id = new ArrayList<>();
+		ArrayList<Integer> source_sup = new ArrayList<>();
 
-		ArrayList<Long> sink_id = new ArrayList<Long>();
-		ArrayList<Integer> sink_sup = new ArrayList<Integer>();
+		ArrayList<Long> sink_id = new ArrayList<>();
+		ArrayList<Integer> sink_sup = new ArrayList<>();
 
-		ArrayList<Long> edge_start = new ArrayList<Long>();
-		ArrayList<Long> edge_end = new ArrayList<Long>();
-		ArrayList<Integer> edge_cap = new ArrayList<Integer>();
-		ArrayList<Integer> edge_len = new ArrayList<Integer>();
+		ArrayList<Long> edge_start = new ArrayList<>();
+		ArrayList<Long> edge_end = new ArrayList<>();
+		ArrayList<Integer> edge_cap = new ArrayList<>();
+		ArrayList<Integer> edge_len = new ArrayList<>();
 
-		HashMap<Long, Integer> nodeMap = new HashMap<Long, Integer>();
+		HashMap<Long, Integer> nodeMap = new HashMap<>();
 
 		int currentNodeID = 0;
 
@@ -498,7 +498,7 @@ public class DatFileReaderWriter implements AlgorithmListener {
 		System.out.println( result );
 		//AlgorithmTask.getInstance().publish( 100, result, "" );
 		long end = System.nanoTime();
-		System.err.println( Formatter.formatUnit( end - start, TimeUnits.NanoSeconds ) );
+		System.err.println( Formatter.formatUnit( end - start, TimeUnits.NANO_SECOND ) );
 		return algo;
 	}
 
@@ -509,7 +509,7 @@ public class DatFileReaderWriter implements AlgorithmListener {
 		else if( event instanceof AlgorithmStartedEvent )
 			System.out.println( "Algorithmus startet." );
 		else if( event instanceof AlgorithmTerminatedEvent )
-			System.out.println( "Laufzeit Flussalgorithmus: " + TimeUnits.MilliSeconds );
+			System.out.println( "Laufzeit Flussalgorithmus: " + TimeUnits.MILLI_SECOND );
 		else
 			System.out.println( event.toString() );
 	}

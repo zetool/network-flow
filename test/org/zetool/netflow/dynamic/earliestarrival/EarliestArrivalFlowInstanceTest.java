@@ -193,7 +193,7 @@ public class EarliestArrivalFlowInstanceTest extends TestCase implements Algorit
         long end = System.nanoTime();
         System.out.println("Sending the flow units required " + algo.getRuntime() + ".");
 //        System.out.println( df.toString() );
-        System.err.println(Formatter.formatUnit(end - start, TimeUnits.NanoSeconds));
+        System.err.println(Formatter.formatUnit(end - start, TimeUnits.NANO_SECOND));
 
     }
 

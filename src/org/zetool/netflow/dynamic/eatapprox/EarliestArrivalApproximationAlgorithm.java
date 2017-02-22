@@ -155,10 +155,10 @@ public class EarliestArrivalApproximationAlgorithm
 
         long total = counterBuild + counterDistances + counterFlow + counterUnhide;
 
-        System.out.println("Residualnetz aufbauen: " + Formatter.formatUnit(counterBuild, TimeUnits.NanoSeconds, 2) + " = " + Formatter.formatPercent((double) counterBuild / total));
-        System.out.println("Schichten sichtbar machen: " + Formatter.formatUnit(counterUnhide, TimeUnits.NanoSeconds, 2) + " = " + Formatter.formatPercent(((double) counterUnhide / total)));
-        System.out.println("Distanzen korrigieren: " + Formatter.formatUnit(counterDistances, TimeUnits.NanoSeconds, 2) + " = " + Formatter.formatPercent(((double) counterDistances / total)));
-        System.out.println("Fluss-Berechnung: " + Formatter.formatUnit(counterFlow, TimeUnits.NanoSeconds, 2) + " = " + Formatter.formatPercent(((double) counterFlow / total)));
+        System.out.println("Residualnetz aufbauen: " + Formatter.formatUnit(counterBuild, TimeUnits.NANO_SECOND, 2) + " = " + Formatter.formatPercent((double) counterBuild / total));
+        System.out.println("Schichten sichtbar machen: " + Formatter.formatUnit(counterUnhide, TimeUnits.NANO_SECOND, 2) + " = " + Formatter.formatPercent(((double) counterUnhide / total)));
+        System.out.println("Distanzen korrigieren: " + Formatter.formatUnit(counterDistances, TimeUnits.NANO_SECOND, 2) + " = " + Formatter.formatPercent(((double) counterDistances / total)));
+        System.out.println("Fluss-Berechnung: " + Formatter.formatUnit(counterFlow, TimeUnits.NANO_SECOND, 2) + " = " + Formatter.formatPercent(((double) counterFlow / total)));
     }
 
     private static void printEdgeList(HidingResidualGraph g) {
