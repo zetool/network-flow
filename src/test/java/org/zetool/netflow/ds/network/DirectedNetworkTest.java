@@ -18,7 +18,7 @@ package org.zetool.netflow.ds.network;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.jmock.AbstractExpectations.same;
+import static org.jmock.Expectations.same;
 import org.zetool.graph.DirectedGraph;
 import org.jmock.Mockery;
 import static org.junit.Assert.assertThat;

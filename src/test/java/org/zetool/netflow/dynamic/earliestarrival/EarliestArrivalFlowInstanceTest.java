@@ -30,6 +30,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.Test;
@@ -43,10 +46,12 @@ import org.zetool.common.algorithm.AbstractAlgorithmEvent;
 public class EarliestArrivalFlowInstanceTest extends TestCase implements AlgorithmListener {
 
     @Test
-    public void testInstance() throws FileNotFoundException, IOException {
+    public void testInstance() throws FileNotFoundException, IOException, URISyntaxException {
         //File batchFile = new File( "./testinstanz/siouxfalls_500_10s.dat" );
-        File batchFile = new File("./testinstanz/padang_10p_10s_flow01.dat");
 
+        URL networkInput = EarliestArrivalFlowInstanceTest.class.getResource("/networks/padang_10p_10s_flow01.dat");
+        File batchFile = new File(networkInput.toURI());
+        
         BufferedReader read = new BufferedReader(new FileReader(batchFile));
         String s;
 
@@ -75,6 +80,10 @@ public class EarliestArrivalFlowInstanceTest extends TestCase implements Algorit
             }
             if (s.charAt(0) == 'N') {
                 nodeCount = Integer.parseInt(s.substring(2));
+                continue;
+            }
+            if (s.charAt(0) == 'V') {
+                // Old format. Skip vertices
                 continue;
             }
             if (s.startsWith("TIME")) {
@@ -120,7 +129,7 @@ public class EarliestArrivalFlowInstanceTest extends TestCase implements Algorit
                 edge_len.add(Integer.parseInt(split[4]));
                 continue;
             }
-            throw new IllegalStateException("Unbekannte Zeile");
+            throw new IllegalStateException("Unbekannte Zeile: " + s);
         }
 
         int edgeCount = edge_start.size();
