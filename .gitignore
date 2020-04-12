@@ -1,6 +1,20 @@
+# Java binary files
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# JVM crash logs
+hs_err_pid*
+
+# IDE files
+nbproject/
+
+# build artifacts
+target/
+
+# build process
 .sonar/
-nbproject/private/
-build/
-dist/
-lib/
-cobertura.ser
+
