@@ -16,7 +16,7 @@
 package org.zetool.netflow.ds.network;
 
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
-import org.zetool.graph.DefaultGraph;
+import org.zetool.graph.DefaultDirectedGraph;
 import org.zetool.graph.DirectedGraph;
 import org.zetool.graph.Edge;
 
@@ -29,20 +29,23 @@ import org.zetool.graph.Edge;
  *
  * @author Jan-Philipp Kappmeier
  */
-class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
+class DefaultResidualGraph extends DefaultDirectedGraph implements ResidualGraph {
 
     // TODO: maybe clone method for default graph that generates copy with larger capacity
-
     private final int originalNumberOfEdges;
     private final DirectedGraph graph;
-    /** The flow associated with this residual graph. */
+    /**
+     * The flow associated with this residual graph.
+     */
     protected IdentifiableIntegerMapping<Edge> flow;
-    /** The residual capacities of this residual graph. */
+    /**
+     * The residual capacities of this residual graph.
+     */
     protected IdentifiableIntegerMapping<Edge> residualCapacities;
     private final IdentifiableIntegerMapping<Edge> capacities;
 
     public DefaultResidualGraph(DirectedGraph graph, IdentifiableIntegerMapping<Edge> capacities) {
-        super(graph.nodeCount(), graph.edgeCount() * 2);
+        super(graph.nodeCount(), (maxEdgeId(graph) + 1) * 2);
         this.originalNumberOfEdges = graph.edgeCount();
         System.out.println("Setting up a graph with " + originalNumberOfEdges + " edges.");
         this.graph = graph;
@@ -51,6 +54,16 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
         setUp();
     }
 
+    private static int maxEdgeId(DirectedGraph graph) {
+        int maxEdgeId = -1;
+        for (Edge edge : graph.edges()) {
+            maxEdgeId = Math.max(edge.id(), maxEdgeId);
+        }
+        System.out.println("Max edge id: " + maxEdgeId);
+        return maxEdgeId;
+    }
+    private int maxID = -1;
+
     /**
      * Initializes the reverse arcs copies of the graph.
      */
@@ -58,15 +71,12 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
         // create original edges
         setNodes(graph.nodes());
 
-        int maxID = -1;
         for (Edge edge : graph.edges()) {
             System.out.println("Iterating over edge " + edge);
             setEdge(edge);
             maxID = Math.max(edge.id(), maxID);
         }
-        if (maxID >= originalNumberOfEdges) {
-            throw new IllegalArgumentException("Default residual Graph only works with graphs enumerated 1, ..., m for the edges.");
-        }
+        this.setNextEdgeIdCandidate(maxID + 1);
 
         // copy reverse edges
         for (Edge edge : graph.edges()) {
@@ -113,7 +123,7 @@ class DefaultResidualGraph extends DefaultGraph implements ResidualGraph {
      */
     @Override
     public boolean isReverseEdge(Edge edge) {
-        return edge.id() >= originalNumberOfEdges;
+        return edge.id() > maxID;
     }
 
     /**
