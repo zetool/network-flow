@@ -11,14 +11,15 @@ import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
 import java.util.HashMap;
 import java.util.Iterator;
+import org.zetool.graph.MutableDirectedGraph;
 
 /**
- * A special {@code DefaultDirectedGraph} extending an static network, i.e. a network that cannot be changed, such that
+ * A special {@link MutableDirectedGraph} extending an static network, i.e. a network that cannot be changed, such that
  * it can be modified by adding some sources and edges. Slow implementation!
  *
  * @author Jan-Philipp Kappmeier
  */
-public class ExtendedGraph implements DirectedGraph {
+public class ExtendedGraph implements MutableDirectedGraph {
 
     private final int originalEdgeCount;
     private final int originalNodeCount;
@@ -26,7 +27,6 @@ public class ExtendedGraph implements DirectedGraph {
     private final ArraySet<Node> newNodes;
     private final ArraySet<Edge> newEdges;
 
-    // Node information
     /**
      * Caches the edges incident to a node for all nodes in the graph. * Must not be null.
      */
@@ -64,8 +64,10 @@ public class ExtendedGraph implements DirectedGraph {
 
         //outgoingEdges = new IdentifiableObjectMapping<>( (originalNodeCount + newNodes) );
         outgoingEdges = new HashMap<>();
+        incomingEdges = new HashMap<>();
         for (Node node : this) {
             outgoingEdges.put(node, new ListSequence<>());
+            incomingEdges.put(node, new ListSequence<>());
         }
     }
 
@@ -79,7 +81,11 @@ public class ExtendedGraph implements DirectedGraph {
 
     @Override
     public IdentifiableCollection<Edge> incomingEdges(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (node.id() < originalNodeCount) {
+            return graph.incomingEdges(node);
+        } else {
+            return incomingEdges.get(node);
+        }
     }
 
     @Override
@@ -123,6 +129,7 @@ public class ExtendedGraph implements DirectedGraph {
 
     @Override
     public IdentifiableCollection<Node> nodes() {
+        
         return new CombinedCollection<>(graph.nodes(), this.newNodes);
     }
 
@@ -234,11 +241,7 @@ public class ExtendedGraph implements DirectedGraph {
         return new IteratorIterator<>(graph.iterator(), newNodes.iterator());
     }
 
-    // TEmporary:
-    public static int getEdgeCapacity() {
-        return -1;
-    }
-
+    @Override
     public Edge createAndSetEdge(Node start, Node end) {
         if (newEdges.size() >= newEdges.getCapacity()) {
             throw new IllegalArgumentException("Cannot add more edges to extended graph!");
@@ -246,11 +249,74 @@ public class ExtendedGraph implements DirectedGraph {
         Edge edge = new Edge(originalEdgeCount + newEdges.size(), start, end);
         newEdges.add(edge);
         outgoingEdges.get(start).add(edge);
+        incomingEdges.get(end).add(edge);
         return edge;
     }
 
     @Override
     public String toString() {
         return DirectedGraph.stringRepresentation(this);
+    }
+
+    @Override
+    public void setEdges(Iterable<Edge> edges) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
+    public void setNodes(Iterable<Node> nodes) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
+    public int getNodeCapacity() {
+        return originalNodeCount + newNodes.getCapacity();
+    }
+
+    @Override
+    public void setNodeCapacity(int newCapacity) {
+        int currentCapacity = getNodeCapacity();
+
+        int newNewNodes = newCapacity - currentCapacity;
+
+        if (newCapacity < currentCapacity) {
+            for (int i = Math.abs(newNewNodes); i >= newNodes.getCapacity() + newNewNodes; --i) {
+                Node deletedNode = newNodes.get(i);
+                for (Edge e: outgoingEdges(deletedNode)) {
+                    newEdges.remove(e);
+                }
+                outgoingEdges.remove(deletedNode);
+                for (Edge e: incomingEdges(deletedNode)) {
+                    newEdges.remove(e);
+                }
+                incomingEdges.remove(deletedNode);
+                newNodes.remove(deletedNode);
+            }
+        }
+        if (newCapacity == currentCapacity) {
+            throw new IllegalArgumentException("Return without modification");
+        }
+        newNodes.setCapacity(newNodes.getCapacity() + newNewNodes);
+        for (int i = 0; i < newNewNodes; ++i) {
+            Node newNode = new Node(currentCapacity + i);
+            this.newNodes.add(newNode);
+            outgoingEdges.put(newNode, new ListSequence<>());
+            incomingEdges.put(newNode, new ListSequence<>());
+        }
+    }
+
+    @Override
+    public int getEdgeCapacity() {
+        return originalEdgeCount + newEdges.getCapacity();
+    }
+
+    @Override
+    public void setEdgeCapacity(int newCapacity) {
+        int currentCapacity = getEdgeCapacity();
+        if (newCapacity < currentCapacity) {
+            throw new IllegalStateException("Extended network cannot decrease capacity");
+        }
+        int newNewEdges = newCapacity - currentCapacity;
+        newEdges.setCapacity(newEdges.getCapacity() + newNewEdges);
     }
 }

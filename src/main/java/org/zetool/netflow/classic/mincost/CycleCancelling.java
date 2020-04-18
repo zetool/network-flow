@@ -21,7 +21,6 @@ import org.zetool.netflow.classic.problems.MinimumCostFlowProblem;
 import org.zetool.netflow.classic.transshipment.StaticTransshipment;
 import org.zetool.graph.Edge;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
-import org.zetool.graph.DefaultDirectedGraph;
 import org.zetool.graph.DirectedGraph;
 import org.zetool.netflow.ds.network.OldResidualNetwork;
 import org.zetool.graph.structure.StaticPath;
@@ -44,7 +43,7 @@ public abstract class CycleCancelling extends AbstractAlgorithm<MinimumCostFlowP
      */
     @Override
     protected Flow runAlgorithm(MinimumCostFlowProblem problem) {
-        StaticTransshipment algorithm = new StaticTransshipment((DefaultDirectedGraph)problem.getGraph(), problem.getCapacities(), problem.getBalances());
+        StaticTransshipment algorithm = new StaticTransshipment(problem.getGraph(), problem.getCapacities(), problem.getBalances());
         algorithm.run();
         OldResidualNetwork residualNetwork = algorithm.getResidualNetwork();
         if (residualNetwork == null) {
