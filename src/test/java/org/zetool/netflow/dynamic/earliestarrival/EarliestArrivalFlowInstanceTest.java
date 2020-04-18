@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -93,14 +92,19 @@ public class EarliestArrivalFlowInstanceTest extends TestCase implements Algorit
             if (s.startsWith("HOLDOVER")) {
                 continue;
             }
+            if (s.startsWith("SCALE")) {
+                continue;
+            }
             if (s.charAt(0) == 'S') {
                 final String[] split = s.split(" ");
                 final long nodeID = Long.parseLong(split[1]);
                 System.out.println(" Key: " + nodeID + " value: " + currentNodeID);
                 nodeMap.put(nodeID, currentNodeID++);
-                final int nodeSupply = Integer.parseInt(split[2]);
-                source_id.add(nodeID);
-                source_sup.add(nodeSupply);
+                final int nodeSupply = Integer.parseInt(split[2]) / 50;
+                if (nodeSupply > 0) {
+                    source_id.add(nodeID);
+                    source_sup.add(nodeSupply);
+                }
                 continue;
             }
             if (s.charAt(0) == 'T') {
@@ -203,7 +207,6 @@ public class EarliestArrivalFlowInstanceTest extends TestCase implements Algorit
         System.out.println("Sending the flow units required " + algo.getRuntime() + ".");
 //        System.out.println( df.toString() );
         System.err.println(Formatter.formatUnit(end - start, TimeUnits.NANO_SECOND));
-
     }
 
     @Override
