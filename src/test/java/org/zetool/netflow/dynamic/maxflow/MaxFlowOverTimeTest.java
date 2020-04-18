@@ -29,6 +29,7 @@ import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
 import org.zetool.graph.DefaultDirectedGraph;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.netflow.dynamic.earliestarrival.TestInstance;
 
 public class MaxFlowOverTimeTest {
 
@@ -107,56 +108,16 @@ public class MaxFlowOverTimeTest {
      */
     @Test
     public void MaxFlowTest2() {
-        System.out.println("TEST 2:");
-        DefaultDirectedGraph network = new DefaultDirectedGraph(6, 7);
-        Node s = network.getNode(0);
-        Node t = network.getNode(1);
-        Node v1 = network.getNode(2);
-        Node v2 = network.getNode(3);
-        Node v3 = network.getNode(4);
-        Node v4 = network.getNode(5);
-
-        Edge e1 = network.createAndSetEdge(s, v1);
-        Edge e2 = network.createAndSetEdge(s, v3);
-        Edge e3 = network.createAndSetEdge(v1, v2);
-        Edge e4 = network.createAndSetEdge(v2, t);
-        Edge e5 = network.createAndSetEdge(v3, v2);
-        Edge e6 = network.createAndSetEdge(v3, v4);
-        Edge e7 = network.createAndSetEdge(v4, t);
-
-        IdentifiableIntegerMapping<Edge> capacities = new IdentifiableIntegerMapping<>(network.edgeCount());
-        capacities.set(e1, 1);
-        capacities.set(e2, 1);
-        capacities.set(e3, 1);
-        capacities.set(e4, 1);
-        capacities.set(e5, 1);
-        capacities.set(e6, 1);
-        capacities.set(e7, 1);
-        IdentifiableIntegerMapping<Edge> transitTimes = new IdentifiableIntegerMapping<>(network.edgeCount());
-        transitTimes.set(e1, 3);
-        transitTimes.set(e2, 2);
-        transitTimes.set(e3, 3);
-        transitTimes.set(e4, 2);
-        transitTimes.set(e5, 2);
-        transitTimes.set(e6, 3);
-        transitTimes.set(e7, 3);
-
-        List<Node> sources = new LinkedList<>();
-        sources.add(s);
-        List<Node> sinks = new LinkedList<>();
-        sinks.add(t);
-
-        MaxFlowOverTime algo = new MaxFlowOverTime();
+        TestInstance exampleNetwork = TestInstance.EXAMPLE_NETWORK;
 
         int timeHorizon = 9;
+        MaximumFlowOverTimeProblem mfotp = new MaximumFlowOverTimeProblem(exampleNetwork.network, exampleNetwork.capacities,
+                exampleNetwork.transitTimes, exampleNetwork.sources, exampleNetwork.sinks, timeHorizon);
 
-        MaximumFlowOverTimeProblem mfotp = new MaximumFlowOverTimeProblem(network, capacities, transitTimes, sources, sinks, timeHorizon);
+        MaxFlowOverTime fixture = new MaxFlowOverTime();
+        fixture.setProblem(mfotp);
+        fixture.run();
 
-        algo.setProblem(mfotp);
-
-        algo.run();
-        System.out.println(algo.getSolution());
-        System.out.println("Value: " + algo.getSolution().getValue());
-        assertThat(algo.getSolution().getValue(), is(equalTo(3L)));
+        assertThat(fixture.getSolution().getValue(), is(equalTo(3L)));
     }
 }
