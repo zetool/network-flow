@@ -15,25 +15,26 @@
  */
 package org.zetool.netflow.dynamic.maxflow;
 
-import org.zetool.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
-import org.zetool.netflow.classic.mincost.MinimumMeanCycleCancelling;
-import org.zetool.netflow.classic.maxflow.PathDecomposition;
+import java.util.List;
+
+import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.common.algorithm.Algorithm;
-import org.zetool.netflow.ds.structure.DynamicPath;
-import org.zetool.netflow.ds.structure.FlowOverTimePath;
-import org.zetool.graph.Edge;
 import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.graph.DefaultDirectedGraph;
+import org.zetool.graph.Edge;
 import org.zetool.graph.Node;
-import org.zetool.netflow.ds.flow.PathBasedFlow;
 import org.zetool.graph.structure.StaticPath;
-import org.zetool.netflow.ds.structure.StaticFlowPath;
+import org.zetool.graph.localization.GraphLocalization;
+import org.zetool.netflow.classic.maxflow.PathDecomposition;
+import org.zetool.netflow.classic.mincost.MinimumMeanCycleCancelling;
+import org.zetool.netflow.classic.problems.MinimumCostFlowProblem;
+import org.zetool.netflow.dynamic.problems.MaximumFlowOverTimeProblem;
+import org.zetool.netflow.ds.flow.PathBasedFlow;
 import org.zetool.netflow.ds.flow.TimeReapeatedFlow;
 import org.zetool.netflow.ds.network.ExtendedGraph;
-import org.zetool.graph.DefaultDirectedGraph;
-import org.zetool.graph.localization.GraphLocalization;
-import org.zetool.netflow.classic.problems.MinimumCostFlowProblem;
-import java.util.List;
-import org.zetool.common.algorithm.AbstractAlgorithm;
+import org.zetool.netflow.ds.structure.DynamicPath;
+import org.zetool.netflow.ds.structure.FlowOverTimePath;
+import org.zetool.netflow.ds.structure.StaticFlowPath;
 
 /**
  * The class {@code MaxFlowOverTime} solves the max flow over time problem. The flow is computed by a reduction to a
@@ -64,11 +65,13 @@ public class MaxFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProble
      * Reduction for the computation of an maximum flow over time using a minimum cost flow computation.
      */
     private void reduction() {
-        ex = new ExtendedGraph(network, 1, sources.size() + sinks.size());
+        int newEdgeCount = sources.size() + sinks.size();
+        int newNodeCount = 1;
+        ex = new ExtendedGraph(network, newNodeCount,newEdgeCount );
         superNode = ex.getFirstNewNode();
 
-        edgeCapacities.setDomainSize(ex.getEdgeCapacity()); // reserve space
-        transitTimes.setDomainSize(ex.getEdgeCapacity()); // reserve space
+        edgeCapacities.setDomainSize(ex.edgeCount()); // reserve space
+        transitTimes.setDomainSize(ex.edgeCount()); // reserve space
 
         for (Node source : sources) {
             Edge newEdge = ex.createAndSetEdge(superNode, source);
@@ -88,7 +91,6 @@ public class MaxFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProble
      * Edges in the flow are also removed.
      */
     private void reconstruction(IdentifiableIntegerMapping<Edge> flow) {
-        //ex.undo();
         // the additional edges have the highest numbers, so we can just get rid of them
         flow.setDomainSize(flow.getDomainSize() - (sources.size() + sinks.size()));
         transitTimes.setDomainSize(flow.getDomainSize());
@@ -128,7 +130,7 @@ public class MaxFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProble
     protected TimeReapeatedFlow runAlgorithm(MaximumFlowOverTimeProblem problem) {
         sinks = problem.getSinks();
         sources = problem.getSources();
-        network = (DefaultDirectedGraph) problem.getNetwork(); // todo avoid cast here?
+        network = (DefaultDirectedGraph) problem.getNetwork(); // TODO avoid cast here?
         edgeCapacities = problem.getCapacities();
         transitTimes = problem.getTransitTimes();
         timeHorizon = problem.getTimeHorizon();
@@ -142,8 +144,8 @@ public class MaxFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProble
         }
 
         reduction();
-
-        MinimumCostFlowProblem p = new MinimumCostFlowProblem(ex, edgeCapacities, transitTimes, new IdentifiableIntegerMapping<>(network.nodes().size()));
+        
+        MinimumCostFlowProblem p = new MinimumCostFlowProblem(ex, edgeCapacities, transitTimes, new IdentifiableIntegerMapping<>(ex.nodes().size()));
         Algorithm<MinimumCostFlowProblem, IdentifiableIntegerMapping<Edge>> algorithm = new MinimumMeanCycleCancelling();
         algorithm.setProblem(p);
         algorithm.run();
@@ -154,8 +156,7 @@ public class MaxFlowOverTime extends AbstractAlgorithm<MaximumFlowOverTimeProble
         //flow = algo.getFlow();
         reconstruction(flow);
 
-        PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition(null, sources, sinks, flow);
-        //PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition( (DefaultDirectedGraph)ex, sources, sinks, flow );
+        PathBasedFlow minCostFlow = PathDecomposition.calculatePathDecomposition(network, sources, sinks, flow);
 
         return translateIntoMaxFlow(minCostFlow);
     }
