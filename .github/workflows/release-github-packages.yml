@@ -2,7 +2,7 @@
 # It uses Maven release to release the process including deploy.
 # Deployment is done to GitHub Package registry.
 
-name: Maven Release
+name: Release GitHub Packages
 
 on:
   pull_request:
@@ -12,13 +12,13 @@ on:
 
 jobs:
   release:
-    name: Maven Release
+    name: Release with Maven
     if: github.event.pull_request.merged == true
 
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_TOKEN: ${{ secrets. GH_RELEASE_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
 
     steps:
     - name: Checkout source code
@@ -27,7 +27,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: maven-settings-xml-action
+    - name: Define custom repositories
       uses: whelk-io/maven-settings-xml-action@v4
       with:
         repositories: '[
