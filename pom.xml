@@ -21,7 +21,7 @@
 
     <groupId>org.zetool</groupId>
     <artifactId>network-flow</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>zetool-network-flow</name>
     <url>https://zetool.org</url>
 
@@ -133,6 +133,6 @@
     <scm>
         <connection>scm:git:https://github.com/zetool/network-flow.git</connection>
         <url>https://github.com/zetool/network-flow.git</url>
-        <tag>HEAD</tag>
+        <tag>network-flow-0.2.0</tag>
     </scm>
 </project>
