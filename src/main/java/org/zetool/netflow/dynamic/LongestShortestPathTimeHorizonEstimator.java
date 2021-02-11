@@ -15,10 +15,11 @@
  */
 package org.zetool.netflow.dynamic;
 
-import org.zetool.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 import org.zetool.algorithm.shortestpath.Dijkstra;
+import org.zetool.algorithm.shortestpath.IntegralSingleSourceShortestPathProblem;
 import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.graph.Node;
+import org.zetool.netflow.dynamic.problems.EarliestArrivalFlowProblem;
 
 /**
  *
@@ -31,10 +32,13 @@ public class LongestShortestPathTimeHorizonEstimator
     protected TimeHorizonBounds runAlgorithm(EarliestArrivalFlowProblem problem) {
         int longest = 0;
         for (Node source : problem.getSources()) {
-            Dijkstra dijkstra = new Dijkstra(problem.getNetwork(), problem.getTransitTimes(), source);
+            Dijkstra dijkstra = new Dijkstra();
+            IntegralSingleSourceShortestPathProblem shortestPathProblem = new IntegralSingleSourceShortestPathProblem(
+                    problem.getNetwork(), problem.getTransitTimes(), source);
+            dijkstra.setProblem(shortestPathProblem);
             dijkstra.run();
-            if (dijkstra.getDistance(problem.getSink()) > longest) {
-                longest = dijkstra.getDistance(problem.getSink());
+            if (dijkstra.getSolution().getDistance(problem.getSink()) > longest) {
+                longest = dijkstra.getSolution().getDistance(problem.getSink());
             }
         }
         int supply = 0;

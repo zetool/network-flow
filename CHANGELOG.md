@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Updates
+
+- Bumped zetool-graph from 0.2.0 to 0.3.0
+- Bumped junit from 4.12 to 4.13.1
+
 ## [0.1.0]
 
 ### Features

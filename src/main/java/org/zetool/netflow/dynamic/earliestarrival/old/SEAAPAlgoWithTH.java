@@ -21,8 +21,11 @@ import org.zetool.algorithm.shortestpath.Dijkstra;
 import org.zetool.netflow.ds.network.ImplicitTimeExpandedResidualNetwork;
 import org.zetool.graph.Node;
 import org.zetool.netflow.ds.flow.FlowOverTimeImplicit;
+
 import java.util.Arrays;
 import java.util.LinkedList;
+
+import org.zetool.algorithm.shortestpath.IntegralSingleSourceShortestPathProblem;
 import org.zetool.common.algorithm.AbstractAlgorithm;
 import org.zetool.common.algorithm.AlgorithmStatusEvent;
 import org.zetool.netflow.dynamic.earliestarrival.EarliestArrivalAugmentingPathAlgorithm;
@@ -116,11 +119,14 @@ public class SEAAPAlgoWithTH extends AbstractAlgorithm<EarliestArrivalFlowProble
     private void calculateShortestPathLengths() {
         distances = new int[getProblem().getSources().size()];
         int index = 0;
-        Dijkstra dijkstra = new Dijkstra(getProblem().getNetwork(), getProblem().getTransitTimes(), getProblem().getSink(), true);
+        Dijkstra dijkstra = new Dijkstra(true);
+        IntegralSingleSourceShortestPathProblem shortestPathProblem = new IntegralSingleSourceShortestPathProblem(
+                getProblem().getNetwork(), getProblem().getTransitTimes(), getProblem().getSink());
+        dijkstra.setProblem(shortestPathProblem);
         dijkstra.run();
         for (Node source : getProblem().getSources()) {
             System.out.println("source: " + source);
-            distances[index++] = dijkstra.getDistance(source);
+            distances[index++] = dijkstra.getSolution().getDistance(source);
         }
         Arrays.sort(distances);
         for (int i=0; i< distances.length; i++)
