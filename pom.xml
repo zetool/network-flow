@@ -21,7 +21,7 @@
 
     <groupId>org.zetool</groupId>
     <artifactId>network-flow</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>zetool-network-flow</name>
     <url>https://zetool.org</url>
 
