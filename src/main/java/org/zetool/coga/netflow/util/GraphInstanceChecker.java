@@ -45,8 +45,8 @@ public class GraphInstanceChecker {
     /**
      * Creates a new instance of the checker.
      *
-     * @param network the network to be checked.
-     * @param supplies the supplies of the network.
+     * @param network the network to be checked
+     * @param supplies the supplies of the network; will be modified in place if necessary
      */
     public GraphInstanceChecker(DirectedGraph network,
             IdentifiableIntegerMapping<Node> supplies) {
