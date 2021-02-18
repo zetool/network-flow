@@ -15,15 +15,16 @@
  */
 package org.zetool.coga.netflow.util;
 
-import org.zetool.container.collection.ListSequence;
-import org.zetool.graph.Node;
-import org.zetool.container.mapping.IdentifiableIntegerMapping;
-import org.zetool.container.mapping.IdentifiableObjectMapping;
-import org.zetool.graph.DirectedGraph;
-import org.zetool.graph.traversal.DepthFirstSearch;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.zetool.container.collection.ListSequence;
+import org.zetool.container.mapping.IdentifiableIntegerMapping;
+import org.zetool.container.mapping.IdentifiableObjectMapping;
+import org.zetool.graph.DirectedGraph;
+import org.zetool.graph.Node;
+import org.zetool.graph.traversal.DepthFirstSearch;
 
 /**
  * This class provides a method to check a supplies mapping for a given network. The method tests whether all sources in
@@ -56,7 +57,7 @@ public class GraphInstanceChecker {
     /**
      * Returns whether the network has already been checked.
      *
-     * @return whether the network has already been checked.
+     * @return whether the network has already been checked
      */
     public boolean hasRun() {
         return hasRun;
@@ -66,45 +67,40 @@ public class GraphInstanceChecker {
      * If the algorithm has already been called, this method gives the resulting supply mapping. Else an exception is
      * thrown.
      *
-     * @return If the algorithm has already been called, this method gives the resulting supply mapping. Else an
-     * exception is thrown.
+     * @return the resulting supply mapping
+     * @throws IllegalStateException if the instance has {@link #hasRun() not been checked}
      */
     public IdentifiableIntegerMapping<Node> getNewSupplies() {
-        if (hasRun) {
-            return newSupplies;
-        } else {
-            throw new AssertionError("supplyChecker has to be called first.");
-        }
+        return valueOrThrow(newSupplies);
     }
 
     /**
      * If the algorithm has already been called, this method gives the resulting list of sources. Else an exception is
      * thrown.
      *
-     * @return If the algorithm has already been called, this method gives the resulting list of sources. Else an
-     * exception is thrown.
+     * @return the unmodifiable resulting list of sources
+     * @throws IllegalStateException if the instance has {@link #hasRun() not been checked}
      */
     public List<Node> getNewSources() {
-        if (hasRun) {
-            return Collections.unmodifiableList(newSources);
-        } else {
-            throw new AssertionError("supplyChecker has to be called first.");
-        }
+        return valueOrThrow(Collections.unmodifiableList(newSources));
     }
 
     /**
      * If the algorithm has already been called, this method gives the list of deleted sources. Else an exception is
      * thrown.
      *
-     * @return If the algorithm has already been called, this method gives the list of deleted sources. Else an
-     * exception is thrown.
+     * @return the list of deleted sources.
+     * @throws IllegalStateException if the instance has {@link #hasRun() not been checked}
      */
     public List<Node> getDeletedSources() {
+        return valueOrThrow(Collections.unmodifiableList(deletedSources));
+    }
+
+    private <T> T valueOrThrow(T value) {
         if (hasRun) {
-            return Collections.unmodifiableList(deletedSources);
-        } else {
-            throw new AssertionError("supplyChecker has to be called first.");
+            return value;
         }
+        throw new IllegalStateException("supplyChecker has to be called first.");
     }
 
     /**
@@ -167,7 +163,7 @@ public class GraphInstanceChecker {
             /* This case can't be repaired automatically if you want to subtract supply and need symmetrically. */
             if (sinks.size() != 1) {
                 throw new AssertionError("There are sources that cannot reach any sink, and there are " + sinks.size()
-                        + " sinks. This method can only automatically repairthe network for exactly one sink.");
+                        + " sinks. This method can only automatically repair the network for exactly one sink.");
             }
             /* Now there is only one sink. Set the supply of each non reachable source to zero and
              * subtract the corresponding value from the need of the sink. */
@@ -190,7 +186,7 @@ public class GraphInstanceChecker {
     }
 
     /**
-     * Checks whether there are no supplies in the network, i. e. true is returned if there are no supplies and demands.
+     * Checks whether there are no supplies in the network, i.e. true is returned if there are no supplies and demands.
      * If there are supplies and demands, but supplies=-demands does not hold, an exception is thrown. If
      * supplies=-demands holds and is not zero, false is returned.
      *
