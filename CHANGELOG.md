@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0]
+
 ### Updates
 
 - Bumped zetool-graph from 0.2.0 to 0.3.0
